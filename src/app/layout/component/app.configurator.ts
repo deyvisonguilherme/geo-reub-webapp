@@ -1,4 +1,4 @@
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { isPlatformBrowser } from '@angular/common';
 import { Component, computed, inject, PLATFORM_ID } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { $t, updatePreset, updateSurfacePalette } from '@primeuix/themes';
@@ -38,7 +38,7 @@ declare type SurfacesType = {
 @Component({
   selector: 'app-configurator',
   standalone: true,
-  imports: [CommonModule, FormsModule, SelectButtonModule],
+  imports: [FormsModule, SelectButtonModule],
   template: ` <div class="flex flex-col gap-4"></div> `,
   host: {
     class:

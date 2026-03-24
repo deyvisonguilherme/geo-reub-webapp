@@ -2,37 +2,10 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
-import { CheckboxModule } from 'primeng/checkbox';
-import { DatePickerModule } from 'primeng/datepicker';
 import { DialogModule } from 'primeng/dialog';
-import { InputNumberModule } from 'primeng/inputnumber';
-import { InputTextModule } from 'primeng/inputtext';
 import { TagModule } from 'primeng/tag';
-import { TextareaModule } from 'primeng/textarea';
-
-type TagSeverity = 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast';
-
-interface Nucleus {
-  id: string;
-  codigo: string;
-  nome: string;
-  descricao: string;
-  situacaoGeografica: string;
-  areaTotalM2: number | null;
-  perimetroM: number | null;
-  poligonalGeorreferenciada: string;
-  centroide: string;
-  consolidado: boolean;
-  dataOcupacaoInicial: Date | null;
-  numeroFamiliasEstimado: number | null;
-  municipioId: string;
-  criadoPor: string;
-  criadoEm: Date;
-  atualizadoPor: string;
-  atualizadoEm: Date | null;
-}
-
-type NucleusFormModel = Omit<Nucleus, 'criadoEm' | 'atualizadoEm'>;
+import { NucleusFormDialogComponent } from './components/nucleus-form-dialog/nucleus-form-dialog.component';
+import { Nucleus, NucleusFormModel, TagSeverity } from './nucleus.types';
 
 @Component({
   selector: 'app-nucleus',
@@ -43,11 +16,7 @@ type NucleusFormModel = Omit<Nucleus, 'criadoEm' | 'atualizadoEm'>;
     ButtonModule,
     TagModule,
     DialogModule,
-    InputTextModule,
-    TextareaModule,
-    InputNumberModule,
-    DatePickerModule,
-    CheckboxModule,
+    NucleusFormDialogComponent,
   ],
   templateUrl: './nucleus.component.html',
   styleUrl: './nucleus.component.scss',
@@ -70,6 +39,7 @@ export class NucleusComponent {
 
   nuclei: Nucleus[] = this.buildInitialNuclei();
   selectedNucleus: Nucleus | null = this.nuclei[0] ?? null;
+  searchTerm = '';
 
   rows = 10;
   currentPage = 1;
@@ -82,16 +52,38 @@ export class NucleusComponent {
   nucleusPendingDelete: Nucleus | null = null;
 
   get totalPages(): number {
-    return Math.max(1, Math.ceil(this.nuclei.length / this.rows));
+    return Math.max(1, Math.ceil(this.filteredNuclei.length / this.rows));
+  }
+
+  get filteredNuclei(): Nucleus[] {
+    const term = this.searchTerm.trim().toLocaleLowerCase('pt-BR');
+
+    if (!term) {
+      return this.nuclei;
+    }
+
+    return this.nuclei.filter((nucleus) =>
+      [
+        nucleus.codigo,
+        nucleus.nome,
+        nucleus.descricao,
+        nucleus.situacaoGeografica,
+        nucleus.municipioId,
+        nucleus.poligonalGeorreferenciada,
+        nucleus.centroide,
+      ]
+        .filter(Boolean)
+        .some((value) => value.toLocaleLowerCase('pt-BR').includes(term)),
+    );
   }
 
   get paginatedNuclei(): Nucleus[] {
     const start = (this.currentPage - 1) * this.rows;
-    return this.nuclei.slice(start, start + this.rows);
+    return this.filteredNuclei.slice(start, start + this.rows);
   }
 
   get pageStart(): number {
-    if (this.nuclei.length === 0) {
+    if (this.filteredNuclei.length === 0) {
       return 0;
     }
 
@@ -99,7 +91,7 @@ export class NucleusComponent {
   }
 
   get pageEnd(): number {
-    return Math.min(this.currentPage * this.rows, this.nuclei.length);
+    return Math.min(this.currentPage * this.rows, this.filteredNuclei.length);
   }
 
   get pageNumbers(): number[] {
@@ -108,6 +100,11 @@ export class NucleusComponent {
 
   get dialogTitle(): string {
     return this.isEditing ? 'Editar núcleo urbano' : 'Cadastrar núcleo urbano';
+  }
+
+  onSearchTermChange(value: string): void {
+    this.searchTerm = value;
+    this.currentPage = 1;
   }
 
   onRowsChange(rows: number): void {

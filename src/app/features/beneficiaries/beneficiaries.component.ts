@@ -1,10 +1,10 @@
-import { CommonModule } from '@angular/common';
+
 import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-beneficiaries',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './beneficiaries.component.html',
   styleUrl: './beneficiaries.component.scss',
 })
