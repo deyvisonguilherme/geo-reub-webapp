@@ -1,0 +1,441 @@
+<div class="nucleus-page">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Núcleos urbanos</h1>
+      <p class="page-subtitle">
+        Listagem operacional com os principais dados para triagem e acesso rápido ao cadastro completo.
+      </p>
+    </div>
+
+    <p-button
+      label="Criar núcleo"
+      icon="pi pi-plus"
+      styleClass="header-action"
+      (onClick)="openCreateDialog()"
+    />
+  </div>
+
+  <div class="nucleus-grid">
+    <section class="nucleus-card table-card">
+      <div class="table-toolbar">
+        <div>
+          <span class="toolbar-label">Registros</span>
+          <strong>{{ nuclei.length }}</strong>
+        </div>
+
+        <div class="toolbar-select">
+          <label for="rows">Linhas por página</label>
+          <select id="rows" [ngModel]="rows" (ngModelChange)="onRowsChange($event)">
+            @for (option of rowSizeOptions; track option.value) {
+              <option [ngValue]="option.value">{{ option.label }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <div class="native-table-wrapper">
+        <table class="native-table">
+          <thead>
+            <tr>
+              <th>Código</th>
+              <th>Núcleo urbano</th>
+              <th>Situação geográfica</th>
+              <th>Famílias</th>
+              <th>Área</th>
+              <th>Consolidado</th>
+              <th class="actions-column">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            @if (paginatedNuclei.length) {
+              @for (nucleus of paginatedNuclei; track nucleus.id) {
+                <tr
+                  class="table-row"
+                  [class.selected]="selectedNucleus?.id === nucleus.id"
+                  (click)="selectNucleus(nucleus)"
+                >
+                  <td>
+                    <span class="cell-code">{{ nucleus.codigo }}</span>
+                  </td>
+                  <td>
+                    <div class="cell-title">
+                      <strong>{{ nucleus.nome }}</strong>
+                      <span>{{ nucleus.descricao || 'Sem descrição informada' }}</span>
+                    </div>
+                  </td>
+                  <td>{{ nucleus.situacaoGeografica || 'Não informada' }}</td>
+                  <td>{{ nucleus.numeroFamiliasEstimado ?? 'Não informado' }}</td>
+                  <td>{{ getAreaLabel(nucleus.areaTotalM2) }}</td>
+                  <td>
+                    <p-tag
+                      [value]="nucleus.consolidado ? 'Sim' : 'Não'"
+                      [severity]="getConsolidadoSeverity(nucleus.consolidado)"
+                    />
+                  </td>
+                  <td class="actions-column">
+                    <div class="row-actions">
+                      <p-button
+                        icon="pi pi-pencil"
+                        severity="secondary"
+                        [text]="true"
+                        [rounded]="true"
+                        (onClick)="openEditDialog(nucleus); $event.stopPropagation()"
+                      />
+                      <p-button
+                        icon="pi pi-trash"
+                        severity="danger"
+                        [text]="true"
+                        [rounded]="true"
+                        (onClick)="openDeleteDialog(nucleus); $event.stopPropagation()"
+                      />
+                    </div>
+                  </td>
+                </tr>
+              }
+            } @else {
+              <tr>
+                <td colspan="7">
+                  <div class="empty-state">
+                    <i class="pi pi-inbox"></i>
+                    <span>Nenhum núcleo urbano cadastrado.</span>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <div class="pagination-bar">
+        <span class="pagination-report">
+          Exibindo {{ pageStart }} a {{ pageEnd }} de {{ nuclei.length }} núcleos
+        </span>
+
+        <div class="pagination-actions">
+          <button type="button" class="page-button" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">
+            Anterior
+          </button>
+
+          @for (page of pageNumbers; track page) {
+            <button
+              type="button"
+              class="page-button"
+              [class.active]="page === currentPage"
+              (click)="goToPage(page)"
+            >
+              {{ page }}
+            </button>
+          }
+
+          <button
+            type="button"
+            class="page-button"
+            [disabled]="currentPage === totalPages"
+            (click)="goToPage(currentPage + 1)"
+          >
+            Próxima
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <aside class="nucleus-card detail-card">
+      @if (selectedNucleus; as nucleus) {
+      <div class="detail-header">
+        <div>
+          <span class="detail-kicker">Cadastro selecionado</span>
+          <h2>{{ nucleus.nome }}</h2>
+        </div>
+        <p-tag
+          [value]="nucleus.consolidado ? 'Consolidado' : 'Em consolidação'"
+          [severity]="getConsolidadoSeverity(nucleus.consolidado)"
+        />
+      </div>
+
+      <div class="detail-section">
+        <span class="detail-section-title">Resumo</span>
+        <div class="detail-grid">
+          <div class="detail-item">
+            <span class="detail-label">Código</span>
+            <strong>{{ nucleus.codigo }}</strong>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Situação geográfica</span>
+            <strong>{{ nucleus.situacaoGeografica || 'Não informada' }}</strong>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Famílias estimadas</span>
+            <strong>{{ nucleus.numeroFamiliasEstimado ?? 'Não informado' }}</strong>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Data de ocupação inicial</span>
+            <strong>{{ getDateLabel(nucleus.dataOcupacaoInicial) }}</strong>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Área total</span>
+            <strong>{{ getAreaLabel(nucleus.areaTotalM2) }}</strong>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Perímetro</span>
+            <strong>{{ getPerimetroLabel(nucleus.perimetroM) }}</strong>
+          </div>
+        </div>
+        <p class="detail-description">
+          {{ nucleus.descricao || 'Sem descrição informada para este núcleo.' }}
+        </p>
+      </div>
+
+      <div class="detail-section">
+        <span class="detail-section-title">Campos técnicos</span>
+        <div class="detail-stack">
+          <div class="detail-item mono">
+            <span class="detail-label">Município ID</span>
+            <strong>{{ nucleus.municipioId || 'Não informado' }}</strong>
+          </div>
+          <div class="detail-item mono">
+            <span class="detail-label">Poligonal georreferenciada</span>
+            <strong>{{ nucleus.poligonalGeorreferenciada || 'Não informada' }}</strong>
+          </div>
+          <div class="detail-item mono">
+            <span class="detail-label">Centroide</span>
+            <strong>{{ nucleus.centroide || 'Não informado' }}</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="detail-section">
+        <span class="detail-section-title">Auditoria</span>
+        <div class="detail-grid">
+          <div class="detail-item mono">
+            <span class="detail-label">ID</span>
+            <strong>{{ nucleus.id }}</strong>
+          </div>
+          <div class="detail-item mono">
+            <span class="detail-label">Criado por</span>
+            <strong>{{ nucleus.criadoPor }}</strong>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Criado em</span>
+            <strong>{{ getDateLabel(nucleus.criadoEm) }}</strong>
+          </div>
+          <div class="detail-item mono">
+            <span class="detail-label">Atualizado por</span>
+            <strong>{{ nucleus.atualizadoPor || 'Não informado' }}</strong>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Atualizado em</span>
+            <strong>{{ getDateLabel(nucleus.atualizadoEm) }}</strong>
+          </div>
+        </div>
+      </div>
+      } @else {
+      <div class="empty-state">
+        <i class="pi pi-info-circle"></i>
+        <span>Selecione um núcleo para visualizar os detalhes.</span>
+      </div>
+      }
+    </aside>
+  </div>
+</div>
+
+<p-dialog
+  [header]="dialogTitle"
+  [(visible)]="isFormDialogVisible"
+  [modal]="true"
+  [draggable]="false"
+  [resizable]="false"
+  [style]="{ width: 'min(1080px, 96vw)' }"
+  styleClass="nucleus-dialog"
+>
+  <div class="dialog-grid">
+    <div class="form-block">
+      <span class="form-block-title">Identificação</span>
+
+      <div class="field-grid two-columns">
+        <div class="field">
+          <label for="codigo">Código</label>
+          <input id="codigo" type="text" pInputText [(ngModel)]="formModel.codigo" />
+        </div>
+
+        <div class="field">
+          <label for="nome">Nome</label>
+          <input id="nome" type="text" pInputText [(ngModel)]="formModel.nome" />
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="descricao">Descrição</label>
+        <textarea
+          id="descricao"
+          pTextarea
+          rows="4"
+          [(ngModel)]="formModel.descricao"
+        ></textarea>
+      </div>
+    </div>
+
+    <div class="form-block">
+      <span class="form-block-title">Caracterização</span>
+
+      <div class="field-grid two-columns">
+        <div class="field">
+          <label for="situacaoGeografica">Situação geográfica</label>
+          <select id="situacaoGeografica" [(ngModel)]="formModel.situacaoGeografica">
+            <option value="">Selecione</option>
+            @for (option of situacaoOptions; track option.value) {
+              <option [value]="option.value">{{ option.label }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="field checkbox-field">
+          <label for="consolidado">Consolidado</label>
+          <div class="checkbox-wrapper">
+            <p-checkbox
+              inputId="consolidado"
+              [binary]="true"
+              [(ngModel)]="formModel.consolidado"
+            />
+            <span>{{ formModel.consolidado ? 'Sim' : 'Não' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="field-grid three-columns">
+        <div class="field">
+          <label for="areaTotalM2">Área total (m²)</label>
+          <p-inputnumber
+            inputId="areaTotalM2"
+            [(ngModel)]="formModel.areaTotalM2"
+            mode="decimal"
+            [minFractionDigits]="2"
+            [maxFractionDigits]="2"
+          />
+        </div>
+
+        <div class="field">
+          <label for="perimetroM">Perímetro (m)</label>
+          <p-inputnumber
+            inputId="perimetroM"
+            [(ngModel)]="formModel.perimetroM"
+            mode="decimal"
+            [minFractionDigits]="2"
+            [maxFractionDigits]="2"
+          />
+        </div>
+
+        <div class="field">
+          <label for="numeroFamiliasEstimado">Famílias estimadas</label>
+          <p-inputnumber
+            inputId="numeroFamiliasEstimado"
+            [(ngModel)]="formModel.numeroFamiliasEstimado"
+            [useGrouping]="false"
+          />
+        </div>
+      </div>
+
+      <div class="field-grid two-columns">
+        <div class="field">
+          <label for="dataOcupacaoInicial">Data de ocupação inicial</label>
+          <p-datepicker
+            inputId="dataOcupacaoInicial"
+            [(ngModel)]="formModel.dataOcupacaoInicial"
+            dateFormat="dd/mm/yy"
+            appendTo="body"
+          />
+        </div>
+
+        <div class="field">
+          <label for="municipioId">Município ID</label>
+          <input id="municipioId" type="text" pInputText [(ngModel)]="formModel.municipioId" />
+        </div>
+      </div>
+    </div>
+
+    <div class="form-block">
+      <span class="form-block-title">Georreferenciamento</span>
+
+      <div class="field">
+        <label for="poligonalGeorreferenciada">Poligonal georreferenciada</label>
+        <textarea
+          id="poligonalGeorreferenciada"
+          pTextarea
+          rows="4"
+          [(ngModel)]="formModel.poligonalGeorreferenciada"
+        ></textarea>
+      </div>
+
+      <div class="field">
+        <label for="centroide">Centroide</label>
+        <textarea id="centroide" pTextarea rows="2" [(ngModel)]="formModel.centroide"></textarea>
+      </div>
+    </div>
+
+    <div class="form-block">
+      <span class="form-block-title">Auditoria</span>
+
+      <div class="field-grid two-columns">
+        <div class="field">
+          <label for="criadoPor">Criado por</label>
+          <input id="criadoPor" type="text" pInputText [(ngModel)]="formModel.criadoPor" />
+        </div>
+
+        <div class="field">
+          <label for="atualizadoPor">Atualizado por</label>
+          <input
+            id="atualizadoPor"
+            type="text"
+            pInputText
+            [(ngModel)]="formModel.atualizadoPor"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #footer>
+    <div class="dialog-actions">
+      <p-button
+        label="Cancelar"
+        severity="secondary"
+        [text]="true"
+        (onClick)="isFormDialogVisible = false"
+      />
+      <p-button
+        label="Salvar"
+        icon="pi pi-check"
+        [disabled]="!formModel.codigo || !formModel.nome || !formModel.criadoPor"
+        (onClick)="saveNucleus()"
+      />
+    </div>
+  </ng-template>
+</p-dialog>
+
+<p-dialog
+  header="Confirmar exclusão"
+  [(visible)]="isDeleteDialogVisible"
+  [modal]="true"
+  [draggable]="false"
+  [resizable]="false"
+  [style]="{ width: 'min(420px, 92vw)' }"
+>
+  <p class="delete-copy">
+    Excluir o núcleo
+    <strong>{{ nucleusPendingDelete?.nome }}</strong>
+    de código
+    <strong>{{ nucleusPendingDelete?.codigo }}</strong
+    >?
+  </p>
+
+  <ng-template #footer>
+    <div class="dialog-actions">
+      <p-button
+        label="Cancelar"
+        severity="secondary"
+        [text]="true"
+        (onClick)="isDeleteDialogVisible = false"
+      />
+      <p-button label="Excluir" severity="danger" icon="pi pi-trash" (onClick)="confirmDelete()" />
+    </div>
+  </ng-template>
+</p-dialog>
