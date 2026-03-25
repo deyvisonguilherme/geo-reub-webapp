@@ -162,7 +162,9 @@
 
 .table-row {
   cursor: pointer;
-  transition: background-color 0.18s ease, transform 0.18s ease;
+  transition:
+    background-color 0.18s ease,
+    transform 0.18s ease;
 }
 
 .table-row:hover {

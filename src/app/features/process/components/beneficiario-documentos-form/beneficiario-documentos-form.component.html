@@ -1,0 +1,87 @@
+<section class="section-card">
+  <div class="section-header">
+    <div>
+      <h2 class="section-title">Documentos dos Beneficiários</h2>
+      <p class="section-subtitle">
+        Cadastro complementar dos arquivos vinculados aos beneficiários com validação e
+        possibilidade de exclusão.
+      </p>
+    </div>
+  </div>
+
+  <div class="form-grid">
+    <div class="form-field">
+      <label>Beneficiário</label>
+      <select [(ngModel)]="draft.beneficiarioId">
+        <option value="">Selecione</option>
+        @for (beneficiario of beneficiarios; track beneficiario.id) {
+          <option [value]="beneficiario.id">{{ beneficiario.nomeCompleto }}</option>
+        }
+      </select>
+    </div>
+    <div class="form-field">
+      <label>Tipo documento</label>
+      <input [(ngModel)]="draft.tipoDocumento" />
+    </div>
+    <div class="form-field">
+      <label>Arquivo ID</label>
+      <input [(ngModel)]="draft.arquivoId" />
+    </div>
+    <div class="form-field">
+      <label>Data validação</label>
+      <input type="date" [(ngModel)]="draft.dataValidacao" />
+    </div>
+    <div class="form-field">
+      <label>Validado por</label>
+      <input [(ngModel)]="draft.validadoPor" />
+    </div>
+  </div>
+
+  <div class="checkbox-grid">
+    <label class="checkbox-field">
+      <input type="checkbox" [(ngModel)]="draft.validado" />
+      Documento validado
+    </label>
+  </div>
+
+  <div class="form-actions">
+    <button type="button" class="secondary-button" (click)="resetDraft()">Limpar</button>
+    <button type="button" class="primary-button" (click)="upsert()">Salvar documento</button>
+  </div>
+
+  <table class="list-table">
+    <thead>
+      <tr>
+        <th>Beneficiário</th>
+        <th>Documento</th>
+        <th>Arquivo</th>
+        <th>Validação</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      @if (localItems.length) {
+        @for (item of localItems; track item.id) {
+          <tr>
+            <td>{{ getBeneficiarioNome(item.beneficiarioId) }}</td>
+            <td>{{ item.tipoDocumento || '-' }}</td>
+            <td>{{ item.arquivoId || '-' }}</td>
+            <td>{{ item.validado ? 'Validado' : 'Pendente' }}</td>
+            <td>
+              <div class="row-actions">
+                <button type="button" class="secondary-button" (click)="edit(item)">Editar</button>
+                <button type="button" class="danger-button" (click)="remove(item.id)">
+                  Excluir
+                </button>
+              </div>
+            </td>
+          </tr>
+        }
+      } @else {
+        <tr>
+          <td colspan="5" class="text-muted">Nenhum documento cadastrado.</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</section>

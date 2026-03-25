@@ -1,0 +1,99 @@
+<section class="section-card">
+  <div class="section-header">
+    <div>
+      <h2 class="section-title">Emissão de CRF</h2>
+      <p class="section-subtitle">
+        Certidão administrativa final com anexos obrigatórios, modalidade e validação do fluxo
+        cartorial.
+      </p>
+    </div>
+  </div>
+
+  @if (modalidade === 'REURB-S') {
+    <div class="warning-box">
+      O primeiro registro e a abertura de matrícula devem permanecer marcados com isenção de
+      emolumentos.
+    </div>
+  }
+
+  @if (atoUnicoDisponivel) {
+    <div class="warning-box">
+      Fluxo de ato único disponível: o PRF e a listagem de ocupantes podem seguir juntos para
+      registro imediato da propriedade.
+    </div>
+  }
+
+  <div class="form-grid">
+    <div class="form-field">
+      <label>Número CRF</label>
+      <input [(ngModel)]="draft.numeroCrf" />
+    </div>
+    <div class="form-field">
+      <label>Modalidade</label>
+      <select [(ngModel)]="draft.modalidadeReurb">
+        <option value="">Selecione</option>
+        <option value="REURB-S">REURB-S</option>
+        <option value="REURB-E">REURB-E</option>
+      </select>
+    </div>
+    <div class="form-field">
+      <label>Área total m²</label>
+      <input type="number" [(ngModel)]="draft.areaTotalM2" />
+    </div>
+    <div class="form-field">
+      <label>Número beneficiários</label>
+      <input type="number" [(ngModel)]="draft.numeroBeneficiarios" />
+    </div>
+    <div class="form-field">
+      <label>Data emissão</label>
+      <input type="date" [(ngModel)]="draft.dataEmissao" />
+    </div>
+    <div class="form-field">
+      <label>Emitido por</label>
+      <input [(ngModel)]="draft.emitidoPor" />
+    </div>
+    <div class="form-field">
+      <label>Arquivo CRF ID</label>
+      <input [(ngModel)]="draft.arquivoCrfId" />
+    </div>
+    <div class="form-field">
+      <label>Arquivo memorial ID</label>
+      <input [(ngModel)]="draft.arquivoMemorialDescritivoId" />
+    </div>
+    <div class="form-field">
+      <label>Arquivo projeto urbanístico ID</label>
+      <input [(ngModel)]="draft.arquivoProjetoUrbanisticoId" />
+    </div>
+    <div class="form-field">
+      <label>Arquivo lista beneficiários ID</label>
+      <input [(ngModel)]="draft.arquivoListaBeneficiariosId" />
+    </div>
+    <div class="form-field">
+      <label>Arquivo planta ID</label>
+      <input [(ngModel)]="draft.arquivoPlantaId" />
+    </div>
+    <div class="form-field">
+      <label>Data cancelamento</label>
+      <input type="date" [(ngModel)]="draft.dataCancelamento" />
+    </div>
+    <div class="form-field field-span-full">
+      <label>Descrição núcleo</label>
+      <textarea [(ngModel)]="draft.descricaoNucleo"></textarea>
+    </div>
+    <div class="form-field field-span-full">
+      <label>Motivo cancelamento</label>
+      <textarea [(ngModel)]="draft.motivoCancelamento"></textarea>
+    </div>
+  </div>
+
+  <div class="checkbox-grid">
+    <label class="checkbox-field">
+      <input type="checkbox" [(ngModel)]="draft.valida" />
+      CRF válida
+    </label>
+  </div>
+
+  <div class="form-actions">
+    <button type="button" class="primary-button" (click)="submit()">Salvar etapa</button>
+  </div>
+</section>

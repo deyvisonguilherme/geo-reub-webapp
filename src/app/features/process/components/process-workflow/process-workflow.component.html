@@ -1,0 +1,179 @@
+@if (process(); as process) {
+  <div class="workflow-page">
+    <div class="workflow-header">
+      <div>
+        <a class="back-link" routerLink="/process"> <i class="pi pi-arrow-left"></i> Voltar </a>
+        <h1>{{ processTitle }}</h1>
+        <p>
+          Workflow operacional da REURB com etapas destacadas na timeline e formulários separados
+          para facilitar manutenção e evolução do fluxo.
+        </p>
+      </div>
+
+      <div class="header-actions">
+        <p-button
+          icon="pi pi-times"
+          severity="secondary"
+          [text]="true"
+          [rounded]="true"
+          routerLink="/process"
+        />
+        <p-button
+          icon="pi pi-trash"
+          severity="danger"
+          [text]="true"
+          [rounded]="true"
+          (click)="removeProcess()"
+        />
+      </div>
+    </div>
+
+    <div class="workflow-layout">
+      <aside class="timeline-panel">
+        <div class="timeline-card">
+          <span class="timeline-kicker">Timeline REURB</span>
+          <h2>Etapas para conclusão</h2>
+          <p class="timeline-intro">
+            Verde representa etapa concluída. Tons de cinza diferenciam os blocos ativos ainda
+            pendentes.
+          </p>
+
+          <div class="timeline-list">
+            @for (stage of stages(); track stage.id) {
+              <div class="timeline-stage" [class.completed]="stage.completed" [class]="stage.tone">
+                <div class="stage-header">
+                  <div class="stage-bullet"></div>
+                  <div>
+                    <h3>{{ stage.title }}</h3>
+                    <p>{{ stage.description }}</p>
+                  </div>
+                </div>
+
+                <div class="stage-links">
+                  @for (section of stage.sections; track section.key) {
+                    <button
+                      type="button"
+                      class="stage-link"
+                      [class.active]="activeSection === section.key"
+                      (click)="openSection(section.key)"
+                    >
+                      <span>{{ section.label }}</span>
+                      <small>{{ section.helper }}</small>
+                    </button>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      </aside>
+
+      <section class="content-panel">
+        <div class="summary-card">
+          <div class="summary-grid">
+            <div>
+              <span class="summary-label">Status</span>
+              <strong>{{ process.status }}</strong>
+            </div>
+            <div>
+              <span class="summary-label">Modalidade</span>
+              <strong>{{ process.modalidade || 'Não definida' }}</strong>
+            </div>
+            <div>
+              <span class="summary-label">Prazo admissibilidade</span>
+              <strong>{{ process.prazoAnaliseAdmissibilidade || 'Não informado' }}</strong>
+            </div>
+            <div>
+              <span class="summary-label">Prazo conclusão</span>
+              <strong>{{ process.prazoConclusaoEstimado || 'Não informado' }}</strong>
+            </div>
+          </div>
+        </div>
+
+        @switch (activeSection) {
+          @case ('abertura') {
+            <app-abertura-processo-form [model]="process" (save)="saveAbertura($event)" />
+          }
+          @case ('pesquisa') {
+            <app-pesquisa-dominialidade-form
+              [model]="process.pesquisaDominialidade"
+              (save)="savePesquisa($event)"
+            />
+          }
+          @case ('titulares') {
+            <app-titulares-confrontantes-form
+              [items]="process.titularesConfrontantes"
+              (save)="saveTitulares($event)"
+            />
+          }
+          @case ('estudo') {
+            <app-estudo-tecnico-form [model]="process.estudoTecnico" (save)="saveEstudo($event)" />
+          }
+          @case ('levantamentos') {
+            <app-levantamentos-topograficos-form
+              [items]="process.levantamentosTopograficos"
+              (save)="saveLevantamentos($event)"
+            />
+          }
+          @case ('projeto') {
+            <app-projeto-urbanistico-form
+              [model]="process.projetoUrbanistico"
+              [modalidade]="process.modalidade"
+              (save)="saveProjeto($event)"
+            />
+          }
+          @case ('obras') {
+            <app-obras-infraestrutura-form
+              [items]="process.obrasInfraestrutura"
+              (save)="saveObras($event)"
+            />
+          }
+          @case ('termos') {
+            <app-termos-compromisso-form
+              [items]="process.termosCompromisso"
+              (save)="saveTermos($event)"
+            />
+          }
+          @case ('beneficiarios') {
+            <app-cadastro-social-beneficiario-form
+              [items]="process.beneficiarios"
+              [modalidade]="process.modalidade"
+              (save)="saveBeneficiarios($event)"
+            />
+          }
+          @case ('documentos') {
+            <app-beneficiario-documentos-form
+              [beneficiarios]="process.beneficiarios"
+              [items]="process.beneficiarioDocumentos"
+              (save)="saveDocumentos($event)"
+            />
+          }
+          @case ('crf') {
+            <app-emissao-crf-form
+              [model]="process.certidaoCrf"
+              [modalidade]="process.modalidade"
+              [beneficiariosCount]="process.beneficiarios.length"
+              [atoUnicoDisponivel]="
+                process.modalidade === 'REURB-S' && !!process.projetoUrbanistico?.bemPublico
+              "
+              (save)="saveCrf($event)"
+            />
+          }
+          @case ('titulos') {
+            <app-registro-titulos-form
+              [beneficiarios]="process.beneficiarios"
+              [items]="process.registrosTitulos"
+              (save)="saveTitulos($event)"
+            />
+          }
+        }
+      </section>
+    </div>
+  </div>
+} @else {
+  <div class="missing-process">
+    <h1>Processo não encontrado</h1>
+    <p>O registro solicitado não existe mais na memória local da aplicação.</p>
+    <a routerLink="/process">Voltar para a listagem</a>
+  </div>
+}

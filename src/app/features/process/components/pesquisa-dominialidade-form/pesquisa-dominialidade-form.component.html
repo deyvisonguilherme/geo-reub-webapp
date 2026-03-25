@@ -1,0 +1,68 @@
+<section class="section-card">
+  <div class="section-header">
+    <div>
+      <h2 class="section-title">Pesquisa Dominialidade</h2>
+      <p class="section-subtitle">
+        Identificação de matrículas, cartório, titularidade e sobreposições da área ocupada.
+      </p>
+    </div>
+  </div>
+
+  <div class="form-grid">
+    <div class="form-field">
+      <label>Matrícula base</label>
+      <input [(ngModel)]="draft.matriculaBase" />
+    </div>
+    <div class="form-field">
+      <label>Cartório de registro</label>
+      <input [(ngModel)]="draft.cartorioRegistro" />
+    </div>
+    <div class="form-field">
+      <label>Elaborado por</label>
+      <input [(ngModel)]="draft.elaboradoPor" />
+    </div>
+    <div class="form-field">
+      <label>Data de elaboração</label>
+      <input type="date" [(ngModel)]="draft.dataElaboracao" />
+    </div>
+    <div class="form-field field-span-2">
+      <label>Arquivo planta sobreposição ID</label>
+      <input [(ngModel)]="draft.arquivoPlantaSobreposicaoId" />
+    </div>
+    <div class="form-field field-span-2">
+      <label>Arquivo certidão matrícula ID</label>
+      <input [(ngModel)]="draft.arquivoCertidaoMatriculaId" />
+    </div>
+    <div class="form-field field-span-full">
+      <label>Situação dominial</label>
+      <textarea [(ngModel)]="draft.situacaoDominial"></textarea>
+    </div>
+    <div class="form-field field-span-full">
+      <label>Descrição sobreposições</label>
+      <textarea [(ngModel)]="draft.descricaoSobreposicoes"></textarea>
+    </div>
+  </div>
+
+  <div class="checkbox-grid">
+    <label class="checkbox-field">
+      <input type="checkbox" [(ngModel)]="draft.proprietarioIdentificado" />
+      Proprietário identificado
+    </label>
+    <label class="checkbox-field">
+      <input type="checkbox" [(ngModel)]="draft.areaPublica" />
+      Área pública
+    </label>
+    <label class="checkbox-field">
+      <input type="checkbox" [(ngModel)]="draft.areaPrivada" />
+      Área privada
+    </label>
+    <label class="checkbox-field">
+      <input type="checkbox" [(ngModel)]="draft.possuiSobreposicao" />
+      Possui sobreposição
+    </label>
+  </div>
+
+  <div class="form-actions">
+    <button type="button" class="primary-button" (click)="submit()">Salvar etapa</button>
+  </div>
+</section>

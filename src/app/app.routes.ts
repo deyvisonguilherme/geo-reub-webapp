@@ -18,6 +18,13 @@ export const routes: Routes = [
           import('./features/process/process.component').then((m) => m.ProcessComponent),
       },
       {
+        path: 'process/:id',
+        loadComponent: () =>
+          import('./features/process/components/process-workflow/process-workflow.component').then(
+            (m) => m.ProcessWorkflowComponent,
+          ),
+      },
+      {
         path: 'beneficiaries',
         loadComponent: () =>
           import('./features/beneficiaries/beneficiaries.component').then(

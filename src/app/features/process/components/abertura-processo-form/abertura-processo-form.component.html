@@ -1,0 +1,83 @@
+<section class="section-card">
+  <div class="section-header">
+    <div>
+      <h2 class="section-title">Abertura de Processo</h2>
+      <p class="section-subtitle">
+        Requerimento inicial, classificação da modalidade e controle dos prazos de admissibilidade.
+      </p>
+    </div>
+    <span class="helper-badge">Prazo máximo de classificação: 6 meses</span>
+  </div>
+
+  <p class="section-note">
+    Na REURB-S o poder público assume custeio do projeto e infraestrutura. Na REURB-E o fluxo
+    exigirá contrato de custeio pelos beneficiários no projeto urbanístico.
+  </p>
+
+  <div class="form-grid">
+    <div class="form-field">
+      <label for="numeroProcesso">Número do processo</label>
+      <input id="numeroProcesso" [(ngModel)]="draft.numeroProcesso" />
+    </div>
+    <div class="form-field">
+      <label for="nucleoId">Núcleo ID</label>
+      <input id="nucleoId" [(ngModel)]="draft.nucleoId" />
+    </div>
+    <div class="form-field">
+      <label for="modalidade">Modalidade</label>
+      <select id="modalidade" [(ngModel)]="draft.modalidade">
+        <option value="">Selecione</option>
+        <option value="REURB-S">REURB-S</option>
+        <option value="REURB-E">REURB-E</option>
+      </select>
+    </div>
+    <div class="form-field">
+      <label for="status">Status</label>
+      <input id="status" [(ngModel)]="draft.status" />
+    </div>
+    <div class="form-field">
+      <label for="legitimado">Legitimado requerente ID</label>
+      <input id="legitimado" [(ngModel)]="draft.legitimadoRequerenteId" />
+    </div>
+    <div class="form-field">
+      <label for="tipoLegitimado">Tipo de legitimado</label>
+      <input id="tipoLegitimado" [(ngModel)]="draft.tipoLegitimado" />
+    </div>
+    <div class="form-field">
+      <label for="dataInstauracao">Data de instauração</label>
+      <input id="dataInstauracao" type="date" [(ngModel)]="draft.dataInstauracao" />
+    </div>
+    <div class="form-field">
+      <label for="prazoAnalise">Prazo admissibilidade</label>
+      <input id="prazoAnalise" type="date" [(ngModel)]="draft.prazoAnaliseAdmissibilidade" />
+    </div>
+    <div class="form-field">
+      <label for="prazoConclusao">Prazo conclusão estimado</label>
+      <input id="prazoConclusao" type="date" [(ngModel)]="draft.prazoConclusaoEstimado" />
+    </div>
+    <div class="form-field">
+      <label for="dataConclusao">Data de conclusão</label>
+      <input id="dataConclusao" type="date" [(ngModel)]="draft.dataConclusao" />
+    </div>
+    <div class="form-field field-span-2">
+      <label for="arquivoRequerimento">Arquivo do requerimento ID</label>
+      <input id="arquivoRequerimento" [(ngModel)]="draft.arquivoRequerimentoId" />
+    </div>
+    <div class="form-field">
+      <label for="criadoPor">Criado por</label>
+      <input id="criadoPor" [(ngModel)]="draft.criadoPor" />
+    </div>
+    <div class="form-field">
+      <label for="atualizadoPor">Atualizado por</label>
+      <input id="atualizadoPor" [(ngModel)]="draft.atualizadoPor" />
+    </div>
+    <div class="form-field field-span-full">
+      <label for="observacoes">Observações</label>
+      <textarea id="observacoes" [(ngModel)]="draft.observacoes"></textarea>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <p-button [text]="true" [rounded]="true" (click)="submit()" label="Salvar Etapa" />
+  </div>
+</section>
