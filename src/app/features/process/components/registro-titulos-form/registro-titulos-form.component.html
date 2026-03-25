@@ -1,0 +1,96 @@
+<section class="section-card">
+  <div class="section-header">
+    <div>
+      <h2 class="section-title">Registro de Títulos</h2>
+      <p class="section-subtitle">
+        Listagem registral com vínculo ao beneficiário, identificação do lote e métricas para a CRF
+        final.
+      </p>
+    </div>
+  </div>
+
+  <div class="form-grid">
+    <div class="form-field">
+      <label>Beneficiário</label>
+      <select [(ngModel)]="draft.beneficiarioId">
+        <option value="">Selecione</option>
+        @for (beneficiario of beneficiarios; track beneficiario.id) {
+          <option [value]="beneficiario.id">{{ beneficiario.nomeCompleto }}</option>
+        }
+      </select>
+    </div>
+    <div class="form-field">
+      <label>Número item</label>
+      <input type="number" [(ngModel)]="draft.numeroItem" />
+    </div>
+    <div class="form-field">
+      <label>Identificação lote</label>
+      <input [(ngModel)]="draft.identificacaoLote" />
+    </div>
+    <div class="form-field">
+      <label>Área lote m²</label>
+      <input type="number" [(ngModel)]="draft.areaLoteM2" />
+    </div>
+    <div class="form-field">
+      <label>Frente (m)</label>
+      <input type="number" [(ngModel)]="draft.frenteM" />
+    </div>
+    <div class="form-field">
+      <label>Fundos (m)</label>
+      <input type="number" [(ngModel)]="draft.fundosM" />
+    </div>
+    <div class="form-field">
+      <label>Lateral direita (m)</label>
+      <input type="number" [(ngModel)]="draft.lateralDireitaM" />
+    </div>
+    <div class="form-field">
+      <label>Lateral esquerda (m)</label>
+      <input type="number" [(ngModel)]="draft.lateralEsquerdaM" />
+    </div>
+    <div class="form-field field-span-full">
+      <label>Confrontações</label>
+      <textarea [(ngModel)]="draft.confrontacoes"></textarea>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <button type="button" class="secondary-button" (click)="resetDraft()">Limpar</button>
+    <button type="button" class="primary-button" (click)="upsert()">Salvar registro</button>
+  </div>
+
+  <table class="list-table">
+    <thead>
+      <tr>
+        <th>Item</th>
+        <th>Beneficiário</th>
+        <th>Lote</th>
+        <th>Área</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      @if (localItems.length) {
+        @for (item of localItems; track item.id) {
+          <tr>
+            <td>{{ item.numeroItem ?? '-' }}</td>
+            <td>{{ getBeneficiarioNome(item.beneficiarioId) }}</td>
+            <td>{{ item.identificacaoLote || '-' }}</td>
+            <td>{{ item.areaLoteM2 ?? '-' }}</td>
+            <td>
+              <div class="row-actions">
+                <button type="button" class="secondary-button" (click)="edit(item)">Editar</button>
+                <button type="button" class="danger-button" (click)="remove(item.id)">
+                  Excluir
+                </button>
+              </div>
+            </td>
+          </tr>
+        }
+      } @else {
+        <tr>
+          <td colspan="5" class="text-muted">Nenhum título registrado.</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</section>

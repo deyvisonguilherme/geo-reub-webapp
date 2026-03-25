@@ -1,0 +1,192 @@
+<section class="section-card">
+  <div class="section-header">
+    <div>
+      <h2 class="section-title">Cadastro Social do Beneficiário</h2>
+      <p class="section-subtitle">
+        Tela com formulário e listagem de beneficiários, incluindo soma de renda familiar mensal e
+        alerta de limite na REURB-S.
+      </p>
+    </div>
+    <span class="helper-badge"
+      >Total renda: {{ totalRenda | currency: 'BRL' : 'symbol' : '1.2-2' : 'pt-BR' }}</span
+    >
+  </div>
+
+  @if (modalidade === 'REURB-S' && totalRenda > limiteRendaReurbS) {
+    <div class="warning-box">
+      A soma da renda familiar mensal ultrapassa o limite de 5 salários mínimos considerado no fluxo
+      social da REURB-S.
+    </div>
+  }
+
+  <div class="form-grid">
+    <div class="form-field">
+      <label>Nome completo</label>
+      <input [(ngModel)]="draft.nomeCompleto" />
+    </div>
+    <div class="form-field">
+      <label>CPF</label>
+      <input [(ngModel)]="draft.cpf" />
+    </div>
+    <div class="form-field">
+      <label>RG</label>
+      <input [(ngModel)]="draft.rg" />
+    </div>
+    <div class="form-field">
+      <label>Órgão expedidor</label>
+      <input [(ngModel)]="draft.orgaoExpedidor" />
+    </div>
+    <div class="form-field">
+      <label>Data nascimento</label>
+      <input type="date" [(ngModel)]="draft.dataNascimento" />
+    </div>
+    <div class="form-field">
+      <label>Nacionalidade</label>
+      <input [(ngModel)]="draft.nacionalidade" />
+    </div>
+    <div class="form-field">
+      <label>Naturalidade</label>
+      <input [(ngModel)]="draft.naturalidade" />
+    </div>
+    <div class="form-field">
+      <label>Estado civil</label>
+      <input [(ngModel)]="draft.estadoCivil" />
+    </div>
+    <div class="form-field">
+      <label>Regime casamento</label>
+      <input [(ngModel)]="draft.regimeCasamento" />
+    </div>
+    <div class="form-field">
+      <label>Nome cônjuge</label>
+      <input [(ngModel)]="draft.nomeConjuge" />
+    </div>
+    <div class="form-field">
+      <label>CPF cônjuge</label>
+      <input [(ngModel)]="draft.cpfConjuge" />
+    </div>
+    <div class="form-field">
+      <label>Telefone</label>
+      <input [(ngModel)]="draft.telefone" />
+    </div>
+    <div class="form-field">
+      <label>E-mail</label>
+      <input [(ngModel)]="draft.email" />
+    </div>
+    <div class="form-field">
+      <label>Logradouro</label>
+      <input [(ngModel)]="draft.logradouro" />
+    </div>
+    <div class="form-field">
+      <label>Número lote</label>
+      <input [(ngModel)]="draft.numeroLote" />
+    </div>
+    <div class="form-field">
+      <label>Quadra</label>
+      <input [(ngModel)]="draft.quadra" />
+    </div>
+    <div class="form-field">
+      <label>Complemento</label>
+      <input [(ngModel)]="draft.complemento" />
+    </div>
+    <div class="form-field">
+      <label>Área ocupada m²</label>
+      <input type="number" [(ngModel)]="draft.areaOcupadaM2" />
+    </div>
+    <div class="form-field">
+      <label>Coordenadas lote</label>
+      <input [(ngModel)]="draft.coordenadasLote" />
+    </div>
+    <div class="form-field">
+      <label>Renda familiar mensal</label>
+      <input type="number" [(ngModel)]="draft.rendaFamiliarMensal" />
+    </div>
+    <div class="form-field">
+      <label>Número dependentes</label>
+      <input type="number" [(ngModel)]="draft.numeroDependentes" />
+    </div>
+    <div class="form-field">
+      <label>Tempo ocupação anos</label>
+      <input type="number" [(ngModel)]="draft.tempoOcupacaoAnos" />
+    </div>
+    <div class="form-field">
+      <label>Data ocupação inicial</label>
+      <input type="date" [(ngModel)]="draft.dataOcupacaoInicial" />
+    </div>
+    <div class="form-field">
+      <label>Direito real conferido</label>
+      <input [(ngModel)]="draft.direitoRealConferido" />
+    </div>
+    <div class="form-field">
+      <label>Nome do pai</label>
+      <input [(ngModel)]="draft.nomePai" />
+    </div>
+    <div class="form-field">
+      <label>Nome da mãe</label>
+      <input [(ngModel)]="draft.nomeMae" />
+    </div>
+    <div class="form-field field-span-full">
+      <label>Observações</label>
+      <textarea [(ngModel)]="draft.observacoes"></textarea>
+    </div>
+  </div>
+
+  <div class="checkbox-grid">
+    <label class="checkbox-field"
+      ><input type="checkbox" [(ngModel)]="draft.rendaFamiliarAte5Sm" /> Renda até 5 SM</label
+    >
+    <label class="checkbox-field"><input type="checkbox" [(ngModel)]="draft.idoso" /> Idoso</label>
+    <label class="checkbox-field"
+      ><input type="checkbox" [(ngModel)]="draft.deficiente" /> Deficiente</label
+    >
+    <label class="checkbox-field"
+      ><input type="checkbox" [(ngModel)]="draft.mulherChefeFamilia" /> Mulher chefe família</label
+    >
+    <label class="checkbox-field"
+      ><input type="checkbox" [(ngModel)]="draft.possuiDocumentacaoCompleta" /> Documentação
+      completa</label
+    >
+  </div>
+
+  <div class="form-actions">
+    <button type="button" class="secondary-button" (click)="resetDraft()">Limpar</button>
+    <button type="button" class="primary-button" (click)="upsert()">Salvar beneficiário</button>
+  </div>
+
+  <table class="list-table">
+    <thead>
+      <tr>
+        <th>Beneficiário</th>
+        <th>Lote</th>
+        <th>Renda</th>
+        <th>Direito</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      @if (localItems.length) {
+        @for (item of localItems; track item.id) {
+          <tr>
+            <td>{{ item.nomeCompleto || '-' }}</td>
+            <td>{{ item.quadra || '-' }}/{{ item.numeroLote || '-' }}</td>
+            <td>
+              {{ item.rendaFamiliarMensal ?? 0 | currency: 'BRL' : 'symbol' : '1.2-2' : 'pt-BR' }}
+            </td>
+            <td>{{ item.direitoRealConferido || '-' }}</td>
+            <td>
+              <div class="row-actions">
+                <button type="button" class="secondary-button" (click)="edit(item)">Editar</button>
+                <button type="button" class="danger-button" (click)="remove(item.id)">
+                  Excluir
+                </button>
+              </div>
+            </td>
+          </tr>
+        }
+      } @else {
+        <tr>
+          <td colspan="5" class="text-muted">Nenhum beneficiário cadastrado.</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</section>

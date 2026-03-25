@@ -1,0 +1,152 @@
+<div class="dashboard">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Dashboard</h1>
+      <p class="page-subtitle">Visão geral dos processos de regularização fundiária</p>
+    </div>
+    <div class="page-header-actions">
+      <p-button
+        label="Exportar"
+        icon="pi pi-download"
+        severity="secondary"
+        styleClass="dashboard-action dashboard-action-secondary"
+      />
+      <p-button
+        label="Novo processo"
+        icon="pi pi-plus"
+        styleClass="dashboard-action dashboard-action-primary"
+      />
+    </div>
+  </div>
+
+  <div class="kpi-grid">
+    @for (kpi of kpis; track kpi.label) {
+      <p-card styleClass="kpi-card">
+        <ng-template #content>
+          <div class="kpi-header">
+            <span class="kpi-label">{{ kpi.label }}</span>
+            <div class="kpi-icon" [ngClass]="kpi.color">
+              <i [class]="'pi ' + kpi.icon"></i>
+            </div>
+          </div>
+          <div class="kpi-value">{{ kpi.value }}</div>
+          <p-tag
+            [severity]="kpi.severity"
+            [rounded]="true"
+            [icon]="kpi.deltaUp ? 'pi pi-arrow-up' : 'pi pi-arrow-down'"
+            [value]="kpi.delta"
+            styleClass="kpi-delta-tag"
+          />
+        </ng-template>
+      </p-card>
+    }
+  </div>
+
+  <div class="mid-grid">
+    <p-card styleClass="dashboard-card">
+      <ng-template #header>
+        <div class="card-header">
+          <span class="card-title">Processos recentes</span>
+          <a routerLink="/processos" class="card-link">Ver todos <i class="pi pi-arrow-right"></i></a>
+        </div>
+      </ng-template>
+      <div class="table-wrapper">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Processo</th>
+              <th>Núcleo urbano</th>
+              <th>Etapa</th>
+              <th>Prazo</th>
+              <th>Prioridade</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (p of processos; track p.id) {
+              <tr>
+                <td>
+                  <span class="proc-id">{{ p.id }}</span>
+                </td>
+                <td>{{ p.nucleo }}</td>
+                <td>
+                  <p-tag [value]="p.etapa" [severity]="p.etapaSeverity" styleClass="stage-tag" />
+                </td>
+                <td>{{ p.prazo }}</td>
+                <td>
+                  <p-tag [value]="p.prioridade" [severity]="p.prioridadeSeverity" styleClass="priority-tag" />
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </p-card>
+
+    <p-card styleClass="dashboard-card process-flow-card">
+      <ng-template #header>
+        <div class="card-header">
+          <span class="card-title">Fluxo do processo</span>
+          <span class="card-subtitle">Processo RU-2025-0482</span>
+        </div>
+      </ng-template>
+      <p-timeline [value]="etapas" align="left" styleClass="process-timeline">
+        <ng-template pTemplate="marker" let-e>
+          <div class="etapa-num" [ngClass]="e.status">
+            @if (e.status === 'done') {
+              <i class="pi pi-check"></i>
+            } @else {
+              <span>{{ e.num }}</span>
+            }
+          </div>
+        </ng-template>
+        <ng-template pTemplate="content" let-e>
+          <div class="etapa-body">
+            <div class="etapa-topline">
+              <div class="etapa-copy">
+                <span class="etapa-name">{{ e.name }}</span>
+                <span class="etapa-sub">{{ e.sub }}</span>
+              </div>
+              <p-tag [value]="e.statusLabel" [severity]="e.severity" styleClass="etapa-badge" />
+            </div>
+          </div>
+        </ng-template>
+      </p-timeline>
+    </p-card>
+  </div>
+
+  <p-card styleClass="dashboard-card alerts-card">
+    <ng-template #header>
+      <div class="card-header">
+        <span class="card-title">Pendências críticas</span>
+        <p-tag [value]="alertas.length + ' pendências'" severity="danger" [rounded]="true" />
+      </div>
+    </ng-template>
+    <div class="alerts-grid">
+      @for (a of alertas; track a.title) {
+        <div class="alert-item">
+          <p-message [severity]="a.severity" styleClass="alert-message">
+            <ng-template pTemplate>
+              <div class="alert-content">
+                <div class="alert-main">
+                  <div class="alert-icon" [ngClass]="a.type">
+                    <i [class]="'pi ' + a.icon"></i>
+                  </div>
+                  <div class="alert-text">
+                    <span class="alert-title">{{ a.title }}</span>
+                    <span class="alert-desc">{{ a.desc }}</span>
+                  </div>
+                </div>
+                <p-button
+                  label="Analisar"
+                  severity="secondary"
+                  size="small"
+                  styleClass="dashboard-action dashboard-action-secondary compact"
+                />
+              </div>
+            </ng-template>
+          </p-message>
+        </div>
+      }
+    </div>
+  </p-card>
+</div>

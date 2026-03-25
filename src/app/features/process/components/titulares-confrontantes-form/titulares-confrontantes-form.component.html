@@ -1,0 +1,129 @@
+<section class="section-card">
+  <div class="section-header">
+    <div>
+      <h2 class="section-title">Titulares Confrontantes</h2>
+      <p class="section-subtitle">
+        Listagem com ações para adicionar, editar e excluir confrontantes vinculados à pesquisa
+        dominial.
+      </p>
+    </div>
+    <span class="helper-badge">{{ draft.id ? 'Editando titular' : 'Novo titular' }}</span>
+  </div>
+
+  <div class="form-grid">
+    <div class="form-field">
+      <label>Tipo</label>
+      <input [(ngModel)]="draft.tipo" />
+    </div>
+    <div class="form-field">
+      <label>Nome completo</label>
+      <input [(ngModel)]="draft.nomeCompleto" />
+    </div>
+    <div class="form-field">
+      <label>CPF/CNPJ</label>
+      <input [(ngModel)]="draft.cpfCnpj" />
+    </div>
+    <div class="form-field">
+      <label>Forma notificação</label>
+      <input [(ngModel)]="draft.formaNotificacao" />
+    </div>
+    <div class="form-field">
+      <label>Logradouro</label>
+      <input [(ngModel)]="draft.logradouro" />
+    </div>
+    <div class="form-field">
+      <label>Número</label>
+      <input [(ngModel)]="draft.numero" />
+    </div>
+    <div class="form-field">
+      <label>Bairro</label>
+      <input [(ngModel)]="draft.bairro" />
+    </div>
+    <div class="form-field">
+      <label>Cidade</label>
+      <input [(ngModel)]="draft.cidade" />
+    </div>
+    <div class="form-field">
+      <label>UF</label>
+      <input [(ngModel)]="draft.uf" maxlength="2" />
+    </div>
+    <div class="form-field">
+      <label>CEP</label>
+      <input [(ngModel)]="draft.cep" />
+    </div>
+    <div class="form-field">
+      <label>Data notificação</label>
+      <input type="date" [(ngModel)]="draft.dataNotificacao" />
+    </div>
+    <div class="form-field">
+      <label>Data impugnação</label>
+      <input type="date" [(ngModel)]="draft.dataImpugnacao" />
+    </div>
+    <div class="form-field field-span-2">
+      <label>Arquivo impugnação ID</label>
+      <input [(ngModel)]="draft.arquivoImpugnacaoId" />
+    </div>
+    <div class="form-field field-span-full">
+      <label>Resultado impugnação</label>
+      <textarea [(ngModel)]="draft.resultadoImpugnacao"></textarea>
+    </div>
+  </div>
+
+  <div class="checkbox-grid">
+    <label class="checkbox-field">
+      <input type="checkbox" [(ngModel)]="draft.identificado" />
+      Identificado
+    </label>
+    <label class="checkbox-field">
+      <input type="checkbox" [(ngModel)]="draft.notificado" />
+      Notificado
+    </label>
+    <label class="checkbox-field">
+      <input type="checkbox" [(ngModel)]="draft.impugnou" />
+      Impugnou
+    </label>
+  </div>
+
+  <div class="form-actions">
+    <button type="button" class="secondary-button" (click)="resetDraft()">Limpar</button>
+    <button type="button" class="primary-button" (click)="upsert()">Salvar titular</button>
+  </div>
+
+  <table class="list-table">
+    <thead>
+      <tr>
+        <th>Tipo</th>
+        <th>Nome</th>
+        <th>CPF/CNPJ</th>
+        <th>Notificação</th>
+        <th>Impugnação</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      @if (localItems.length) {
+        @for (item of localItems; track item.id) {
+          <tr>
+            <td>{{ item.tipo || '-' }}</td>
+            <td>{{ item.nomeCompleto || '-' }}</td>
+            <td>{{ item.cpfCnpj || '-' }}</td>
+            <td>{{ item.notificado ? item.formaNotificacao || 'Sim' : 'Não' }}</td>
+            <td>{{ item.impugnou ? 'Com impugnação' : 'Sem impugnação' }}</td>
+            <td>
+              <div class="row-actions">
+                <button type="button" class="secondary-button" (click)="edit(item)">Editar</button>
+                <button type="button" class="danger-button" (click)="remove(item.id)">
+                  Excluir
+                </button>
+              </div>
+            </td>
+          </tr>
+        }
+      } @else {
+        <tr>
+          <td colspan="6" class="text-muted">Nenhum titular confrontante cadastrado.</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</section>

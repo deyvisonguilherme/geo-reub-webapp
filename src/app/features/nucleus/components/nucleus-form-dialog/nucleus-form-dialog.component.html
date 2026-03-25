@@ -1,0 +1,154 @@
+<p-dialog
+  [header]="title"
+  [visible]="visible"
+  (visibleChange)="visibleChange.emit($event)"
+  [modal]="true"
+  [draggable]="false"
+  [resizable]="false"
+  [style]="{ width: 'min(1080px, 96vw)' }"
+  styleClass="nucleus-dialog"
+>
+  <div class="dialog-grid">
+    <div class="form-block">
+      <span class="form-block-title">Identificação</span>
+
+      <div class="field-grid two-columns">
+        <div class="field">
+          <label for="codigo">Código</label>
+          <input id="codigo" type="text" pInputText [(ngModel)]="model.codigo" />
+        </div>
+
+        <div class="field">
+          <label for="nome">Nome</label>
+          <input id="nome" type="text" pInputText [(ngModel)]="model.nome" />
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="descricao">Descrição</label>
+        <textarea id="descricao" pTextarea rows="4" [(ngModel)]="model.descricao"></textarea>
+      </div>
+    </div>
+
+    <div class="form-block">
+      <span class="form-block-title">Caracterização</span>
+
+      <div class="field-grid two-columns">
+        <div class="field">
+          <label for="situacaoGeografica">Situação geográfica</label>
+          <select id="situacaoGeografica" [(ngModel)]="model.situacaoGeografica">
+            <option value="">Selecione</option>
+            @for (option of situacaoOptions; track option.value) {
+              <option [value]="option.value">{{ option.label }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="field checkbox-field">
+          <label for="consolidado">Consolidado</label>
+          <div class="checkbox-wrapper">
+            <p-checkbox inputId="consolidado" [binary]="true" [(ngModel)]="model.consolidado" />
+            <span>{{ model.consolidado ? 'Sim' : 'Não' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="field-grid three-columns">
+        <div class="field">
+          <label for="areaTotalM2">Área total (m²)</label>
+          <p-inputnumber
+            inputId="areaTotalM2"
+            [(ngModel)]="model.areaTotalM2"
+            mode="decimal"
+            [minFractionDigits]="2"
+            [maxFractionDigits]="2"
+          />
+        </div>
+
+        <div class="field">
+          <label for="perimetroM">Perímetro (m)</label>
+          <p-inputnumber
+            inputId="perimetroM"
+            [(ngModel)]="model.perimetroM"
+            mode="decimal"
+            [minFractionDigits]="2"
+            [maxFractionDigits]="2"
+          />
+        </div>
+
+        <div class="field">
+          <label for="numeroFamiliasEstimado">Famílias estimadas</label>
+          <p-inputnumber
+            inputId="numeroFamiliasEstimado"
+            [(ngModel)]="model.numeroFamiliasEstimado"
+            [useGrouping]="false"
+          />
+        </div>
+      </div>
+
+      <div class="field-grid two-columns">
+        <div class="field">
+          <label for="dataOcupacaoInicial">Data de ocupação inicial</label>
+          <p-datepicker
+            inputId="dataOcupacaoInicial"
+            [(ngModel)]="model.dataOcupacaoInicial"
+            dateFormat="dd/mm/yy"
+            appendTo="body"
+          />
+        </div>
+
+        <div class="field">
+          <label for="municipioId">Município ID</label>
+          <input id="municipioId" type="text" pInputText [(ngModel)]="model.municipioId" />
+        </div>
+      </div>
+    </div>
+
+    <div class="form-block">
+      <span class="form-block-title">Georreferenciamento</span>
+
+      <div class="field">
+        <label for="poligonalGeorreferenciada">Poligonal georreferenciada</label>
+        <textarea
+          id="poligonalGeorreferenciada"
+          pTextarea
+          rows="4"
+          [(ngModel)]="model.poligonalGeorreferenciada"
+        ></textarea>
+      </div>
+
+      <div class="field">
+        <label for="centroide">Centroide</label>
+        <textarea id="centroide" pTextarea rows="2" [(ngModel)]="model.centroide"></textarea>
+      </div>
+    </div>
+
+    <div class="form-block">
+      <span class="form-block-title">Auditoria</span>
+
+      <div class="field-grid two-columns">
+        <div class="field">
+          <label for="criadoPor">Criado por</label>
+          <input id="criadoPor" type="text" pInputText [(ngModel)]="model.criadoPor" />
+        </div>
+
+        <div class="field">
+          <label for="atualizadoPor">Atualizado por</label>
+          <input id="atualizadoPor" type="text" pInputText [(ngModel)]="model.atualizadoPor" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #footer>
+    <div class="dialog-actions">
+      <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="close()" />
+      <p-button
+        label="Salvar"
+        icon="pi pi-check"
+        [disabled]="saveDisabled"
+        (onClick)="submit()"
+      />
+    </div>
+  </ng-template>
+</p-dialog>
