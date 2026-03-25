@@ -1,0 +1,141 @@
+<div class="process-page">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Processos REURB</h1>
+      <p class="page-subtitle">
+        Listagem dos registros de `processos_reurb` com acesso direto ao workflow de execução,
+        edição e exclusão.
+      </p>
+    </div>
+
+    <p-button
+      type="button"
+      (click)="createProcess()"
+      icon="pi pi-plus"
+      label="Criar novo processo"
+    />
+  </div>
+
+  <section class="process-card table-card">
+    <div class="table-toolbar">
+      <div class="toolbar-summary">
+        <span class="toolbar-label">Itens {{ filteredProcesses.length }}</span>
+      </div>
+
+      <div class="toolbar-search">
+        <input
+          type="text"
+          [ngModel]="searchTerm"
+          (ngModelChange)="onSearchTermChange($event)"
+          placeholder="Número, núcleo, modalidade, legitimado..."
+        />
+      </div>
+
+      <div class="toolbar-select">
+        <label for="rows">Linhas</label>
+        <select id="rows" [ngModel]="rows" (ngModelChange)="onRowsChange($event)">
+          @for (option of rowSizeOptions; track option) {
+            <option [ngValue]="option">{{ option }}</option>
+          }
+        </select>
+      </div>
+    </div>
+
+    <div class="native-table-wrapper">
+      <table class="native-table">
+        <thead>
+          <tr>
+            <th>Número</th>
+            <th>Núcleo</th>
+            <th>Modalidade</th>
+            <th>Status</th>
+            <th>Instauração</th>
+            <th>Progresso</th>
+            <th class="actions-column">Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          @if (paginatedProcesses.length) {
+            @for (process of paginatedProcesses; track process.id) {
+              <tr>
+                <td>
+                  <strong>{{ process.numeroProcesso || 'Novo processo' }}</strong>
+                </td>
+                <td>{{ process.nucleoId || 'Não informado' }}</td>
+                <td>{{ process.modalidade || 'Não definida' }}</td>
+                <td>{{ process.status }}</td>
+                <td>{{ process.dataInstauracao || 'Não informada' }}</td>
+                <td>
+                  <span class="progress-pill">{{ getCompletionLabel(process) }}</span>
+                </td>
+                <td class="actions-column">
+                  <div class="row-actions">
+                    <p-button
+                      icon="pi pi-pencil"
+                      severity="secondary"
+                      [text]="true"
+                      [rounded]="true"
+                      (click)="editProcess(process)"
+                    />
+                    <p-button
+                      icon="pi pi-trash"
+                      severity="danger"
+                      [text]="true"
+                      [rounded]="true"
+                      (click)="deleteProcess(process)"
+                    />
+                  </div>
+                </td>
+              </tr>
+            }
+          } @else {
+            <tr>
+              <td colspan="7">
+                <div class="empty-state">
+                  <span>Nenhum processo REURB cadastrado.</span>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <div class="pagination-bar">
+      <span class="pagination-report">
+        Exibindo {{ pageStart }} a {{ pageEnd }} de {{ filteredProcesses.length }} processos
+      </span>
+
+      <div class="pagination-actions">
+        <button
+          type="button"
+          class="page-button"
+          [disabled]="currentPage === 1"
+          (click)="goToPage(currentPage - 1)"
+        >
+          Anterior
+        </button>
+
+        @for (page of pageNumbers; track page) {
+          <button
+            type="button"
+            class="page-button"
+            [class.active]="page === currentPage"
+            (click)="goToPage(page)"
+          >
+            {{ page }}
+          </button>
+        }
+
+        <button
+          type="button"
+          class="page-button"
+          [disabled]="currentPage === totalPages"
+          (click)="goToPage(currentPage + 1)"
+        >
+          Próxima
+        </button>
+      </div>
+    </div>
+  </section>
+</div>

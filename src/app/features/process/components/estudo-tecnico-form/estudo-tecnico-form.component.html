@@ -1,0 +1,72 @@
+<section class="section-card">
+  <div class="section-header">
+    <div>
+      <h2 class="section-title">Estudo Técnico Preliminar</h2>
+      <p class="section-subtitle">
+        Levantamentos técnicos, risco, remoções necessárias e aprovação preliminar.
+      </p>
+    </div>
+  </div>
+
+  <div class="form-grid">
+    <div class="form-field">
+      <label>Tipo de estudo</label>
+      <input [(ngModel)]="draft.tipoEstudo" />
+    </div>
+    <div class="form-field">
+      <label>Título</label>
+      <input [(ngModel)]="draft.titulo" />
+    </div>
+    <div class="form-field">
+      <label>Nível de risco</label>
+      <input [(ngModel)]="draft.nivelRisco" />
+    </div>
+    <div class="form-field">
+      <label>Famílias afetadas</label>
+      <input type="number" [(ngModel)]="draft.familiasAfetadas" />
+    </div>
+    <div class="form-field">
+      <label>Responsável técnico</label>
+      <input [(ngModel)]="draft.responsavelTecnico" />
+    </div>
+    <div class="form-field">
+      <label>Registro profissional</label>
+      <input [(ngModel)]="draft.registroProfissional" />
+    </div>
+    <div class="form-field">
+      <label>Arquivo estudo ID</label>
+      <input [(ngModel)]="draft.arquivoEstudoId" />
+    </div>
+    <div class="form-field">
+      <label>Data elaboração</label>
+      <input type="date" [(ngModel)]="draft.dataElaboracao" />
+    </div>
+    <div class="form-field">
+      <label>Data aprovação</label>
+      <input type="date" [(ngModel)]="draft.dataAprovacao" />
+    </div>
+    <div class="form-field field-span-full">
+      <label>Resumo executivo</label>
+      <textarea [(ngModel)]="draft.resumoExecutivo"></textarea>
+    </div>
+    <div class="form-field field-span-full">
+      <label>Conclusões</label>
+      <textarea [(ngModel)]="draft.conclusoes"></textarea>
+    </div>
+    <div class="form-field field-span-full">
+      <label>Recomendações</label>
+      <textarea [(ngModel)]="draft.recomendacoes"></textarea>
+    </div>
+  </div>
+
+  <div class="checkbox-grid">
+    <label class="checkbox-field">
+      <input type="checkbox" [(ngModel)]="draft.necessitaRemocao" />
+      Necessita remoção
+    </label>
+  </div>
+
+  <div class="form-actions">
+    <button type="button" class="primary-button" (click)="submit()">Salvar etapa</button>
+  </div>
+</section>

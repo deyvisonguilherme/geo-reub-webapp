@@ -1,0 +1,98 @@
+<section class="section-card">
+  <div class="section-header">
+    <div>
+      <h2 class="section-title">Termos de Compromisso</h2>
+      <p class="section-subtitle">
+        Tabela operacional para termos vinculados ao projeto urbanístico, com cronograma e
+        obrigações.
+      </p>
+    </div>
+  </div>
+
+  <div class="form-grid">
+    <div class="form-field">
+      <label>Número termo</label>
+      <input [(ngModel)]="draft.numeroTermo" />
+    </div>
+    <div class="form-field">
+      <label>Compromissário</label>
+      <input [(ngModel)]="draft.compromissario" />
+    </div>
+    <div class="form-field">
+      <label>Arquivo termo ID</label>
+      <input [(ngModel)]="draft.arquivoTermoId" />
+    </div>
+    <div class="form-field">
+      <label>Data assinatura</label>
+      <input type="date" [(ngModel)]="draft.dataAssinatura" />
+    </div>
+    <div class="form-field">
+      <label>Vigência início</label>
+      <input type="date" [(ngModel)]="draft.vigenciaInicio" />
+    </div>
+    <div class="form-field">
+      <label>Vigência fim</label>
+      <input type="date" [(ngModel)]="draft.vigenciaFim" />
+    </div>
+    <div class="form-field field-span-full">
+      <label>Descrição</label>
+      <textarea [(ngModel)]="draft.descricao"></textarea>
+    </div>
+    <div class="form-field field-span-full">
+      <label>Obrigações (json/texto)</label>
+      <textarea [(ngModel)]="draft.obrigacoes"></textarea>
+    </div>
+    <div class="form-field field-span-full">
+      <label>Cronograma (json/texto)</label>
+      <textarea [(ngModel)]="draft.cronograma"></textarea>
+    </div>
+  </div>
+
+  <div class="checkbox-grid">
+    <label class="checkbox-field">
+      <input type="checkbox" [(ngModel)]="draft.assinado" />
+      Assinado
+    </label>
+  </div>
+
+  <div class="form-actions">
+    <button type="button" class="secondary-button" (click)="resetDraft()">Limpar</button>
+    <button type="button" class="primary-button" (click)="upsert()">Salvar termo</button>
+  </div>
+
+  <table class="list-table">
+    <thead>
+      <tr>
+        <th>Termo</th>
+        <th>Compromissário</th>
+        <th>Assinado</th>
+        <th>Vigência</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      @if (localItems.length) {
+        @for (item of localItems; track item.id) {
+          <tr>
+            <td>{{ item.numeroTermo || '-' }}</td>
+            <td>{{ item.compromissario || '-' }}</td>
+            <td>{{ item.assinado ? 'Sim' : 'Não' }}</td>
+            <td>{{ item.vigenciaInicio || '-' }} a {{ item.vigenciaFim || '-' }}</td>
+            <td>
+              <div class="row-actions">
+                <button type="button" class="secondary-button" (click)="edit(item)">Editar</button>
+                <button type="button" class="danger-button" (click)="remove(item.id)">
+                  Excluir
+                </button>
+              </div>
+            </td>
+          </tr>
+        }
+      } @else {
+        <tr>
+          <td colspan="5" class="text-muted">Nenhum termo cadastrado.</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</section>

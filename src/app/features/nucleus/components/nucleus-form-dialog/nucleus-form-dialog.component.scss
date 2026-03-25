@@ -1,0 +1,93 @@
+:host {
+  display: contents;
+}
+
+.dialog-grid {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.form-block {
+  display: grid;
+  gap: 1rem;
+  padding: 1rem;
+  border: 1px solid #e3ebf4;
+  border-radius: 1rem;
+  background: #fbfdff;
+}
+
+.form-block-title {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #5f7896;
+}
+
+.field-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.two-columns {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.three-columns {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.field {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.field label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #34506c;
+}
+
+.field select {
+  min-height: 2.75rem;
+  width: 100%;
+  border: 1px solid #cfdceb;
+  border-radius: 0.85rem;
+  padding: 0.65rem 0.85rem;
+  background: #fff;
+  color: #16324f;
+}
+
+.checkbox-field {
+  align-content: start;
+}
+
+.checkbox-wrapper {
+  min-height: 2.75rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: #16324f;
+  font-weight: 600;
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+:host ::ng-deep .p-inputtext,
+:host ::ng-deep .p-inputnumber,
+:host ::ng-deep .p-datepicker,
+:host ::ng-deep textarea.p-textarea {
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .two-columns,
+  .three-columns {
+    grid-template-columns: 1fr;
+  }
+}

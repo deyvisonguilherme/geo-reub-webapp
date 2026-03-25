@@ -1,0 +1,113 @@
+<section class="section-card">
+  <div class="section-header">
+    <div>
+      <h2 class="section-title">Obras Infraestrutura</h2>
+      <p class="section-subtitle">
+        Listagem das obras com custo estimado, prazo e classificação essencial, mitigadora ou
+        compensatória.
+      </p>
+    </div>
+  </div>
+
+  <div class="form-grid">
+    <div class="form-field">
+      <label>Tipo de obra</label>
+      <input [(ngModel)]="draft.tipoObra" />
+    </div>
+    <div class="form-field">
+      <label>Unidade medida</label>
+      <input [(ngModel)]="draft.unidadeMedida" />
+    </div>
+    <div class="form-field">
+      <label>Quantidade</label>
+      <input type="number" [(ngModel)]="draft.quantidade" />
+    </div>
+    <div class="form-field">
+      <label>Custo estimado</label>
+      <input type="number" [(ngModel)]="draft.custoEstimado" />
+    </div>
+    <div class="form-field">
+      <label>Prazo execução (meses)</label>
+      <input type="number" [(ngModel)]="draft.prazoExecucaoMeses" />
+    </div>
+    <div class="form-field">
+      <label>Início previsto</label>
+      <input type="date" [(ngModel)]="draft.dataPrevistaInicio" />
+    </div>
+    <div class="form-field">
+      <label>Conclusão prevista</label>
+      <input type="date" [(ngModel)]="draft.dataPrevistaConclusao" />
+    </div>
+    <div class="form-field field-span-full">
+      <label>Descrição</label>
+      <textarea [(ngModel)]="draft.descricao"></textarea>
+    </div>
+    <div class="form-field field-span-full">
+      <label>Especificações técnicas</label>
+      <textarea [(ngModel)]="draft.especificacoesTecnicas"></textarea>
+    </div>
+  </div>
+
+  <div class="checkbox-grid">
+    <label class="checkbox-field"
+      ><input type="checkbox" [(ngModel)]="draft.obraEssencial" /> Obra essencial</label
+    >
+    <label class="checkbox-field"
+      ><input type="checkbox" [(ngModel)]="draft.obraMitigacao" /> Obra mitigação</label
+    >
+    <label class="checkbox-field"
+      ><input type="checkbox" [(ngModel)]="draft.obraCompensacao" /> Obra compensação</label
+    >
+  </div>
+
+  <div class="form-actions">
+    <button type="button" class="secondary-button" (click)="resetDraft()">Limpar</button>
+    <button type="button" class="primary-button" (click)="upsert()">Salvar obra</button>
+  </div>
+
+  <table class="list-table">
+    <thead>
+      <tr>
+        <th>Tipo</th>
+        <th>Custo</th>
+        <th>Prazo</th>
+        <th>Classificação</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      @if (localItems.length) {
+        @for (item of localItems; track item.id) {
+          <tr>
+            <td>{{ item.tipoObra || '-' }}</td>
+            <td>{{ item.custoEstimado ?? '-' }}</td>
+            <td>{{ item.prazoExecucaoMeses ?? '-' }} meses</td>
+            <td>
+              {{
+                item.obraEssencial
+                  ? 'Essencial'
+                  : item.obraMitigacao
+                    ? 'Mitigação'
+                    : item.obraCompensacao
+                      ? 'Compensação'
+                      : '-'
+              }}
+            </td>
+            <td>
+              <div class="row-actions">
+                <button type="button" class="secondary-button" (click)="edit(item)">Editar</button>
+                <button type="button" class="danger-button" (click)="remove(item.id)">
+                  Excluir
+                </button>
+              </div>
+            </td>
+          </tr>
+        }
+      } @else {
+        <tr>
+          <td colspan="5" class="text-muted">Nenhuma obra cadastrada.</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</section>
