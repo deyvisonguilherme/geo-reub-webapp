@@ -1,4 +1,4 @@
-<section class="section-card">
+<section class="card">
   <div class="section-header">
     <div>
       <h2 class="section-title">Projeto Urbanístico</h2>
@@ -25,67 +25,99 @@
 
   <div class="form-grid">
     <div class="form-field">
-      <label>Título</label>
-      <input [(ngModel)]="draft.titulo" />
+      <label for="titulo">Título</label>
+      <input id="titulo" type="text" pInputText [(ngModel)]="draft.titulo" />
     </div>
     <div class="form-field">
-      <label>Responsável técnico</label>
-      <input [(ngModel)]="draft.responsavelTecnico" />
+      <label for="responsavelTecnico">Responsável técnico</label>
+      <input id="responsavelTecnico" type="text" pInputText [(ngModel)]="draft.responsavelTecnico" />
     </div>
     <div class="form-field">
-      <label>Registro profissional</label>
-      <input [(ngModel)]="draft.registroProfissional" />
+      <label for="registroProfissional">Registro profissional</label>
+      <input
+        id="registroProfissional"
+        type="text"
+        pInputText
+        [(ngModel)]="draft.registroProfissional"
+      />
     </div>
     <div class="form-field">
-      <label>Número lotes</label>
-      <input type="number" [(ngModel)]="draft.numeroLotes" />
+      <label for="numeroLotes">Número lotes</label>
+      <p-inputnumber id="numeroLotes" [(ngModel)]="draft.numeroLotes" styleClass="w-full" />
     </div>
     <div class="form-field">
-      <label>Área intervenção m²</label>
-      <input type="number" [(ngModel)]="draft.areaIntervencaoM2" />
+      <label for="areaIntervencaoM2">Área intervenção m²</label>
+      <p-inputnumber
+        id="areaIntervencaoM2"
+        [(ngModel)]="draft.areaIntervencaoM2"
+        styleClass="w-full"
+      />
     </div>
     <div class="form-field">
-      <label>Áreas verdes m²</label>
-      <input type="number" [(ngModel)]="draft.areasVerdesM2" />
+      <label for="areasVerdesM2">Áreas verdes m²</label>
+      <p-inputnumber id="areasVerdesM2" [(ngModel)]="draft.areasVerdesM2" styleClass="w-full" />
     </div>
     <div class="form-field">
-      <label>Áreas institucionais m²</label>
-      <input type="number" [(ngModel)]="draft.areasInstitucionaisM2" />
+      <label for="areasInstitucionaisM2">Áreas institucionais m²</label>
+      <p-inputnumber
+        id="areasInstitucionaisM2"
+        [(ngModel)]="draft.areasInstitucionaisM2"
+        styleClass="w-full"
+      />
     </div>
     <div class="form-field">
-      <label>Licença urbanística</label>
-      <input [(ngModel)]="draft.licencaUrbanistica" />
+      <label for="licencaUrbanistica">Licença urbanística</label>
+      <input id="licencaUrbanistica" type="text" pInputText [(ngModel)]="draft.licencaUrbanistica" />
     </div>
     <div class="form-field">
-      <label>Licença ambiental</label>
-      <input [(ngModel)]="draft.licencaAmbiental" />
+      <label for="licencaAmbiental">Licença ambiental</label>
+      <input id="licencaAmbiental" type="text" pInputText [(ngModel)]="draft.licencaAmbiental" />
     </div>
     <div class="form-field">
-      <label>Data aprovação município</label>
-      <input type="date" [(ngModel)]="draft.dataAprovacaoMunicipio" />
+      <label for="dataAprovacaoMunicipio">Data aprovação município</label>
+      <p-datepicker
+        id="dataAprovacaoMunicipio"
+        [(ngModel)]="draft.dataAprovacaoMunicipio"
+        dateFormat="dd/mm/yy"
+        appendTo="body"
+        styleClass="w-full"
+      />
     </div>
     <div class="form-field">
-      <label>Arquivo projeto ID</label>
-      <input [(ngModel)]="draft.arquivoProjetoId" />
+      <label for="arquivoProjetoId">Arquivo projeto ID</label>
+      <input id="arquivoProjetoId" type="text" pInputText [(ngModel)]="draft.arquivoProjetoId" />
     </div>
     <div class="form-field">
-      <label>Arquivo memorial ID</label>
-      <input [(ngModel)]="draft.arquivoMemorialDescritivoId" />
+      <label for="arquivoMemorialDescritivoId">Arquivo memorial ID</label>
+      <input
+        id="arquivoMemorialDescritivoId"
+        type="text"
+        pInputText
+        [(ngModel)]="draft.arquivoMemorialDescritivoId"
+      />
     </div>
     <div class="form-field field-span-2">
-      <label>Arquivo plantas ID</label>
-      <input [(ngModel)]="draft.arquivoPlantasId" />
+      <label for="arquivoPlantasId">Arquivo plantas ID</label>
+      <input id="arquivoPlantasId" type="text" pInputText [(ngModel)]="draft.arquivoPlantasId" />
     </div>
     @if (modalidade === 'REURB-S') {
       <div class="form-field field-span-full">
-        <label>Dotação orçamentária pública</label>
-        <input [(ngModel)]="draft.dotacaoOrcamentariaPublica" />
+        <label for="dotacaoOrcamentaria">Dotação orçamentária pública</label>
+        <input
+          id="dotacaoOrcamentaria"
+          type="text"
+          pInputText
+          [(ngModel)]="draft.dotacaoOrcamentariaPublica"
+        />
       </div>
     }
     @if (modalidade === 'REURB-E') {
       <div class="form-field field-span-full">
-        <label>Contrato de custeio</label>
+        <label for="contratoCusteio">Contrato de custeio</label>
         <input
+          id="contratoCusteio"
+          type="text"
+          pInputText
           [ngModel]="draft.contratoCusteioAnexado ? 'Anexado' : ''"
           (ngModelChange)="draft.contratoCusteioAnexado = !!$event"
           placeholder="Preencha qualquer valor para indicar anexo"
@@ -93,50 +125,98 @@
       </div>
     }
     <div class="form-field field-span-full">
-      <label>Descrição</label>
-      <textarea [(ngModel)]="draft.descricao"></textarea>
+      <label for="descricao">Descrição</label>
+      <textarea id="descricao" pTextarea [(ngModel)]="draft.descricao" rows="3"></textarea>
     </div>
   </div>
 
   <div class="checkbox-grid">
-    <label class="checkbox-field"
-      ><input type="checkbox" [(ngModel)]="draft.sistemaViario" /> Sistema viário</label
-    >
-    <label class="checkbox-field"
-      ><input type="checkbox" [(ngModel)]="draft.redeAgua" /> Rede de água</label
-    >
-    <label class="checkbox-field"
-      ><input type="checkbox" [(ngModel)]="draft.redeEsgoto" /> Rede de esgoto</label
-    >
-    <label class="checkbox-field"
-      ><input type="checkbox" [(ngModel)]="draft.drenagem" /> Drenagem</label
-    >
-    <label class="checkbox-field"
-      ><input type="checkbox" [(ngModel)]="draft.energiaEletrica" /> Energia elétrica</label
-    >
-    <label class="checkbox-field"
-      ><input type="checkbox" [(ngModel)]="draft.iluminacaoPublica" /> Iluminação pública</label
-    >
-    <label class="checkbox-field"
-      ><input type="checkbox" [(ngModel)]="draft.coletaResiduos" /> Coleta de resíduos</label
-    >
-    <label class="checkbox-field"
-      ><input type="checkbox" [(ngModel)]="draft.aprovadoMunicipio" /> Aprovado pelo
-      município</label
-    >
-    <label class="checkbox-field"
-      ><input type="checkbox" [(ngModel)]="draft.bemPublico" /> Bem público</label
-    >
-    <label class="checkbox-field"
-      ><input type="checkbox" [(ngModel)]="draft.fluxoAtoUnico" /> Fluxo ato único</label
-    >
-    <label class="checkbox-field"
-      ><input type="checkbox" [(ngModel)]="draft.isencaoEmolumentosPrimeiroRegistro" /> Isenção
-      emolumentos</label
-    >
+    <div class="checkbox-field">
+      <p-checkbox
+        [(ngModel)]="draft.sistemaViario"
+        [binary]="true"
+        label="Sistema viário"
+        id="sistemaViario"
+      />
+    </div>
+    <div class="checkbox-field">
+      <p-checkbox
+        [(ngModel)]="draft.redeAgua"
+        [binary]="true"
+        label="Rede de água"
+        id="redeAgua"
+      />
+    </div>
+    <div class="checkbox-field">
+      <p-checkbox
+        [(ngModel)]="draft.redeEsgoto"
+        [binary]="true"
+        label="Rede de esgoto"
+        id="redeEsgoto"
+      />
+    </div>
+    <div class="checkbox-field">
+      <p-checkbox
+        [(ngModel)]="draft.drenagem"
+        [binary]="true"
+        label="Drenagem"
+        id="drenagem"
+      />
+    </div>
+    <div class="checkbox-field">
+      <p-checkbox
+        [(ngModel)]="draft.energiaEletrica"
+        [binary]="true"
+        label="Energia elétrica"
+        id="energiaEletrica"
+      />
+    </div>
+    <div class="checkbox-field">
+      <p-checkbox
+        [(ngModel)]="draft.iluminacaoPublica"
+        [binary]="true"
+        label="Iluminação pública"
+        id="iluminacaoPublica"
+      />
+    </div>
+    <div class="checkbox-field">
+      <p-checkbox
+        [(ngModel)]="draft.coletaResiduos"
+        [binary]="true"
+        label="Coleta de resíduos"
+        id="coletaResiduos"
+      />
+    </div>
+    <div class="checkbox-field">
+      <p-checkbox
+        [(ngModel)]="draft.aprovadoMunicipio"
+        [binary]="true"
+        label="Aprovado pelo município"
+        id="aprovadoMunicipio"
+      />
+    </div>
+    <div class="checkbox-field">
+      <p-checkbox [(ngModel)]="draft.bemPublico" [binary]="true" label="Bem público" id="bemPublico" />
+    </div>
+    <div class="checkbox-field">
+      <p-checkbox
+        [(ngModel)]="draft.fluxoAtoUnico"
+        [binary]="true"
+        label="Fluxo ato único"
+        id="fluxoAtoUnico"
+      />
+    </div>
+    <div class="checkbox-field">
+      <p-checkbox
+        [(ngModel)]="draft.isencaoEmolumentosPrimeiroRegistro"
+        [binary]="true"
+        label="Isenção emolumentos"
+        id="isencaoEmolumentos"
+      />
+    </div>
   </div>
 
   <div class="form-actions">
-    <button type="button" class="primary-button" (click)="submit()">Salvar etapa</button>
+    <p-button label="Salvar Etapa" [rounded]="true" (click)="submit()" />
   </div>
 </section>

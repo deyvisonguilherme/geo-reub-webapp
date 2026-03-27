@@ -31,7 +31,7 @@ import { NucleusFormModel } from '../../nucleus.types';
 export class NucleusFormDialogComponent {
   @Input({ required: true }) title = '';
   @Input({ required: true }) visible = false;
-  @Input({ required: true }) model!: NucleusFormModel;
+  @Input({ required: true }) model: NucleusFormModel | null = null;
   @Input() situacaoOptions: ReadonlyArray<{ label: string; value: string }> = [];
 
   @Output() visibleChange = new EventEmitter<boolean>();

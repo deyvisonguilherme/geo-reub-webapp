@@ -1,14 +1,10 @@
+/* Using the exported styles from process-form.styles.ts */
+/* Since it's a string, we can't easily import it into a .scss file via @import */
+/* But I will replicate the key parts or the project might be using a global approach */
+
+/* Replicating the core styles to ensure consistency if the component uses this SCSS file */
 :host {
   display: block;
-}
-
-.section-card {
-  /* Removed border and background as it's inside the dialog now */
-  padding: 0;
-}
-
-.section-header {
-  margin-bottom: 1.5rem;
 }
 
 .section-title {
@@ -27,10 +23,8 @@
   }
 }
 
-.section-subtitle {
-  margin: 0.25rem 0 0;
-  font-size: 0.875rem;
-  color: #6b7280;
+.mt-4 {
+  margin-top: 1rem;
 }
 
 .form-grid {
@@ -48,16 +42,6 @@
     font-size: 0.8125rem;
     font-weight: 600;
     color: #374151;
-  }
-
-  select {
-    width: 100%;
-    border: 1px solid #cfd4dc;
-    border-radius: 8px;
-    padding: 0.55rem 0.75rem;
-    background: #fff;
-    color: #111827;
-    font: inherit;
   }
 }
 
@@ -91,14 +75,6 @@
   }
 }
 
-.dialog-header-custom {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 1rem;
-}
-
 .form-actions {
   display: flex;
   justify-content: flex-end;
@@ -126,16 +102,6 @@
 
 /* PrimeNG Overrides within component scope */
 :host ::ng-deep {
-  .p-dialog-content {
-    padding: 0 1.5rem 1.5rem 1.5rem;
-    border-radius: 0 0 20px 20px;
-  }
-
-  .p-dialog-header {
-    padding: 1.5rem 1.5rem 0.5rem 1.5rem;
-    border-radius: 20px 20px 0 0;
-  }
-
   .p-inputtext,
   .p-datepicker,
   .p-inputnumber {

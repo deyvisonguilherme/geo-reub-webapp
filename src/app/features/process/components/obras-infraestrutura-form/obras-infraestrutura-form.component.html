@@ -1,4 +1,4 @@
-<section class="section-card">
+<section class="card">
   <div class="section-header">
     <div>
       <h2 class="section-title">Obras Infraestrutura</h2>
@@ -11,103 +11,148 @@
 
   <div class="form-grid">
     <div class="form-field">
-      <label>Tipo de obra</label>
-      <input [(ngModel)]="draft.tipoObra" />
+      <label for="tipoObra">Tipo de obra</label>
+      <input id="tipoObra" type="text" pInputText [(ngModel)]="draft.tipoObra" />
     </div>
     <div class="form-field">
-      <label>Unidade medida</label>
-      <input [(ngModel)]="draft.unidadeMedida" />
+      <label for="unidadeMedida">Unidade medida</label>
+      <input id="unidadeMedida" type="text" pInputText [(ngModel)]="draft.unidadeMedida" />
     </div>
     <div class="form-field">
-      <label>Quantidade</label>
-      <input type="number" [(ngModel)]="draft.quantidade" />
+      <label for="quantidade">Quantidade</label>
+      <p-inputnumber id="quantidade" [(ngModel)]="draft.quantidade" styleClass="w-full" />
     </div>
     <div class="form-field">
-      <label>Custo estimado</label>
-      <input type="number" [(ngModel)]="draft.custoEstimado" />
+      <label for="custoEstimado">Custo estimado</label>
+      <p-inputnumber id="custoEstimado" [(ngModel)]="draft.custoEstimado" styleClass="w-full" />
     </div>
     <div class="form-field">
-      <label>Prazo execução (meses)</label>
-      <input type="number" [(ngModel)]="draft.prazoExecucaoMeses" />
+      <label for="prazoExecucaoMeses">Prazo execução (meses)</label>
+      <p-inputnumber
+        id="prazoExecucaoMeses"
+        [(ngModel)]="draft.prazoExecucaoMeses"
+        styleClass="w-full"
+      />
     </div>
     <div class="form-field">
-      <label>Início previsto</label>
-      <input type="date" [(ngModel)]="draft.dataPrevistaInicio" />
+      <label for="dataPrevistaInicio">Início previsto</label>
+      <p-datepicker
+        id="dataPrevistaInicio"
+        [(ngModel)]="draft.dataPrevistaInicio"
+        dateFormat="dd/mm/yy"
+        appendTo="body"
+        styleClass="w-full"
+      />
     </div>
     <div class="form-field">
-      <label>Conclusão prevista</label>
-      <input type="date" [(ngModel)]="draft.dataPrevistaConclusao" />
+      <label for="dataPrevistaConclusao">Conclusão prevista</label>
+      <p-datepicker
+        id="dataPrevistaConclusao"
+        [(ngModel)]="draft.dataPrevistaConclusao"
+        dateFormat="dd/mm/yy"
+        appendTo="body"
+        styleClass="w-full"
+      />
     </div>
     <div class="form-field field-span-full">
-      <label>Descrição</label>
-      <textarea [(ngModel)]="draft.descricao"></textarea>
+      <label for="descricao">Descrição</label>
+      <textarea id="descricao" pTextarea [(ngModel)]="draft.descricao" rows="3"></textarea>
     </div>
     <div class="form-field field-span-full">
-      <label>Especificações técnicas</label>
-      <textarea [(ngModel)]="draft.especificacoesTecnicas"></textarea>
+      <label for="especificacoesTecnicas">Especificações técnicas</label>
+      <textarea
+        id="especificacoesTecnicas"
+        pTextarea
+        [(ngModel)]="draft.especificacoesTecnicas"
+        rows="3"
+      ></textarea>
     </div>
   </div>
 
   <div class="checkbox-grid">
-    <label class="checkbox-field"
-      ><input type="checkbox" [(ngModel)]="draft.obraEssencial" /> Obra essencial</label
-    >
-    <label class="checkbox-field"
-      ><input type="checkbox" [(ngModel)]="draft.obraMitigacao" /> Obra mitigação</label
-    >
-    <label class="checkbox-field"
-      ><input type="checkbox" [(ngModel)]="draft.obraCompensacao" /> Obra compensação</label
-    >
+    <div class="checkbox-field">
+      <p-checkbox
+        [(ngModel)]="draft.obraEssencial"
+        [binary]="true"
+        label="Obra essencial"
+        id="obraEssencial"
+      />
+    </div>
+    <div class="checkbox-field">
+      <p-checkbox
+        [(ngModel)]="draft.obraMitigacao"
+        [binary]="true"
+        label="Obra mitigação"
+        id="obraMitigacao"
+      />
+    </div>
+    <div class="checkbox-field">
+      <p-checkbox
+        [(ngModel)]="draft.obraCompensacao"
+        [binary]="true"
+        label="Obra compensação"
+        id="obraCompensacao"
+      />
+    </div>
   </div>
 
   <div class="form-actions">
-    <button type="button" class="secondary-button" (click)="resetDraft()">Limpar</button>
-    <button type="button" class="primary-button" (click)="upsert()">Salvar obra</button>
+    <p-button label="Limpar" [text]="true" [rounded]="true" (click)="resetDraft()" />
+    <p-button label="Salvar Obra" [rounded]="true" (click)="upsert()" />
   </div>
 
-  <table class="list-table">
-    <thead>
-      <tr>
-        <th>Tipo</th>
-        <th>Custo</th>
-        <th>Prazo</th>
-        <th>Classificação</th>
-        <th>Ações</th>
-      </tr>
-    </thead>
-    <tbody>
-      @if (localItems.length) {
-        @for (item of localItems; track item.id) {
-          <tr>
-            <td>{{ item.tipoObra || '-' }}</td>
-            <td>{{ item.custoEstimado ?? '-' }}</td>
-            <td>{{ item.prazoExecucaoMeses ?? '-' }} meses</td>
-            <td>
-              {{
-                item.obraEssencial
-                  ? 'Essencial'
-                  : item.obraMitigacao
-                    ? 'Mitigação'
-                    : item.obraCompensacao
-                      ? 'Compensação'
-                      : '-'
-              }}
-            </td>
-            <td>
-              <div class="row-actions">
-                <button type="button" class="secondary-button" (click)="edit(item)">Editar</button>
-                <button type="button" class="danger-button" (click)="remove(item.id)">
-                  Excluir
-                </button>
-              </div>
-            </td>
-          </tr>
-        }
-      } @else {
+  <div class="mt-6">
+    <p-table [value]="localItems" [responsiveLayout]="'stack'" styleClass="p-datatable-sm">
+      <ng-template pTemplate="header">
         <tr>
-          <td colspan="5" class="text-muted">Nenhuma obra cadastrada.</td>
+          <th>Tipo</th>
+          <th>Custo</th>
+          <th>Prazo</th>
+          <th>Classificação</th>
+          <th style="width: 8rem">Ações</th>
         </tr>
-      }
-    </tbody>
-  </table>
+      </ng-template>
+      <ng-template pTemplate="body" let-item>
+        <tr>
+          <td>{{ item.tipoObra || '-' }}</td>
+          <td>{{ item.custoEstimado ?? '-' }}</td>
+          <td>{{ item.prazoExecucaoMeses ?? '-' }} meses</td>
+          <td>
+            {{
+              item.obraEssencial
+                ? 'Essencial'
+                : item.obraMitigacao
+                  ? 'Mitigação'
+                  : item.obraCompensacao
+                    ? 'Compensação'
+                    : '-'
+            }}
+          </td>
+          <td>
+            <div class="flex gap-2">
+              <p-button
+                icon="pi pi-pencil"
+                [text]="true"
+                [rounded]="true"
+                severity="secondary"
+                (click)="edit(item)"
+              />
+              <p-button
+                icon="pi pi-trash"
+                [text]="true"
+                [rounded]="true"
+                severity="danger"
+                (click)="remove(item.id)"
+              />
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="5" class="text-center p-4 text-muted">Nenhuma obra cadastrada.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
 </section>

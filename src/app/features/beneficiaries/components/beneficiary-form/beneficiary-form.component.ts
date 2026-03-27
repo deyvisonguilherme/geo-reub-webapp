@@ -1,16 +1,16 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, signal, computed } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 import { DatePickerModule } from 'primeng/datepicker';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
-import { TableModule } from 'primeng/table';
 import { TextareaModule } from 'primeng/textarea';
-import { Beneficiario, ReurbModalidade } from '../../process.types';
+import { Beneficiario, ReurbModalidade } from '../../../process/process.types';
+import { DialogModule } from 'primeng/dialog';
 
-interface BeneficiarioDraft {
+export interface BeneficiarioDraft {
   id: string;
   nomeCompleto: string;
   cpf: string;
@@ -47,7 +47,7 @@ interface BeneficiarioDraft {
 }
 
 @Component({
-  selector: 'app-cadastro-social-beneficiario-form',
+  selector: 'app-beneficiary-form',
   standalone: true,
   imports: [
     CommonModule,
@@ -57,72 +57,45 @@ interface BeneficiarioDraft {
     DatePickerModule,
     InputNumberModule,
     InputTextModule,
-    TableModule,
     TextareaModule,
+    DialogModule,
   ],
-  templateUrl: './cadastro-social-beneficiario-form.component.html',
-  styleUrl: './cadastro-social-beneficiario-form.component.scss',
+  templateUrl: './beneficiary-form.component.html',
+  styleUrl: './beneficiary-form.component.scss',
 })
-export class CadastroSocialBeneficiarioFormComponent implements OnChanges {
-  @Input() items: Beneficiario[] = [];
+export class BeneficiaryFormComponent implements OnChanges {
+  @Input() beneficiary: Beneficiario | null = null;
   @Input() modalidade: ReurbModalidade = '';
-  @Output() save = new EventEmitter<Beneficiario[]>();
+  @Output() save = new EventEmitter<Beneficiario>();
+  @Output() cancel = new EventEmitter<void>();
 
-  readonly limiteRendaReurbS = 7590;
-  
-  readonly localItems = signal<Beneficiario[]>([]);
-  readonly draft = signal<BeneficiarioDraft>(this.createDraft());
-
-  readonly totalRenda = computed(() => {
-    return this.localItems().reduce((sum, item) => sum + Number(item.rendaFamiliarMensal ?? 0), 0);
-  });
+  draft: BeneficiarioDraft = this.createDraft();
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['items']) {
-      this.localItems.set(this.items.map((item) => ({ ...item })));
+    if (changes['beneficiary'] && this.beneficiary) {
+      this.draft = {
+        ...this.beneficiary,
+        dataNascimento: this.parseDate(this.beneficiary.dataNascimento),
+        dataOcupacaoInicial: this.parseDate(this.beneficiary.dataOcupacaoInicial),
+      };
+    } else if (changes['beneficiary'] && !this.beneficiary) {
       this.resetDraft();
     }
   }
 
-  edit(item: Beneficiario): void {
-    this.draft.set({
-      ...item,
-      dataNascimento: this.parseDate(item.dataNascimento),
-      dataOcupacaoInicial: this.parseDate(item.dataOcupacaoInicial),
-    });
-  }
-
-  upsert(): void {
-    const currentDraft = this.draft();
+  onSubmit(): void {
     const item: Beneficiario = {
-      ...currentDraft,
-      id: currentDraft.id || crypto.randomUUID(),
-      dataNascimento: this.toDateString(currentDraft.dataNascimento),
-      dataOcupacaoInicial: this.toDateString(currentDraft.dataOcupacaoInicial),
+      ...this.draft,
+      id: this.draft.id || crypto.randomUUID(),
+      dataNascimento: this.toDateString(this.draft.dataNascimento),
+      dataOcupacaoInicial: this.toDateString(this.draft.dataOcupacaoInicial),
     };
 
-    if (this.modalidade === 'REURB-S' && item.rendaFamiliarMensal !== null) {
-      item.rendaFamiliarAte5Sm = item.rendaFamiliarMensal <= this.limiteRendaReurbS;
-    }
-    
-    const exists = this.localItems().some((current) => current.id === item.id);
-    if (exists) {
-      this.localItems.update(items => items.map((current) => (current.id === item.id ? item : current)));
-    } else {
-      this.localItems.update(items => [item, ...items]);
-    }
-    
-    this.save.emit(this.localItems());
-    this.resetDraft();
-  }
-
-  remove(id: string): void {
-    this.localItems.update(items => items.filter((item) => item.id !== id));
-    this.save.emit(this.localItems());
+    this.save.emit(item);
   }
 
   resetDraft(): void {
-    this.draft.set(this.createDraft());
+    this.draft = this.createDraft();
   }
 
   private createDraft(): BeneficiarioDraft {
@@ -171,10 +144,6 @@ export class CadastroSocialBeneficiarioFormComponent implements OnChanges {
 
   private toDateString(date: Date | null): string {
     if (!date) return '';
-    try {
-      return date.toISOString().slice(0, 10);
-    } catch {
-      return '';
-    }
+    return date.toISOString().slice(0, 10);
   }
 }

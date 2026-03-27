@@ -1,4 +1,4 @@
-<section class="section-card">
+<section class="card">
   <div class="section-header">
     <div>
       <h2 class="section-title">Titulares Confrontantes</h2>
@@ -12,118 +12,153 @@
 
   <div class="form-grid">
     <div class="form-field">
-      <label>Tipo</label>
-      <input [(ngModel)]="draft.tipo" />
+      <label for="tipo">Tipo</label>
+      <input id="tipo" type="text" pInputText [(ngModel)]="draft.tipo" />
     </div>
     <div class="form-field">
-      <label>Nome completo</label>
-      <input [(ngModel)]="draft.nomeCompleto" />
+      <label for="nomeCompleto">Nome completo</label>
+      <input id="nomeCompleto" type="text" pInputText [(ngModel)]="draft.nomeCompleto" />
     </div>
     <div class="form-field">
-      <label>CPF/CNPJ</label>
-      <input [(ngModel)]="draft.cpfCnpj" />
+      <label for="cpfCnpj">CPF/CNPJ</label>
+      <input id="cpfCnpj" type="text" pInputText [(ngModel)]="draft.cpfCnpj" />
     </div>
     <div class="form-field">
-      <label>Forma notificação</label>
-      <input [(ngModel)]="draft.formaNotificacao" />
+      <label for="formaNotificacao">Forma notificação</label>
+      <input id="formaNotificacao" type="text" pInputText [(ngModel)]="draft.formaNotificacao" />
     </div>
     <div class="form-field">
-      <label>Logradouro</label>
-      <input [(ngModel)]="draft.logradouro" />
+      <label for="logradouro">Logradouro</label>
+      <input id="logradouro" type="text" pInputText [(ngModel)]="draft.logradouro" />
     </div>
     <div class="form-field">
-      <label>Número</label>
-      <input [(ngModel)]="draft.numero" />
+      <label for="numero">Número</label>
+      <input id="numero" type="text" pInputText [(ngModel)]="draft.numero" />
     </div>
     <div class="form-field">
-      <label>Bairro</label>
-      <input [(ngModel)]="draft.bairro" />
+      <label for="bairro">Bairro</label>
+      <input id="bairro" type="text" pInputText [(ngModel)]="draft.bairro" />
     </div>
     <div class="form-field">
-      <label>Cidade</label>
-      <input [(ngModel)]="draft.cidade" />
+      <label for="cidade">Cidade</label>
+      <input id="cidade" type="text" pInputText [(ngModel)]="draft.cidade" />
     </div>
     <div class="form-field">
-      <label>UF</label>
-      <input [(ngModel)]="draft.uf" maxlength="2" />
+      <label for="uf">UF</label>
+      <input id="uf" type="text" pInputText [(ngModel)]="draft.uf" maxlength="2" />
     </div>
     <div class="form-field">
-      <label>CEP</label>
-      <input [(ngModel)]="draft.cep" />
+      <label for="cep">CEP</label>
+      <input id="cep" type="text" pInputText [(ngModel)]="draft.cep" />
     </div>
     <div class="form-field">
-      <label>Data notificação</label>
-      <input type="date" [(ngModel)]="draft.dataNotificacao" />
+      <label for="dataNotificacao">Data notificação</label>
+      <p-datepicker
+        id="dataNotificacao"
+        [(ngModel)]="draft.dataNotificacao"
+        dateFormat="dd/mm/yy"
+        appendTo="body"
+        styleClass="w-full"
+      />
     </div>
     <div class="form-field">
-      <label>Data impugnação</label>
-      <input type="date" [(ngModel)]="draft.dataImpugnacao" />
+      <label for="dataImpugnacao">Data impugnação</label>
+      <p-datepicker
+        id="dataImpugnacao"
+        [(ngModel)]="draft.dataImpugnacao"
+        dateFormat="dd/mm/yy"
+        appendTo="body"
+        styleClass="w-full"
+      />
     </div>
     <div class="form-field field-span-2">
-      <label>Arquivo impugnação ID</label>
-      <input [(ngModel)]="draft.arquivoImpugnacaoId" />
+      <label for="arquivoImpugnacaoId">Arquivo impugnação ID</label>
+      <input
+        id="arquivoImpugnacaoId"
+        type="text"
+        pInputText
+        [(ngModel)]="draft.arquivoImpugnacaoId"
+      />
     </div>
     <div class="form-field field-span-full">
-      <label>Resultado impugnação</label>
-      <textarea [(ngModel)]="draft.resultadoImpugnacao"></textarea>
+      <label for="resultadoImpugnacao">Resultado impugnação</label>
+      <textarea
+        id="resultadoImpugnacao"
+        pTextarea
+        [(ngModel)]="draft.resultadoImpugnacao"
+        rows="3"
+      ></textarea>
     </div>
   </div>
 
   <div class="checkbox-grid">
-    <label class="checkbox-field">
-      <input type="checkbox" [(ngModel)]="draft.identificado" />
-      Identificado
-    </label>
-    <label class="checkbox-field">
-      <input type="checkbox" [(ngModel)]="draft.notificado" />
-      Notificado
-    </label>
-    <label class="checkbox-field">
-      <input type="checkbox" [(ngModel)]="draft.impugnou" />
-      Impugnou
-    </label>
+    <div class="checkbox-field">
+      <p-checkbox inputId="identificado" [binary]="true" [(ngModel)]="draft.identificado" />
+      <label for="identificado">Identificado</label>
+    </div>
+    <div class="checkbox-field">
+      <p-checkbox inputId="notificado" [binary]="true" [(ngModel)]="draft.notificado" />
+      <label for="notificado">Notificado</label>
+    </div>
+    <div class="checkbox-field">
+      <p-checkbox inputId="impugnou" [binary]="true" [(ngModel)]="draft.impugnou" />
+      <label for="impugnou">Impugnou</label>
+    </div>
   </div>
 
   <div class="form-actions">
-    <button type="button" class="secondary-button" (click)="resetDraft()">Limpar</button>
-    <button type="button" class="primary-button" (click)="upsert()">Salvar titular</button>
+    <p-button label="Limpar" severity="secondary" [text]="true" (onClick)="resetDraft()" />
+    <p-button label="Salvar Titular" [rounded]="true" (onClick)="upsert()" />
   </div>
 
-  <table class="list-table">
-    <thead>
-      <tr>
-        <th>Tipo</th>
-        <th>Nome</th>
-        <th>CPF/CNPJ</th>
-        <th>Notificação</th>
-        <th>Impugnação</th>
-        <th>Ações</th>
-      </tr>
-    </thead>
-    <tbody>
-      @if (localItems.length) {
-        @for (item of localItems; track item.id) {
-          <tr>
-            <td>{{ item.tipo || '-' }}</td>
-            <td>{{ item.nomeCompleto || '-' }}</td>
-            <td>{{ item.cpfCnpj || '-' }}</td>
-            <td>{{ item.notificado ? item.formaNotificacao || 'Sim' : 'Não' }}</td>
-            <td>{{ item.impugnou ? 'Com impugnação' : 'Sem impugnação' }}</td>
-            <td>
-              <div class="row-actions">
-                <button type="button" class="secondary-button" (click)="edit(item)">Editar</button>
-                <button type="button" class="danger-button" (click)="remove(item.id)">
-                  Excluir
-                </button>
-              </div>
-            </td>
-          </tr>
-        }
-      } @else {
+  <div class="list-container">
+    <p-table [value]="localItems" styleClass="p-datatable-sm" responsiveLayout="scroll">
+      <ng-template pTemplate="header">
         <tr>
-          <td colspan="6" class="text-muted">Nenhum titular confrontante cadastrado.</td>
+          <th>Tipo</th>
+          <th>Nome</th>
+          <th>CPF/CNPJ</th>
+          <th>Notificação</th>
+          <th>Impugnação</th>
+          <th style="width: 150px">Ações</th>
         </tr>
-      }
-    </tbody>
-  </table>
+      </ng-template>
+      <ng-template pTemplate="body" let-item>
+        <tr>
+          <td>{{ item.tipo || '-' }}</td>
+          <td>{{ item.nomeCompleto || '-' }}</td>
+          <td>{{ item.cpfCnpj || '-' }}</td>
+          <td>{{ item.notificado ? item.formaNotificacao || 'Sim' : 'Não' }}</td>
+          <td>{{ item.impugnou ? 'Com impugnação' : 'Sem impugnação' }}</td>
+          <td>
+            <div class="row-actions">
+              <p-button
+                icon="pi pi-pencil"
+                [rounded]="true"
+                [text]="true"
+                severity="secondary"
+                (onClick)="edit(item)"
+                pTooltip="Editar"
+              />
+              <p-button
+                icon="pi pi-trash"
+                [rounded]="true"
+                [text]="true"
+                severity="danger"
+                (onClick)="remove(item.id)"
+                pTooltip="Excluir"
+              />
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="6" class="text-center py-4 text-muted">
+            Nenhum titular confrontante cadastrado.
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
 </section>

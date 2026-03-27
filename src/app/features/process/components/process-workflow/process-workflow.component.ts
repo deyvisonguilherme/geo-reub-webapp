@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AberturaProcessoFormComponent } from '../../components/abertura-processo-form/abertura-processo-form.component';
 import { BeneficiarioDocumentosFormComponent } from '../../components/beneficiario-documentos-form/beneficiario-documentos-form.component';
@@ -85,7 +85,7 @@ export class ProcessWorkflowComponent {
     return this.store.getById(id) ?? null;
   });
 
-  activeSection: SectionKey = 'abertura';
+  readonly activeSection = signal<SectionKey>('abertura');
 
   readonly stages = computed<TimelineStage[]>(() => {
     const process = this.process();
@@ -221,7 +221,7 @@ export class ProcessWorkflowComponent {
   }
 
   openSection(section: SectionKey): void {
-    this.activeSection = section;
+    this.activeSection.set(section);
   }
 
   removeProcess(): void {

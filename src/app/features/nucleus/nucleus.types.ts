@@ -1,23 +1,21 @@
-export type TagSeverity = 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast';
-
-export interface Nucleus {
+export interface NucleusFormModel {
   id: string;
   codigo: string;
   nome: string;
   descricao: string;
   situacaoGeografica: string;
+  consolidado: boolean;
   areaTotalM2: number | null;
   perimetroM: number | null;
+  numeroFamiliasEstimado: number | null;
+  dataOcupacaoInicial: string | null;
+  municipioId: string;
   poligonalGeorreferenciada: string;
   centroide: string;
-  consolidado: boolean;
-  dataOcupacaoInicial: Date | null;
-  numeroFamiliasEstimado: number | null;
-  municipioId: string;
   criadoPor: string;
-  criadoEm: Date;
+  criadoEm: string;
   atualizadoPor: string;
-  atualizadoEm: Date | null;
+  atualizadoEm: string;
 }
 
-export type NucleusFormModel = Omit<Nucleus, 'criadoEm' | 'atualizadoEm'>;
+export type TagSeverity = 'success' | 'info' | 'warn' | 'danger' | 'secondary';

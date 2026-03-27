@@ -1,15 +1,29 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { PROCESS_FORM_STYLES } from '../../process-form.styles';
+import { ButtonModule } from 'primeng/button';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { InputTextModule } from 'primeng/inputtext';
+import { SelectModule } from 'primeng/select';
+import { TableModule } from 'primeng/table';
+import { TextareaModule } from 'primeng/textarea';
 import { Beneficiario, RegistroTitulo } from '../../process.types';
 
 @Component({
   selector: 'app-registro-titulos-form',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ButtonModule,
+    InputNumberModule,
+    InputTextModule,
+    SelectModule,
+    TableModule,
+    TextareaModule,
+  ],
   templateUrl: './registro-titulos-form.component.html',
-  styles: [PROCESS_FORM_STYLES],
+  styleUrl: './registro-titulos-form.component.scss',
 })
 export class RegistroTitulosFormComponent implements OnChanges {
   @Input() beneficiarios: Beneficiario[] = [];
@@ -19,10 +33,18 @@ export class RegistroTitulosFormComponent implements OnChanges {
   localItems: RegistroTitulo[] = [];
   draft: RegistroTitulo = this.createDraft();
 
+  beneficiarioOptions: { label: string; value: string }[] = [];
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['items']) {
-      this.localItems = this.items.map((item) => ({ ...item }));
+      this.localItems = (this.items || []).map((item) => ({ ...item }));
       this.resetDraft();
+    }
+    if (changes['beneficiarios']) {
+      this.beneficiarioOptions = (this.beneficiarios || []).map((b) => ({
+        label: b.nomeCompleto,
+        value: b.id,
+      }));
     }
   }
 
@@ -47,6 +69,9 @@ export class RegistroTitulosFormComponent implements OnChanges {
   remove(id: string): void {
     this.localItems = this.localItems.filter((item) => item.id !== id);
     this.save.emit(this.localItems);
+    if (this.draft.id === id) {
+      this.resetDraft();
+    }
   }
 
   resetDraft(): void {

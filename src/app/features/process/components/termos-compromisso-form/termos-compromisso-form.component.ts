@@ -1,22 +1,50 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { PROCESS_FORM_STYLES } from '../../process-form.styles';
+import { ButtonModule } from 'primeng/button';
+import { CheckboxModule } from 'primeng/checkbox';
+import { DatePickerModule } from 'primeng/datepicker';
+import { InputTextModule } from 'primeng/inputtext';
+import { TableModule } from 'primeng/table';
+import { TextareaModule } from 'primeng/textarea';
 import { TermoCompromisso } from '../../process.types';
+
+interface TermoCompromissoDraft {
+  id: string;
+  numeroTermo: string;
+  descricao: string;
+  compromissario: string;
+  obrigacoes: string;
+  cronograma: string;
+  arquivoTermoId: string;
+  assinado: boolean;
+  dataAssinatura: Date | null;
+  vigenciaInicio: Date | null;
+  vigenciaFim: Date | null;
+}
 
 @Component({
   selector: 'app-termos-compromisso-form',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ButtonModule,
+    CheckboxModule,
+    DatePickerModule,
+    InputTextModule,
+    TableModule,
+    TextareaModule,
+  ],
   templateUrl: './termos-compromisso-form.component.html',
-  styles: [PROCESS_FORM_STYLES],
+  styleUrl: './termos-compromisso-form.component.scss',
 })
 export class TermosCompromissoFormComponent implements OnChanges {
   @Input() items: TermoCompromisso[] = [];
   @Output() save = new EventEmitter<TermoCompromisso[]>();
 
   localItems: TermoCompromisso[] = [];
-  draft: TermoCompromisso = this.createDraft();
+  draft: TermoCompromissoDraft = this.createDraft();
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['items']) {
@@ -26,11 +54,22 @@ export class TermosCompromissoFormComponent implements OnChanges {
   }
 
   edit(item: TermoCompromisso): void {
-    this.draft = { ...item };
+    this.draft = {
+      ...item,
+      dataAssinatura: this.parseDate(item.dataAssinatura),
+      vigenciaInicio: this.parseDate(item.vigenciaInicio),
+      vigenciaFim: this.parseDate(item.vigenciaFim),
+    };
   }
 
   upsert(): void {
-    const item = { ...this.draft, id: this.draft.id || crypto.randomUUID() };
+    const item: TermoCompromisso = {
+      ...this.draft,
+      id: this.draft.id || crypto.randomUUID(),
+      dataAssinatura: this.toDateString(this.draft.dataAssinatura),
+      vigenciaInicio: this.toDateString(this.draft.vigenciaInicio),
+      vigenciaFim: this.toDateString(this.draft.vigenciaFim),
+    };
     const exists = this.localItems.some((current) => current.id === item.id);
     this.localItems = exists
       ? this.localItems.map((current) => (current.id === item.id ? item : current))
@@ -48,7 +87,7 @@ export class TermosCompromissoFormComponent implements OnChanges {
     this.draft = this.createDraft();
   }
 
-  private createDraft(): TermoCompromisso {
+  private createDraft(): TermoCompromissoDraft {
     return {
       id: '',
       numeroTermo: '',
@@ -58,9 +97,20 @@ export class TermosCompromissoFormComponent implements OnChanges {
       cronograma: '',
       arquivoTermoId: '',
       assinado: false,
-      dataAssinatura: '',
-      vigenciaInicio: '',
-      vigenciaFim: '',
+      dataAssinatura: null,
+      vigenciaInicio: null,
+      vigenciaFim: null,
     };
+  }
+
+  private parseDate(dateStr: string | undefined): Date | null {
+    if (!dateStr) return null;
+    const date = new Date(dateStr);
+    return isNaN(date.getTime()) ? null : date;
+  }
+
+  private toDateString(date: Date | null): string {
+    if (!date) return '';
+    return date.toISOString().slice(0, 10);
   }
 }

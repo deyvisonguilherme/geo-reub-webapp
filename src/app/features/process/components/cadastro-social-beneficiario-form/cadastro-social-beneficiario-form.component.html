@@ -1,4 +1,4 @@
-<section class="section-card">
+<section class="card">
   <div class="section-header">
     <div>
       <h2 class="section-title">Cadastro Social do Beneficiário</h2>
@@ -8,185 +8,241 @@
       </p>
     </div>
     <span class="helper-badge"
-      >Total renda: {{ totalRenda | currency: 'BRL' : 'symbol' : '1.2-2' : 'pt-BR' }}</span
+      >Total renda: {{ totalRenda() | currency: 'BRL' : 'symbol' : '1.2-2' : 'pt-BR' }}</span
     >
   </div>
 
-  @if (modalidade === 'REURB-S' && totalRenda > limiteRendaReurbS) {
+  @if (modalidade === 'REURB-S' && totalRenda() > limiteRendaReurbS) {
     <div class="warning-box">
       A soma da renda familiar mensal ultrapassa o limite de 5 salários mínimos considerado no fluxo
       social da REURB-S.
     </div>
   }
 
+  @let currentDraft = draft();
+
   <div class="form-grid">
     <div class="form-field">
-      <label>Nome completo</label>
-      <input [(ngModel)]="draft.nomeCompleto" />
+      <label for="nomeCompleto">Nome completo</label>
+      <input id="nomeCompleto" pInputText [(ngModel)]="currentDraft.nomeCompleto" />
     </div>
     <div class="form-field">
-      <label>CPF</label>
-      <input [(ngModel)]="draft.cpf" />
+      <label for="cpf">CPF</label>
+      <input id="cpf" pInputText [(ngModel)]="currentDraft.cpf" />
     </div>
     <div class="form-field">
-      <label>RG</label>
-      <input [(ngModel)]="draft.rg" />
+      <label for="rg">RG</label>
+      <input id="rg" pInputText [(ngModel)]="currentDraft.rg" />
     </div>
     <div class="form-field">
-      <label>Órgão expedidor</label>
-      <input [(ngModel)]="draft.orgaoExpedidor" />
+      <label for="orgaoExpedidor">Órgão expedidor</label>
+      <input id="orgaoExpedidor" pInputText [(ngModel)]="currentDraft.orgaoExpedidor" />
     </div>
     <div class="form-field">
-      <label>Data nascimento</label>
-      <input type="date" [(ngModel)]="draft.dataNascimento" />
+      <label for="dataNascimento">Data nascimento</label>
+      <p-datepicker
+        inputId="dataNascimento"
+        [(ngModel)]="currentDraft.dataNascimento"
+        dateFormat="dd/mm/yy"
+        appendTo="body"
+        [showIcon]="true"
+      />
     </div>
     <div class="form-field">
-      <label>Nacionalidade</label>
-      <input [(ngModel)]="draft.nacionalidade" />
+      <label for="nacionalidade">Nacionalidade</label>
+      <input id="nacionalidade" pInputText [(ngModel)]="currentDraft.nacionalidade" />
     </div>
     <div class="form-field">
-      <label>Naturalidade</label>
-      <input [(ngModel)]="draft.naturalidade" />
+      <label for="naturalidade">Naturalidade</label>
+      <input id="naturalidade" pInputText [(ngModel)]="currentDraft.naturalidade" />
     </div>
     <div class="form-field">
-      <label>Estado civil</label>
-      <input [(ngModel)]="draft.estadoCivil" />
+      <label for="estadoCivil">Estado civil</label>
+      <input id="estadoCivil" pInputText [(ngModel)]="currentDraft.estadoCivil" />
     </div>
     <div class="form-field">
-      <label>Regime casamento</label>
-      <input [(ngModel)]="draft.regimeCasamento" />
+      <label for="regimeCasamento">Regime casamento</label>
+      <input id="regimeCasamento" pInputText [(ngModel)]="currentDraft.regimeCasamento" />
     </div>
     <div class="form-field">
-      <label>Nome cônjuge</label>
-      <input [(ngModel)]="draft.nomeConjuge" />
+      <label for="nomeConjuge">Nome cônjuge</label>
+      <input id="nomeConjuge" pInputText [(ngModel)]="currentDraft.nomeConjuge" />
     </div>
     <div class="form-field">
-      <label>CPF cônjuge</label>
-      <input [(ngModel)]="draft.cpfConjuge" />
+      <label for="cpfConjuge">CPF cônjuge</label>
+      <input id="cpfConjuge" pInputText [(ngModel)]="currentDraft.cpfConjuge" />
     </div>
     <div class="form-field">
-      <label>Telefone</label>
-      <input [(ngModel)]="draft.telefone" />
+      <label for="telefone">Telefone</label>
+      <input id="telefone" pInputText [(ngModel)]="currentDraft.telefone" />
     </div>
     <div class="form-field">
-      <label>E-mail</label>
-      <input [(ngModel)]="draft.email" />
+      <label for="email">E-mail</label>
+      <input id="email" pInputText [(ngModel)]="currentDraft.email" />
     </div>
     <div class="form-field">
-      <label>Logradouro</label>
-      <input [(ngModel)]="draft.logradouro" />
+      <label for="logradouro">Logradouro</label>
+      <input id="logradouro" pInputText [(ngModel)]="currentDraft.logradouro" />
     </div>
     <div class="form-field">
-      <label>Número lote</label>
-      <input [(ngModel)]="draft.numeroLote" />
+      <label for="numeroLote">Número lote</label>
+      <input id="numeroLote" pInputText [(ngModel)]="currentDraft.numeroLote" />
     </div>
     <div class="form-field">
-      <label>Quadra</label>
-      <input [(ngModel)]="draft.quadra" />
+      <label for="quadra">Quadra</label>
+      <input id="quadra" pInputText [(ngModel)]="currentDraft.quadra" />
     </div>
     <div class="form-field">
-      <label>Complemento</label>
-      <input [(ngModel)]="draft.complemento" />
+      <label for="complemento">Complemento</label>
+      <input id="complemento" pInputText [(ngModel)]="currentDraft.complemento" />
     </div>
     <div class="form-field">
-      <label>Área ocupada m²</label>
-      <input type="number" [(ngModel)]="draft.areaOcupadaM2" />
+      <label for="areaOcupada">Área ocupada m²</label>
+      <p-inputnumber
+        inputId="areaOcupada"
+        [(ngModel)]="currentDraft.areaOcupadaM2"
+        mode="decimal"
+        [minFractionDigits]="2"
+        [maxFractionDigits]="2"
+      />
     </div>
     <div class="form-field">
-      <label>Coordenadas lote</label>
-      <input [(ngModel)]="draft.coordenadasLote" />
+      <label for="coordenadas">Coordenadas lote</label>
+      <input id="coordenadas" pInputText [(ngModel)]="currentDraft.coordenadasLote" />
     </div>
     <div class="form-field">
-      <label>Renda familiar mensal</label>
-      <input type="number" [(ngModel)]="draft.rendaFamiliarMensal" />
+      <label for="rendaFamiliar">Renda familiar mensal</label>
+      <p-inputnumber
+        inputId="rendaFamiliar"
+        [(ngModel)]="currentDraft.rendaFamiliarMensal"
+        mode="currency"
+        currency="BRL"
+        locale="pt-BR"
+      />
     </div>
     <div class="form-field">
-      <label>Número dependentes</label>
-      <input type="number" [(ngModel)]="draft.numeroDependentes" />
+      <label for="numeroDependentes">Número dependentes</label>
+      <p-inputnumber inputId="numeroDependentes" [(ngModel)]="currentDraft.numeroDependentes" />
     </div>
     <div class="form-field">
-      <label>Tempo ocupação anos</label>
-      <input type="number" [(ngModel)]="draft.tempoOcupacaoAnos" />
+      <label for="tempoOcupacao">Tempo ocupação anos</label>
+      <p-inputnumber inputId="tempoOcupacao" [(ngModel)]="currentDraft.tempoOcupacaoAnos" />
     </div>
     <div class="form-field">
-      <label>Data ocupação inicial</label>
-      <input type="date" [(ngModel)]="draft.dataOcupacaoInicial" />
+      <label for="dataOcupacao">Data ocupação inicial</label>
+      <p-datepicker
+        inputId="dataOcupacao"
+        [(ngModel)]="currentDraft.dataOcupacaoInicial"
+        dateFormat="dd/mm/yy"
+        appendTo="body"
+        [showIcon]="true"
+      />
     </div>
     <div class="form-field">
-      <label>Direito real conferido</label>
-      <input [(ngModel)]="draft.direitoRealConferido" />
+      <label for="direitoReal">Direito real conferido</label>
+      <input id="direitoReal" pInputText [(ngModel)]="currentDraft.direitoRealConferido" />
     </div>
     <div class="form-field">
-      <label>Nome do pai</label>
-      <input [(ngModel)]="draft.nomePai" />
+      <label for="nomePai">Nome do pai</label>
+      <input id="nomePai" pInputText [(ngModel)]="currentDraft.nomePai" />
     </div>
     <div class="form-field">
-      <label>Nome da mãe</label>
-      <input [(ngModel)]="draft.nomeMae" />
+      <label for="nomeMae">Nome da mãe</label>
+      <input id="nomeMae" pInputText [(ngModel)]="currentDraft.nomeMae" />
     </div>
     <div class="form-field field-span-full">
-      <label>Observações</label>
-      <textarea [(ngModel)]="draft.observacoes"></textarea>
+      <label for="observacoes">Observações</label>
+      <textarea id="observacoes" pTextarea [(ngModel)]="currentDraft.observacoes" rows="3"></textarea>
     </div>
   </div>
 
   <div class="checkbox-grid">
-    <label class="checkbox-field"
-      ><input type="checkbox" [(ngModel)]="draft.rendaFamiliarAte5Sm" /> Renda até 5 SM</label
-    >
-    <label class="checkbox-field"><input type="checkbox" [(ngModel)]="draft.idoso" /> Idoso</label>
-    <label class="checkbox-field"
-      ><input type="checkbox" [(ngModel)]="draft.deficiente" /> Deficiente</label
-    >
-    <label class="checkbox-field"
-      ><input type="checkbox" [(ngModel)]="draft.mulherChefeFamilia" /> Mulher chefe família</label
-    >
-    <label class="checkbox-field"
-      ><input type="checkbox" [(ngModel)]="draft.possuiDocumentacaoCompleta" /> Documentação
-      completa</label
-    >
+    <div class="checkbox-field">
+      <p-checkbox
+        inputId="rendaAte5Sm"
+        [(ngModel)]="currentDraft.rendaFamiliarAte5Sm"
+        [binary]="true"
+      ></p-checkbox>
+      <label for="rendaAte5Sm">Renda até 5 SM</label>
+    </div>
+    <div class="checkbox-field">
+      <p-checkbox inputId="idoso" [(ngModel)]="currentDraft.idoso" [binary]="true"></p-checkbox>
+      <label for="idoso">Idoso</label>
+    </div>
+    <div class="checkbox-field">
+      <p-checkbox inputId="deficiente" [(ngModel)]="currentDraft.deficiente" [binary]="true"></p-checkbox>
+      <label for="deficiente">Deficiente</label>
+    </div>
+    <div class="checkbox-field">
+      <p-checkbox
+        inputId="mulherChefe"
+        [(ngModel)]="currentDraft.mulherChefeFamilia"
+        [binary]="true"
+      ></p-checkbox>
+      <label for="mulherChefe">Mulher chefe família</label>
+    </div>
+    <div class="checkbox-field">
+      <p-checkbox
+        inputId="docCompleta"
+        [(ngModel)]="currentDraft.possuiDocumentacaoCompleta"
+        [binary]="true"
+      ></p-checkbox>
+      <label for="docCompleta">Documentação completa</label>
+    </div>
   </div>
 
   <div class="form-actions">
-    <button type="button" class="secondary-button" (click)="resetDraft()">Limpar</button>
-    <button type="button" class="primary-button" (click)="upsert()">Salvar beneficiário</button>
+    <p-button label="Limpar" [text]="true" [rounded]="true" (click)="resetDraft()" />
+    <p-button label="Salvar beneficiário" [rounded]="true" (click)="upsert()" />
   </div>
 
-  <table class="list-table">
-    <thead>
-      <tr>
-        <th>Beneficiário</th>
-        <th>Lote</th>
-        <th>Renda</th>
-        <th>Direito</th>
-        <th>Ações</th>
-      </tr>
-    </thead>
-    <tbody>
-      @if (localItems.length) {
-        @for (item of localItems; track item.id) {
-          <tr>
-            <td>{{ item.nomeCompleto || '-' }}</td>
-            <td>{{ item.quadra || '-' }}/{{ item.numeroLote || '-' }}</td>
-            <td>
-              {{ item.rendaFamiliarMensal ?? 0 | currency: 'BRL' : 'symbol' : '1.2-2' : 'pt-BR' }}
-            </td>
-            <td>{{ item.direitoRealConferido || '-' }}</td>
-            <td>
-              <div class="row-actions">
-                <button type="button" class="secondary-button" (click)="edit(item)">Editar</button>
-                <button type="button" class="danger-button" (click)="remove(item.id)">
-                  Excluir
-                </button>
-              </div>
-            </td>
-          </tr>
-        }
-      } @else {
+  <div class="list-container">
+    <h3 class="list-title">Beneficiários Cadastrados</h3>
+    <p-table [value]="localItems()" [rows]="5" [paginator]="true" responsiveLayout="scroll">
+      <ng-template pTemplate="header">
         <tr>
-          <td colspan="5" class="text-muted">Nenhum beneficiário cadastrado.</td>
+          <th>Beneficiário</th>
+          <th>Lote</th>
+          <th>Renda</th>
+          <th>Direito</th>
+          <th style="width: 150px">Ações</th>
         </tr>
-      }
-    </tbody>
-  </table>
+      </ng-template>
+      <ng-template pTemplate="body" let-item>
+        <tr>
+          <td>{{ item.nomeCompleto || '-' }}</td>
+          <td>{{ item.quadra || '-' }}/{{ item.numeroLote || '-' }}</td>
+          <td>
+            {{ item.rendaFamiliarMensal ?? 0 | currency: 'BRL' : 'symbol' : '1.2-2' : 'pt-BR' }}
+          </td>
+          <td>{{ item.direitoRealConferido || '-' }}</td>
+          <td>
+            <div class="flex gap-2">
+              <p-button
+                icon="pi pi-pencil"
+                [text]="true"
+                [rounded]="true"
+                severity="secondary"
+                (click)="edit(item)"
+                size="small"
+              />
+              <p-button
+                icon="pi pi-trash"
+                [text]="true"
+                [rounded]="true"
+                severity="danger"
+                (click)="remove(item.id)"
+                size="small"
+              />
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="5">Nenhum beneficiário cadastrado.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
 </section>

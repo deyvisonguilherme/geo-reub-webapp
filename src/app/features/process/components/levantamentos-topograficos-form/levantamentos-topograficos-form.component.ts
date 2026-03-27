@@ -1,22 +1,51 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { PROCESS_FORM_STYLES } from '../../process-form.styles';
+import { ButtonModule } from 'primeng/button';
+import { DatePickerModule } from 'primeng/datepicker';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { InputTextModule } from 'primeng/inputtext';
+import { TableModule } from 'primeng/table';
 import { LevantamentoTopografico } from '../../process.types';
+
+interface LevantamentoTopograficoDraft {
+  id: string;
+  sistemaReferencia: string;
+  datum: string;
+  fusoUtm: string;
+  precisaoPlanimetricaCm: number | null;
+  precisaoAltimetricaCm: number | null;
+  responsavelTecnico: string;
+  creaArt: string;
+  empresaExecutora: string;
+  arquivoPlantaId: string;
+  arquivoMemorialId: string;
+  arquivoShapefileId: string;
+  dataLevantamento: Date | null;
+  dataAprovacao: Date | null;
+}
 
 @Component({
   selector: 'app-levantamentos-topograficos-form',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ButtonModule,
+    DatePickerModule,
+    InputNumberModule,
+    InputTextModule,
+    TableModule,
+  ],
   templateUrl: './levantamentos-topograficos-form.component.html',
-  styles: [PROCESS_FORM_STYLES],
+  styleUrl: './levantamentos-topograficos-form.component.scss',
 })
 export class LevantamentosTopograficosFormComponent implements OnChanges {
   @Input() items: LevantamentoTopografico[] = [];
   @Output() save = new EventEmitter<LevantamentoTopografico[]>();
 
   localItems: LevantamentoTopografico[] = [];
-  draft: LevantamentoTopografico = this.createDraft();
+  draft: LevantamentoTopograficoDraft = this.createDraft();
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['items']) {
@@ -26,11 +55,20 @@ export class LevantamentosTopograficosFormComponent implements OnChanges {
   }
 
   edit(item: LevantamentoTopografico): void {
-    this.draft = { ...item };
+    this.draft = {
+      ...item,
+      dataLevantamento: this.parseDate(item.dataLevantamento),
+      dataAprovacao: this.parseDate(item.dataAprovacao),
+    };
   }
 
   upsert(): void {
-    const item = { ...this.draft, id: this.draft.id || crypto.randomUUID() };
+    const item: LevantamentoTopografico = {
+      ...this.draft,
+      id: this.draft.id || crypto.randomUUID(),
+      dataLevantamento: this.toDateString(this.draft.dataLevantamento),
+      dataAprovacao: this.toDateString(this.draft.dataAprovacao),
+    };
     const exists = this.localItems.some((current) => current.id === item.id);
     this.localItems = exists
       ? this.localItems.map((current) => (current.id === item.id ? item : current))
@@ -48,7 +86,7 @@ export class LevantamentosTopograficosFormComponent implements OnChanges {
     this.draft = this.createDraft();
   }
 
-  private createDraft(): LevantamentoTopografico {
+  private createDraft(): LevantamentoTopograficoDraft {
     return {
       id: '',
       sistemaReferencia: '',
@@ -62,8 +100,19 @@ export class LevantamentosTopograficosFormComponent implements OnChanges {
       arquivoPlantaId: '',
       arquivoMemorialId: '',
       arquivoShapefileId: '',
-      dataLevantamento: '',
-      dataAprovacao: '',
+      dataLevantamento: null,
+      dataAprovacao: null,
     };
+  }
+
+  private parseDate(dateStr: string | undefined): Date | null {
+    if (!dateStr) return null;
+    const date = new Date(dateStr);
+    return isNaN(date.getTime()) ? null : date;
+  }
+
+  private toDateString(date: Date | null): string {
+    if (!date) return '';
+    return date.toISOString().slice(0, 10);
   }
 }

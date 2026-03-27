@@ -3,7 +3,8 @@
 }
 
 .nucleus-page {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 1.5rem;
 }
 
@@ -17,250 +18,54 @@
 
 .page-title {
   margin: 0;
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: 700;
-  color: #16324f;
+  color: #111827;
 }
 
 .page-subtitle {
-  margin: 0.4rem 0 0;
-  color: #5e7188;
-  max-width: 54rem;
+  margin: 0.25rem 0 0;
+  font-size: 0.875rem;
+  color: #6b7280;
+  line-height: 1.6;
 }
 
 .nucleus-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.7fr) minmax(320px, 0.9fr);
+  grid-template-columns: 1fr 380px;
   gap: 1.5rem;
   align-items: start;
 }
 
 .nucleus-card {
-  background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
-  border: 1px solid #d9e5f2;
-  border-radius: 1.25rem;
-  box-shadow: 0 18px 45px rgba(18, 52, 77, 0.08);
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
-.table-card,
-.detail-card {
-  padding: 1.25rem;
+.table-card {
+  padding: 1rem;
 }
 
-.table-toolbar {
+.table-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 1rem;
   flex-wrap: wrap;
-  margin-bottom: 1rem;
-}
-
-.toolbar-summary {
-  min-width: 7rem;
-}
-
-.toolbar-label,
-.detail-kicker,
-.detail-section-title {
-  display: block;
-  font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: #5f7896;
-}
-
-.toolbar-select {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  color: #4a6077;
-}
-
-.toolbar-search {
-  display: grid;
-  gap: 0.45rem;
-  flex: 1 1 18rem;
-  min-width: min(100%, 18rem);
-}
-
-.toolbar-select label {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: #34506c;
-}
-
-.toolbar-search label {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: #34506c;
-}
-
-.toolbar-select select {
-  min-height: 2.75rem;
-  width: 100%;
-  border: 1px solid #cfdceb;
-  border-radius: 0.85rem;
-  padding: 0.65rem 0.85rem;
-  background: #fff;
-  color: #16324f;
-}
-
-.toolbar-search input {
-  min-height: 2.75rem;
-  width: 100%;
-  border: 1px solid #cfdceb;
-  border-radius: 0.85rem;
-  padding: 0.65rem 0.85rem;
-  background: #fff;
-  color: #16324f;
-}
-
-.toolbar-search input::placeholder {
-  color: #7890a7;
-}
-
-.toolbar-search input:focus,
-.toolbar-select select:focus {
-  outline: none;
-  border-color: #78a9d5;
-  box-shadow: 0 0 0 3px rgba(78, 141, 201, 0.15);
-}
-
-.native-table-wrapper {
-  overflow-x: auto;
-  border: 1px solid #dde7f1;
-  border-radius: 1rem;
-}
-
-.native-table {
-  width: 100%;
-  border-collapse: collapse;
-  min-width: 760px;
-}
-
-.native-table thead th {
-  background: #f3f8fd;
-  color: #274862;
-  font-weight: 700;
-  padding: 1rem;
-  border-bottom: 1px solid #dde7f1;
-  text-align: left;
-}
-
-.native-table tbody td {
-  padding: 1rem;
-  border-bottom: 1px solid #e5edf5;
-  vertical-align: top;
-}
-
-.actions-column {
-  width: 7.5rem;
-  text-align: center;
-}
-
-.table-row {
-  cursor: pointer;
-  transition:
-    background-color 0.18s ease,
-    transform 0.18s ease;
-}
-
-.table-row:hover {
-  background: #f4f9ff;
-}
-
-.table-row.selected {
-  background: #ebf5ff;
-}
-
-.cell-code {
-  display: inline-flex;
-  padding: 0.35rem 0.65rem;
-  border-radius: 999px;
-  background: #eff6ff;
-  color: #21517b;
-  font-weight: 700;
-}
-
-.cell-title {
-  display: grid;
-  gap: 0.2rem;
-}
-
-.cell-title span {
-  color: #5b7086;
-  font-size: 0.92rem;
-  line-height: 1.35;
 }
 
 .row-actions {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.15rem;
-}
-
-.empty-state {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
-  padding: 2rem 1rem;
-  color: #70859a;
+  gap: 0.25rem;
 }
 
-.pagination-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1rem;
-  flex-wrap: wrap;
-  margin-top: 1rem;
-}
-
-.pagination-report {
-  color: #617890;
-  font-size: 0.95rem;
-}
-
-.pagination-actions {
-  display: flex;
-  gap: 0.4rem;
-  flex-wrap: wrap;
-}
-
-.page-button {
-  min-width: 2.5rem;
-  min-height: 2.5rem;
-  border: 1px solid #d4e0ed;
-  border-radius: 0.85rem;
-  background: #fff;
-  color: #204867;
-  font-weight: 600;
-  padding: 0.55rem 0.8rem;
-  cursor: pointer;
-  transition: all 0.18s ease;
-}
-
-.page-button:hover:not(:disabled) {
-  background: #f0f7ff;
-}
-
-.page-button.active {
-  background: #1f6fb2;
-  border-color: #1f6fb2;
-  color: #fff;
-}
-
-.page-button:disabled {
-  opacity: 0.45;
-  cursor: not-allowed;
-}
-
+/* Detail Card Styling */
 .detail-card {
-  display: grid;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
   gap: 1.25rem;
   position: sticky;
   top: 1.5rem;
@@ -269,80 +74,129 @@
 .detail-header {
   display: flex;
   justify-content: space-between;
+  align-items: flex-start;
   gap: 1rem;
-  align-items: start;
+
+  h2 {
+    margin: 0.25rem 0 0;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #111827;
+  }
 }
 
-.detail-header h2 {
-  margin: 0.35rem 0 0;
-  color: #16324f;
-  font-size: 1.35rem;
+.detail-kicker {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #6b7280;
 }
 
 .detail-section {
-  display: grid;
-  gap: 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
   padding-top: 1rem;
-  border-top: 1px solid #e2ebf4;
+  border-top: 1px solid #f3f4f6;
+}
+
+.detail-section-title {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #9ca3af;
 }
 
 .detail-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.9rem;
-}
-
-.detail-stack {
-  display: grid;
-  gap: 0.9rem;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
 }
 
 .detail-item {
-  display: grid;
-  gap: 0.28rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
 }
 
 .detail-label {
-  font-size: 0.82rem;
-  color: #70859a;
+  font-size: 0.75rem;
+  color: #6b7280;
 }
 
 .detail-item strong {
-  color: #16324f;
+  font-size: 0.875rem;
   font-weight: 600;
-  line-height: 1.4;
+  color: #1f2937;
 }
 
-.detail-description {
-  margin: 0;
-  color: #4f657b;
-  line-height: 1.6;
+.field-span-full {
+  grid-column: 1 / -1;
 }
 
-.mono strong {
-  font-family: 'IBM Plex Mono', 'Fira Code', monospace;
-  font-size: 0.88rem;
-  word-break: break-word;
-}
-
-.dialog-actions {
+.empty-state {
   display: flex;
-  justify-content: flex-end;
-  gap: 0.75rem;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 1rem;
+  color: #9ca3af;
+  text-align: center;
+
+  span {
+    font-size: 0.875rem;
+  }
 }
 
-.delete-copy {
-  margin: 0;
-  line-height: 1.6;
-  color: #415a73;
+/* PrimeNG Table Overrides */
+:host ::ng-deep {
+  .p-datatable {
+    .p-datatable-thead > tr > th {
+      background: #f9fafb;
+      color: #4b5563;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 700;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .p-datatable-tbody > tr > td {
+      padding: 0.75rem 1rem;
+      font-size: 0.875rem;
+      color: #1f2937;
+      border-bottom: 1px solid #f3f4f6;
+    }
+
+    .p-datatable-tbody > tr.p-highlight {
+      background: #eff6ff;
+      color: #1e40af;
+    }
+
+    .p-paginator {
+      border: none;
+      padding-top: 1rem;
+    }
+
+    .p-inputtext {
+      border-radius: 8px;
+    }
+  }
+
+  .p-tag {
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+  }
 }
 
-:host ::ng-deep .header-action .p-button {
-  border-radius: 999px;
-  padding-inline: 1.1rem;
-}
-
-@media (max-width: 1100px) {
+@media (max-width: 1200px) {
   .nucleus-grid {
     grid-template-columns: 1fr;
   }
@@ -352,22 +206,18 @@
   }
 }
 
-@media (max-width: 768px) {
-  .detail-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .table-toolbar {
+@media (max-width: 640px) {
+  .page-header {
+    flex-direction: column;
     align-items: stretch;
   }
 
-  .toolbar-summary,
-  .toolbar-search,
-  .toolbar-select {
-    width: 100%;
+  .table-header {
+    flex-direction: column;
+    align-items: stretch;
   }
 
-  .toolbar-select {
-    justify-content: space-between;
+  .detail-grid {
+    grid-template-columns: 1fr;
   }
 }
