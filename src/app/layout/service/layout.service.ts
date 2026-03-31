@@ -56,6 +56,8 @@ export class LayoutService {
 
     transitionComplete = signal<boolean>(false);
 
+    chatVisible = signal<boolean>(false);
+
     private initialized = false;
 
     constructor() {
@@ -74,6 +76,10 @@ export class LayoutService {
 
             this.handleDarkModeTransition(config);
         });
+    }
+
+    toggleChat() {
+        this.chatVisible.update((prev) => !prev);
     }
 
     private handleDarkModeTransition(config: LayoutConfig): void {

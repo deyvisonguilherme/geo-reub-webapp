@@ -1,26 +1,17 @@
 import { CommonModule, DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { Component, PLATFORM_ID, computed, effect, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { AppTopbar } from './app.topbar';
-import { AppSidebar } from './app.sidebar';
-import { AppFooter } from './app.footer';
-import { LayoutService } from '../service/layout.service';
+import { AppTopbar } from '../topbar/app.topbar';
+import { AppSidebar } from '../sidebar/app.sidebar';
+import { AppFooter } from '../footer/app.footer';
+import { LayoutService } from '../../service/layout.service';
+import { AilegalComponent } from '../../../features/ailegal/ailegal.component';
 
 @Component({
   selector: 'app-layout',
   standalone: true,
-  imports: [CommonModule, AppTopbar, AppSidebar, RouterModule, AppFooter],
-  template: `<div class="layout-wrapper" [ngClass]="containerClass()">
-    <app-topbar></app-topbar>
-    <app-sidebar></app-sidebar>
-    <div class="layout-main-container">
-      <div class="layout-main">
-        <router-outlet></router-outlet>
-      </div>
-      <app-footer></app-footer>
-    </div>
-    <div class="layout-mask"></div>
-  </div> `,
+  imports: [CommonModule, AppTopbar, AppSidebar, RouterModule, AppFooter, AilegalComponent],
+  templateUrl: './app.layout.html',
 })
 export class AppLayout {
   layoutService = inject(LayoutService);

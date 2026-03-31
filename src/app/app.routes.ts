@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { AppLayout } from './layout/component/app.layout';
+import { AppLayout } from './layout/component/layout/app.layout';
 
 export const routes: Routes = [
   {
@@ -62,6 +62,11 @@ export const routes: Routes = [
         path: 'users',
         loadComponent: () =>
           import('./features/users/users.component').then((m) => m.UsersComponent),
+      },
+      {
+        path: 'alerts',
+        loadComponent: () =>
+          import('./features/alert/alert.component').then((m) => m.AlertComponent),
       },
     ],
   },

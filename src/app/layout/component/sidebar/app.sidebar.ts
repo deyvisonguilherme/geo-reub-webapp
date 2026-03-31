@@ -1,18 +1,14 @@
-import { Component, computed, effect, ElementRef, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, effect, ElementRef, inject, OnDestroy, OnInit } from '@angular/core';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { filter, Subject, takeUntil } from 'rxjs';
-import { AppMenu } from './app.menu';
-import { LayoutService } from '../service/layout.service';
+import { AppMenu } from '../menu/app.menu';
+import { LayoutService } from '../../service/layout.service';
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
   imports: [AppMenu, RouterModule],
-  template: `
-    <div class="layout-sidebar">
-      <app-menu></app-menu>
-    </div>
-  `,
+  templateUrl: './app.sidebar.html',
 })
 export class AppSidebar implements OnInit, OnDestroy {
   layoutService = inject(LayoutService);

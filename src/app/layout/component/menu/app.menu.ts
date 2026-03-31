@@ -2,21 +2,13 @@ import { Component } from '@angular/core';
 
 import { RouterModule } from '@angular/router';
 import { MenuItem } from 'primeng/api';
-import { AppMenuitem } from './app.menuitem';
+import { AppMenuitem } from '../menuitem/app.menuitem';
 
 @Component({
   selector: 'app-menu',
   standalone: true,
   imports: [AppMenuitem, RouterModule],
-  template: `<ul class="layout-menu">
-    @for (item of model; track item.label) {
-      @if (!item.separator) {
-        <li app-menuitem [item]="item" [root]="true"></li>
-      } @else {
-        <li class="menu-separator"></li>
-      }
-    }
-  </ul> `,
+  templateUrl: './app.menu.html',
 })
 export class AppMenu {
   model: MenuItem[] = [];
@@ -50,6 +42,11 @@ export class AppMenu {
             label: 'Comunicação',
             icon: 'pi pi-fw pi-megaphone',
             routerLink: ['/comunication'],
+          },
+          {
+            label: 'Alertas',
+            icon: 'pi pi-fw pi-bell',
+            routerLink: ['/alerts'],
           },
           {
             label: 'Documentos',
