@@ -24,31 +24,44 @@
 - **Centralized Stores:** State is managed via Signal-based stores (e.g., `ProcessStore` in `src/app/features/process/process.store.ts`).
 - **Layout:** Standard application layout is managed in `src/app/layout/`.
 
-## Design Thinking & UI Patterns
+## Design System & UI Patterns
 
-### 1. Master-Detail Layout
-- **Structure:** List pages (Nucleus, Beneficiaries, Process) follow a master-detail split.
-- **Table View:** Left side features a PrimeNG `p-table` with pagination, sorting, and global search.
-- **Detail Sidebar:** Right side features a sticky `aside` card providing a high-level summary of the selected record.
-- **Responsiveness:** On smaller screens (max-width: 1200px), the layout collapses to a single column with the sidebar moving below the table.
+### 1. Master-Detail Layout (Standard)
+- **Layout Grid:** Use a 2-column grid (`display: grid`) with `grid-template-columns: 1fr 380px`.
+- **Table Card:** Occupies the primary column (`1fr`). Wraps the PrimeNG table with `.table-card` and `.waiting-card`/`.nucleus-card`.
+- **Detail Sidebar:** A fixed-width (`380px`) sticky column (`position: sticky; top: 1.5rem`).
+- **Empty State:** When no record is selected, display an `.empty-state` with a central icon and instruction text.
+- **Responsiveness:** At `max-width: 1200px`, switch to a single column (`1fr`) with the sidebar moving below the table.
 
-### 2. Unified Dialog Workflow
-- **Component Separation:** CRUD operations are separated into a parent management component and a reusable form-dialog component.
-- **Custom Headers:** Dialogs (`p-dialog`) use `pTemplate="header"` to separate the title and subtitle from the form content, including an explicit close button.
-- **State Cleanup:** Form data is wrapped in `@if (model)` checks to prevent null-reference errors during store initialization.
+### 2. Typography & Hierarchy
+- **Page Headers:**
+  - `.page-title`: `font-size: 1.5rem; font-weight: 700; color: #111827`.
+  - `.page-subtitle`: `font-size: 0.875rem; color: #6b7280`.
+- **Detail Views:**
+  - `.detail-kicker`: Small uppercase text above titles (`0.75rem`, bold, gray).
+  - `.detail-section-title`: Small uppercase text for grouping fields (`0.75rem`, bold, light gray).
+  - `.detail-label`: Small descriptive label (`0.75rem`, gray).
+  - `.detail-item strong`: Main data point (`0.875rem`, semibold, dark gray).
 
-### 3. Responsive Form Grids
-- **Grid System:** Forms utilize a CSS Grid (`form-grid`) with `auto-fit` logic and standardized gaps (`1.25rem`).
-- **Column Spans:** Specific fields can span multiple columns using utility classes like `field-span-2` or `field-span-full`.
-- **Logical Sectioning:** Complex forms are divided into semantic blocks with secondary headers (`section-title text-sm`) and subtle bottom borders.
+### 3. Unified Dialog Workflow
+- **Structure:** Separate CRUD logic into a parent management component and a dedicated form-dialog component.
+- **Header Pattern:** Use `pTemplate="header"` to separate the title/subtitle from form fields.
+- **Close Button:** Include an explicit close button in the top-right corner of dialog headers.
+- **State Handling:** Use `@if (model)` in the dialog template to ensure data is present before rendering the form.
 
-### 4. Visual Language & Feedback
-- **Status Tags:** Consistent use of `p-tag` with severities:
-  - `success`: Completed, valid, or active status.
-  - `warn`: Pending, in-progress, or partial status.
-  - `info`: Identification codes and neutral attributes.
-  - `danger`: Critical alerts or negative outcomes.
-- **Auditoria Blocks:** Forms and detail views always include an "Auditoria" section displaying creation and update metadata.
+### 4. PrimeNG Global Overrides (Local SCSS)
+- **Table Header:** Light gray background (`#f9fafb`), uppercase bold text (`0.75rem`), and subtle borders.
+- **Selection:** Use `#eff6ff` (light blue) for highlighted rows (`.p-highlight`).
+- **Tags:** Rounded pills with bold text (`0.7rem`) and specific project severities:
+  - `success`: Finalized/Valid.
+  - `warn`: In-progress/Pending.
+  - `info`: Identification/Codes.
+  - `danger`: Critical/Nota Devolutiva.
+
+### 5. Responsive Form Grids
+- **CSS Grid:** Use `.form-grid` with `grid-template-columns: repeat(auto-fit, minmax(200px, 1fr))`.
+- **Gaps:** Standard `1.25rem` gap between fields.
+- **Spans:** Use `.field-span-full` or `.field-span-2` for wider fields like addresses or descriptions.
 
 ## Building and Running
 

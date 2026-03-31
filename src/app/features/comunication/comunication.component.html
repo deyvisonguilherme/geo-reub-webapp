@@ -1,1 +1,112 @@
-<p>comunication works!</p>
+<div class="comunication-page">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Gestão de Comunicações</h1>
+      <p class="page-subtitle">Acompanhamento de notificações, concordâncias e prazos cartoriais.</p>
+    </div>
+  </div>
+
+  <div class="stats-grid mb-6">
+    <p-card styleClass="stat-card pending">
+      <div class="stat-content">
+        <div>
+          <span class="stat-label">Notificações Pendentes</span>
+          <div class="stat-value">{{ stats().pending }}</div>
+        </div>
+        <div class="stat-icon-wrapper">
+          <i class="pi pi-bell"></i>
+        </div>
+      </div>
+    </p-card>
+
+    <p-card styleClass="stat-card recused">
+      <div class="stat-content">
+        <div>
+          <span class="stat-label">Recusas/Ausentes</span>
+          <div class="stat-value">{{ stats().recused }}</div>
+        </div>
+        <div class="stat-icon-wrapper">
+          <i class="pi pi-times-circle"></i>
+        </div>
+      </div>
+    </p-card>
+
+    <p-card styleClass="stat-card tacit">
+      <div class="stat-content">
+        <div>
+          <span class="stat-label">Aguardando Tácita</span>
+          <div class="stat-value">{{ stats().tacitWaiting }}</div>
+        </div>
+        <div class="stat-icon-wrapper">
+          <i class="pi pi-clock"></i>
+        </div>
+      </div>
+    </p-card>
+
+    <p-card styleClass="stat-card critical">
+      <div class="stat-content">
+        <div>
+          <span class="stat-label">Prazos Críticos</span>
+          <div class="stat-value">{{ stats().criticalDeadlines }}</div>
+        </div>
+        <div class="stat-icon-wrapper">
+          <i class="pi pi-exclamation-triangle"></i>
+        </div>
+      </div>
+    </p-card>
+  </div>
+
+  <p-card styleClass="main-card">
+    <p-tabs value="0">
+      <p-tablist>
+        <p-tab value="0">Notificações Pendentes</p-tab>
+        <p-tab value="1">Concordâncias Tácitas</p-tab>
+        <p-tab value="2">Prazos Cartoriais</p-tab>
+      </p-tablist>
+
+      <p-tabpanels>
+        <p-tabpanel value="0">
+          <app-pending-notifications 
+            [notifications]="notifications()" 
+            (updateAr)="updateArTracking($event)"
+            (convertToEdital)="convertToEdital($event)" />
+        </p-tabpanel>
+
+        <p-tabpanel value="1">
+          <app-tacit-agreements 
+            [agreements]="tacitAgreements()" 
+            (consolidate)="consolidateTacit($event)" />
+        </p-tabpanel>
+
+        <p-tabpanel value="2">
+          <app-registry-deadlines 
+            [deadlines]="registryDeadlines()" />
+        </p-tabpanel>
+      </p-tabpanels>
+    </p-tabs>
+  </p-card>
+
+  <!-- AR Tracking Dialog -->
+  <p-dialog [(visible)]="displayArDialog" [style]="{width: '450px'}" header="Rastreamento AR" [modal]="true">
+    <ng-template pTemplate="header">
+      <div class="flex items-center gap-2">
+        <span class="text-xl font-bold">Rastreamento AR</span>
+        <span class="text-sm text-gray-500 font-normal">| {{ selectedNotification?.numero_processo }}</span>
+      </div>
+    </ng-template>
+    <div class="form-grid py-4">
+      <div class="detail-item field-span-full mb-4">
+        <span class="detail-label">Destinatário</span>
+        <strong>{{ selectedNotification?.destinatario }}</strong>
+      </div>
+      <div class="flex flex-col gap-2">
+        <label for="arCode" class="text-sm font-semibold">Código de Rastreio (Correios)</label>
+        <input id="arCode" type="text" pInputText [(ngModel)]="arCodeInput" placeholder="EX: AR123456789BR" />
+      </div>
+    </div>
+    <ng-template pTemplate="footer">
+      <p-button label="Cancelar" icon="pi pi-times" [text]="true" (click)="displayArDialog = false" />
+      <p-button label="Salvar AR" icon="pi pi-check" (click)="saveArTracking()" [disabled]="!arCodeInput" />
+    </ng-template>
+  </p-dialog>
+</div>

@@ -1,0 +1,205 @@
+<div class="approved-page">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Processos Aprovados e Registrados</h1>
+      <p class="page-subtitle">
+        Acompanhamento de CRFs emitidas e status de registro em cartório.
+      </p>
+    </div>
+  </div>
+
+  <div class="approved-grid">
+    <section class="approved-card table-card">
+      <p-table
+        #dt
+        [value]="data()"
+        [rows]="10"
+        [paginator]="true"
+        [globalFilterFields]="['numero_processo', 'nucleo_nome', 'numero_crf', 'cartorio_registro_imoveis']"
+        styleClass="p-datatable-sm p-datatable-striped"
+        [rowHover]="true"
+        dataKey="processo_id"
+        selectionMode="single"
+        [selection]="selectedItem()"
+        (onRowSelect)="selectItem($event.data)"
+      >
+        <ng-template pTemplate="caption">
+          <div class="table-header">
+            <span class="text-xl font-bold">Listagem de CRFs</span>
+            <p-iconfield iconPosition="left">
+              <p-inputicon styleClass="pi pi-search" />
+              <input
+                pInputText
+                type="text"
+                (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+                placeholder="Pesquisar..."
+              />
+            </p-iconfield>
+          </div>
+        </ng-template>
+
+        <ng-template pTemplate="header">
+          <tr>
+            <th pSortableColumn="numero_processo">Processo <p-sortIcon field="numero_processo" /></th>
+            <th pSortableColumn="numero_crf">Nº CRF <p-sortIcon field="numero_crf" /></th>
+            <th pSortableColumn="data_emissao_crf">Emissão <p-sortIcon field="data_emissao_crf" /></th>
+            <th pSortableColumn="status_registro">Status Registro <p-sortIcon field="status_registro" /></th>
+            <th pSortableColumn="status_prazo_registro">Prazo <p-sortIcon field="status_prazo_registro" /></th>
+            <th style="width: 5rem">Ações</th>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-item>
+          <tr [pSelectableRow]="item" class="table-row">
+            <td>
+              <div class="flex flex-col">
+                <span class="font-bold text-blue-600">{{ item.numero_processo }}</span>
+                <span class="text-xs text-gray-500">{{ item.nucleo_nome }}</span>
+              </div>
+            </td>
+            <td>{{ item.numero_crf }}</td>
+            <td>{{ item.data_emissao_crf | date: 'shortDate' }}</td>
+            <td>
+              <p-tag
+                [value]="item.status_registro.replace('_', ' ')"
+                [severity]="getStatusRegistroSeverity(item.status_registro)"
+              />
+            </td>
+            <td>
+              <p-tag
+                [value]="item.status_prazo_registro.replace('_', ' ')"
+                [severity]="getStatusPrazoSeverity(item.status_prazo_registro)"
+              />
+            </td>
+            <td>
+              <div class="row-actions">
+                <p-button
+                  icon="pi pi-file-pdf"
+                  [rounded]="true"
+                  [text]="true"
+                  severity="danger"
+                  pTooltip="Ver CRF"
+                  (onClick)="$event.stopPropagation()"
+                />
+                <p-button
+                  icon="pi pi-arrow-right"
+                  [rounded]="true"
+                  [text]="true"
+                  [routerLink]="['/process', item.processo_id]"
+                  pTooltip="Ver processo"
+                  (onClick)="$event.stopPropagation()"
+                />
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="6" class="text-center py-8 text-gray-500">
+              Nenhum processo aprovado encontrado.
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </section>
+
+    <aside class="approved-card detail-card">
+      @if (selectedItem(); as item) {
+        <div class="detail-header">
+          <div>
+            <span class="detail-kicker">Resumo da Titulação</span>
+            <h2>{{ item.numero_crf }}</h2>
+          </div>
+          <p-tag [value]="item.modalidade" [severity]="getModalidadeSeverity(item.modalidade)" />
+        </div>
+
+        <div class="detail-section">
+          <span class="detail-section-title">Dados da Certidão (CRF)</span>
+          <div class="detail-grid">
+            <div class="detail-item">
+              <span class="detail-label">Data Emissão</span>
+              <strong>{{ item.data_emissao_crf | date: 'shortDate' }}</strong>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Beneficiários</span>
+              <strong>{{ item.numero_beneficiarios }}</strong>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Área Total</span>
+              <strong>{{ item.area_total_m2 | number }} m²</strong>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Tempo até CRF</span>
+              <strong>{{ item.dias_ate_crf }} dias</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="detail-section">
+          <span class="detail-section-title">Acompanhamento Registral</span>
+          <div class="detail-grid">
+            <div class="detail-item field-span-full">
+              <span class="detail-label">Cartório</span>
+              <strong>{{ item.cartorio_registro_imoveis }}</strong>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Prenotação</span>
+              <strong>{{ item.data_prenotacao ? (item.data_prenotacao | date: 'shortDate') : '---' }}</strong>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Prazo Estimado</span>
+              <strong>{{ item.prazo_registro ? (item.prazo_registro | date: 'shortDate') : '---' }}</strong>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Data Registro</span>
+              <strong>{{ item.data_registro ? (item.data_registro | date: 'shortDate') : '---' }}</strong>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Dias no Cartório</span>
+              <strong>{{ item.dias_no_cartorio }} dias</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="detail-section">
+          <span class="detail-section-title">Financeiro e Pendências</span>
+          <div class="detail-grid">
+            <div class="detail-item">
+              <span class="detail-label">Isento Custas</span>
+              <p-tag [value]="item.isento_custas ? 'Sim' : 'Não'" [severity]="item.isento_custas ? 'success' : 'info'" />
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Valor Custas</span>
+              <strong>{{ item.valor_custas | currency: 'BRL' }}</strong>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Nota Devolutiva</span>
+              <p-tag [value]="item.possui_nota_devolutiva ? 'Sim' : 'Não'" [severity]="item.possui_nota_devolutiva ? 'danger' : 'success'" />
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Pend. Sanadas</span>
+              <p-tag [value]="item.pendencias_sanadas ? 'Sim' : 'Não'" [severity]="item.pendencias_sanadas ? 'success' : 'warn'" />
+            </div>
+          </div>
+        </div>
+
+        <div class="detail-actions mt-4">
+          <p-button
+            label="Visualizar Matrículas"
+            icon="pi pi-list"
+            class="w-full"
+            styleClass="w-full"
+            [routerLink]="['/documents']"
+            [queryParams]="{ type: 'matricula', processo: item.processo_id }"
+          />
+        </div>
+      } @else {
+        <div class="empty-state">
+          <i class="pi pi-check-circle text-4xl mb-4"></i>
+          <span>Selecione um processo para visualizar os detalhes da titulação e registro.</span>
+        </div>
+      }
+    </aside>
+  </div>
+</div>

@@ -2,7 +2,7 @@
   display: block;
 }
 
-.waiting-page {
+.active-page {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
@@ -30,14 +30,14 @@
   line-height: 1.6;
 }
 
-.waiting-grid {
+.active-grid {
   display: grid;
   grid-template-columns: 1fr 380px;
   gap: 1.5rem;
   align-items: start;
 }
 
-.waiting-card {
+.active-card {
   background: #ffffff;
   border: 1px solid #e5e7eb;
   border-radius: 12px;
@@ -197,7 +197,7 @@
 }
 
 @media (max-width: 1200px) {
-  .waiting-grid {
+  .active-grid {
     grid-template-columns: 1fr;
   }
 

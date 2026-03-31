@@ -2,7 +2,7 @@
   display: block;
 }
 
-.waiting-page {
+.beneficiarie-page {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
@@ -30,14 +30,14 @@
   line-height: 1.6;
 }
 
-.waiting-grid {
+.beneficiarie-grid {
   display: grid;
   grid-template-columns: 1fr 380px;
   gap: 1.5rem;
   align-items: start;
 }
 
-.waiting-card {
+.beneficiarie-card {
   background: #ffffff;
   border: 1px solid #e5e7eb;
   border-radius: 12px;
@@ -194,10 +194,25 @@
     padding: 0.2rem 0.6rem;
     border-radius: 999px;
   }
+
+  .p-progressbar {
+    height: 0.5rem;
+    background: #f3f4f6;
+    border-radius: 999px;
+
+    .p-progressbar-value {
+      background: #3b82f6;
+      border-radius: 999px;
+    }
+
+    &.p-progressbar-success .p-progressbar-value { background: #10b981; }
+    &.p-progressbar-warn .p-progressbar-value { background: #f59e0b; }
+    &.p-progressbar-danger .p-progressbar-value { background: #ef4444; }
+  }
 }
 
 @media (max-width: 1200px) {
-  .waiting-grid {
+  .beneficiarie-grid {
     grid-template-columns: 1fr;
   }
 

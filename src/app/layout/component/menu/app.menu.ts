@@ -21,8 +21,13 @@ export class AppMenu {
           {
             label: 'Dashboard',
             icon: 'pi pi-fw pi-home',
-            routerLink: ['/dashboard'],
+            routerLink: [''],
             items: [
+              {
+                label: 'Geral',
+                icon: 'pi pi-fw pi-home',
+                routerLink: ['/dashboard/general'],
+              },
               {
                 label: 'Aguardando',
                 icon: 'pi pi-fw pi-clock',
@@ -31,17 +36,17 @@ export class AppMenu {
               {
                 label: 'Aprovados',
                 icon: 'pi pi-fw pi-check-circle',
-                routerLink: ['/dashboard'],
+                routerLink: ['/dashboard/approved'],
               },
               {
                 label: 'Beneficiários',
                 icon: 'pi pi-fw pi-users',
-                routerLink: ['/dashboard'],
+                routerLink: ['/dashboard/beneficiaries'],
               },
               {
                 label: 'Processos Ativos',
                 icon: 'pi pi-fw pi-play-circle',
-                routerLink: ['/dashboard'],
+                routerLink: ['/dashboard/active'],
               },
             ],
           },
@@ -71,22 +76,11 @@ export class AppMenu {
             routerLink: ['/alerts'],
           },
           {
-            label: 'Documentos',
-            icon: 'pi pi-fw pi-folder-open',
-            routerLink: ['/documents'],
-          },
-          {
             label: 'Configurações',
             icon: 'pi pi-fw pi-cog',
             routerLink: ['/settings'],
           },
-          { label: 'Relatórios', icon: 'pi pi-fw pi-flag', routerLink: ['/reports'] },
           { label: 'Usuários', icon: 'pi pi-fw pi-user', routerLink: ['/users'] },
-          {
-            label: 'Ajuda',
-            icon: 'pi pi-fw pi-question-circle',
-            routerLink: ['/uikit/formlayout'],
-          },
         ],
       },
     ];

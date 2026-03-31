@@ -96,6 +96,14 @@ export class WaitingComponent {
     }
   ]);
 
+  selectedProcess = signal<WaitingProcess | null>(null);
+
+  selectProcess(data: any): void {
+    if (data && !Array.isArray(data)) {
+      this.selectedProcess.set(data as WaitingProcess);
+    }
+  }
+
   getStatusSeverity(status: string): any {
     switch (status) {
       case 'AGUARDANDO_CARTORIO':

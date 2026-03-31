@@ -1,0 +1,191 @@
+<div class="active-page">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Processos em Andamento</h1>
+      <p class="page-subtitle">
+        Gestão de prazos, etapas e produtividade dos processos ativos.
+      </p>
+    </div>
+  </div>
+
+  <div class="active-grid">
+    <section class="active-card table-card">
+      <p-table
+        #dt
+        [value]="data()"
+        [rows]="10"
+        [paginator]="true"
+        [globalFilterFields]="['numero_processo', 'nucleo_nome', 'etapa_atual', 'organizacao']"
+        styleClass="p-datatable-sm p-datatable-striped"
+        [rowHover]="true"
+        dataKey="id"
+        selectionMode="single"
+        [selection]="selectedItem()"
+        (onRowSelect)="selectItem($event.data)"
+      >
+        <ng-template pTemplate="caption">
+          <div class="table-header">
+            <span class="text-xl font-bold">Listagem de Ativos</span>
+            <p-iconfield iconPosition="left">
+              <p-inputicon styleClass="pi pi-search" />
+              <input
+                pInputText
+                type="text"
+                (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+                placeholder="Pesquisar..."
+              />
+            </p-iconfield>
+          </div>
+        </ng-template>
+
+        <ng-template pTemplate="header">
+          <tr>
+            <th pSortableColumn="numero_processo">Processo <p-sortIcon field="numero_processo" /></th>
+            <th pSortableColumn="nucleo_nome">Núcleo <p-sortIcon field="nucleo_nome" /></th>
+            <th pSortableColumn="etapa_atual">Etapa Atual <p-sortIcon field="etapa_atual" /></th>
+            <th pSortableColumn="dias_em_andamento">Dias <p-sortIcon field="dias_em_andamento" /></th>
+            <th pSortableColumn="status_prazo">Prazo <p-sortIcon field="status_prazo" /></th>
+            <th style="width: 5rem">Ações</th>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-item>
+          <tr [pSelectableRow]="item" class="table-row">
+            <td>
+              <div class="flex flex-col">
+                <span class="font-bold text-blue-600">{{ item.numero_processo }}</span>
+                <p-tag
+                  [value]="item.modalidade"
+                  [severity]="getModalidadeSeverity(item.modalidade)"
+                  styleClass="text-[10px] px-1 py-0"
+                />
+              </div>
+            </td>
+            <td>{{ item.nucleo_nome }}</td>
+            <td>
+              <span class="text-sm">{{ item.etapa_atual }}</span>
+            </td>
+            <td>{{ item.dias_em_andamento }}d</td>
+            <td>
+              <p-tag
+                [value]="item.status_prazo.replace('_', ' ')"
+                [severity]="getStatusPrazoSeverity(item.status_prazo)"
+              />
+            </td>
+            <td>
+              <div class="row-actions">
+                <p-button
+                  icon="pi pi-arrow-right"
+                  [rounded]="true"
+                  [text]="true"
+                  [routerLink]="['/process', item.id]"
+                  pTooltip="Ver processo"
+                  (onClick)="$event.stopPropagation()"
+                />
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="6" class="text-center py-8 text-gray-500">
+              Nenhum processo ativo encontrado.
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </section>
+
+    <aside class="active-card detail-card">
+      @if (selectedItem(); as item) {
+        <div class="detail-header">
+          <div>
+            <span class="detail-kicker">Status do Processo</span>
+            <h2>{{ item.numero_processo }}</h2>
+          </div>
+          <p-tag [value]="item.status.replace('_', ' ')" [severity]="getStatusSeverity(item.status)" />
+        </div>
+
+        <div class="detail-section">
+          <span class="detail-section-title">Informações da Etapa</span>
+          <div class="detail-grid">
+            <div class="detail-item field-span-full">
+              <span class="detail-label">Etapa Atual</span>
+              <strong>{{ item.etapa_atual }}</strong>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Dias em Andamento</span>
+              <strong>{{ item.dias_em_andamento }} dias</strong>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Legitimado</span>
+              <strong class="text-xs">{{ item.legitimado }}</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="detail-section">
+          <span class="detail-section-title">Controle de Prazos</span>
+          <div class="detail-grid">
+            <div class="detail-item">
+              <span class="detail-label">Instauração</span>
+              <strong>{{ item.data_instauracao | date: 'shortDate' }}</strong>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Prazo Classif.</span>
+              <strong [class.text-red-600]="item.dias_ate_prazo_classificacao < 0">
+                {{ item.prazo_analise_admissibilidade | date: 'shortDate' }}
+              </strong>
+            </div>
+            <div class="detail-item field-span-full">
+              <span class="detail-label">Status do Prazo</span>
+              <p-tag
+                [value]="item.status_prazo.replace('_', ' ')"
+                [severity]="getStatusPrazoSeverity(item.status_prazo)"
+                styleClass="w-full justify-center"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="detail-section">
+          <span class="detail-section-title">Métricas de Campo</span>
+          <div class="detail-grid">
+            <div class="detail-item">
+              <span class="detail-label">Beneficiários</span>
+              <strong>{{ item.total_beneficiarios }}</strong>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Famílias Est.</span>
+              <strong>{{ item.numero_familias_estimado }}</strong>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Área Total</span>
+              <strong>{{ item.area_total_m2 | number }} m²</strong>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Estudos/Peças</span>
+              <strong>{{ item.total_estudos }}</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="detail-actions mt-4">
+          <p-button
+            label="Gerenciar Etapa"
+            icon="pi pi-cog"
+            class="w-full"
+            styleClass="w-full"
+            [routerLink]="['/process', item.id]"
+          />
+        </div>
+      } @else {
+        <div class="empty-state">
+          <i class="pi pi-spin pi-spinner text-4xl mb-4"></i>
+          <span>Selecione um processo para visualizar o detalhamento do andamento.</span>
+        </div>
+      }
+    </aside>
+  </div>
+</div>

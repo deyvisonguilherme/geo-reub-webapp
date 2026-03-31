@@ -8,6 +8,11 @@ export const routes: Routes = [
     children: [
       {
         path: 'dashboard',
+        redirectTo: 'dashboard/general',
+        pathMatch: 'full',
+      },
+      {
+        path: 'dashboard/general',
         loadComponent: () =>
           import('./features/dashboard/dashboard.component').then((m) => m.DashboardComponent),
       },
@@ -16,6 +21,27 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/dashboard/dashboard-waiting/waiting.component').then(
             (m) => m.WaitingComponent,
+          ),
+      },
+      {
+        path: 'dashboard/beneficiaries',
+        loadComponent: () =>
+          import('./features/dashboard/dashboard-beneficiarie/dashboard-beneficiarie.component').then(
+            (m) => m.DashboardBeneficiarieComponent,
+          ),
+      },
+      {
+        path: 'dashboard/active',
+        loadComponent: () =>
+          import('./features/dashboard/dashboard-active-processes/active-processes.component').then(
+            (m) => m.ActiveProcessesComponent,
+          ),
+      },
+      {
+        path: 'dashboard/approved',
+        loadComponent: () =>
+          import('./features/dashboard/dashboard-approved/approved.component').then(
+            (m) => m.ApprovedComponent,
           ),
       },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -54,16 +80,6 @@ export const routes: Routes = [
         path: 'settings',
         loadComponent: () =>
           import('./features/settings/settings.component').then((m) => m.SettingsComponent),
-      },
-      {
-        path: 'documents',
-        loadComponent: () =>
-          import('./features/documents/documents.component').then((m) => m.DocumentsComponent),
-      },
-      {
-        path: 'reports',
-        loadComponent: () =>
-          import('./features/reports/reports.component').then((m) => m.ReportsComponent),
       },
       {
         path: 'users',

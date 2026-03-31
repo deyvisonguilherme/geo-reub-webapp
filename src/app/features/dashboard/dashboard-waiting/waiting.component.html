@@ -2,103 +2,196 @@
   <div class="page-header">
     <div>
       <h1 class="page-title">Processos Aguardando</h1>
-      <p class="page-subtitle">Acompanhamento de processos com pendências externas ou aguardando prazos legais.</p>
+      <p class="page-subtitle">
+        Acompanhamento de processos com pendências externas ou aguardando prazos legais.
+      </p>
     </div>
   </div>
 
-  <section class="card p-4">
-    <p-table
-      #dt
-      [value]="processes()"
-      [rows]="10"
-      [paginator]="true"
-      [globalFilterFields]="['numero_processo', 'nucleo_nome', 'responsavel_acao', 'tipo_aguardo']"
-      responsiveLayout="scroll"
-      styleClass="p-datatable-sm p-datatable-striped"
-      [rowHover]="true"
-      dataKey="processo_id"
-    >
-      <ng-template pTemplate="caption">
-        <div class="flex justify-between items-center flex-wrap gap-3">
-          <span class="text-xl font-bold">Listagem de Aguardando</span>
-          <p-iconfield iconPosition="left">
-            <p-inputicon styleClass="pi pi-search" />
-            <input
-              pInputText
-              type="text"
-              (input)="dt.filterGlobal($any($event.target).value, 'contains')"
-              placeholder="Pesquisar..."
-            />
-          </p-iconfield>
+  <div class="waiting-grid">
+    <section class="waiting-card table-card">
+      <p-table
+        #dt
+        [value]="processes()"
+        [rows]="10"
+        [paginator]="true"
+        [globalFilterFields]="['numero_processo', 'nucleo_nome', 'responsavel_acao', 'tipo_aguardo']"
+        styleClass="p-datatable-sm p-datatable-striped"
+        [rowHover]="true"
+        dataKey="processo_id"
+        selectionMode="single"
+        [selection]="selectedProcess()"
+        (onRowSelect)="selectProcess($event.data)"
+      >
+        <ng-template pTemplate="caption">
+          <div class="table-header">
+            <span class="text-xl font-bold">Listagem de Aguardando</span>
+            <p-iconfield iconPosition="left">
+              <p-inputicon styleClass="pi pi-search" />
+              <input
+                pInputText
+                type="text"
+                (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+                placeholder="Pesquisar..."
+              />
+            </p-iconfield>
+          </div>
+        </ng-template>
+
+        <ng-template pTemplate="header">
+          <tr>
+            <th pSortableColumn="numero_processo">Processo <p-sortIcon field="numero_processo" /></th>
+            <th pSortableColumn="nucleo_nome">Núcleo <p-sortIcon field="nucleo_nome" /></th>
+            <th pSortableColumn="tipo_aguardo">Tipo de Aguardo <p-sortIcon field="tipo_aguardo" /></th>
+            <th pSortableColumn="dias_aguardando">Dias <p-sortIcon field="dias_aguardando" /></th>
+            <th pSortableColumn="prazo_critico">Status <p-sortIcon field="prazo_critico" /></th>
+            <th style="width: 5rem">Ações</th>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-proc>
+          <tr [pSelectableRow]="proc" class="table-row">
+            <td>
+              <div class="flex flex-col">
+                <span class="font-bold text-blue-600">{{ proc.numero_processo }}</span>
+                <p-tag
+                  [value]="proc.modalidade"
+                  [severity]="getModalidadeSeverity(proc.modalidade)"
+                  styleClass="text-[10px] px-1 py-0"
+                />
+              </div>
+            </td>
+            <td>{{ proc.nucleo_nome }}</td>
+            <td>
+              <div class="flex flex-col">
+                <span>{{ proc.tipo_aguardo }}</span>
+                @if (proc.cartorio_registro_imoveis) {
+                  <span class="text-xs text-gray-500">{{ proc.cartorio_registro_imoveis }}</span>
+                }
+              </div>
+            </td>
+            <td>
+              <span [class.text-red-600]="proc.prazo_critico" [class.font-bold]="proc.prazo_critico">
+                {{ proc.dias_aguardando }} dias
+              </span>
+            </td>
+            <td>
+              <div class="flex flex-col gap-1">
+                <p-tag
+                  [value]="proc.status.replace('_', ' ')"
+                  [severity]="getStatusSeverity(proc.status)"
+                />
+              </div>
+            </td>
+            <td>
+              <div class="row-actions">
+                <p-button
+                  icon="pi pi-arrow-right"
+                  [rounded]="true"
+                  [text]="true"
+                  [routerLink]="['/process', proc.processo_id]"
+                  pTooltip="Ver processo"
+                  (onClick)="$event.stopPropagation()"
+                />
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="6" class="text-center py-8 text-gray-500">
+              Nenhum processo em aguardo encontrado.
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </section>
+
+    <aside class="waiting-card detail-card">
+      @if (selectedProcess(); as proc) {
+        <div class="detail-header">
+          <div>
+            <span class="detail-kicker">Processo selecionado</span>
+            <h2>{{ proc.numero_processo }}</h2>
+          </div>
+          <p-tag [value]="proc.modalidade" [severity]="getModalidadeSeverity(proc.modalidade)" />
         </div>
-      </ng-template>
 
-      <ng-template pTemplate="header">
-        <tr>
-          <th pSortableColumn="numero_processo">Processo <p-sortIcon field="numero_processo" /></th>
-          <th pSortableColumn="nucleo_nome">Núcleo <p-sortIcon field="nucleo_nome" /></th>
-          <th pSortableColumn="tipo_aguardo">Tipo de Aguardo <p-sortIcon field="tipo_aguardo" /></th>
-          <th pSortableColumn="dias_aguardando">Dias <p-sortIcon field="dias_aguardando" /></th>
-          <th pSortableColumn="responsavel_acao">Responsável <p-sortIcon field="responsavel_acao" /></th>
-          <th pSortableColumn="prazo_critico">Status <p-sortIcon field="prazo_critico" /></th>
-          <th style="width: 5rem"></th>
-        </tr>
-      </ng-template>
+        <div class="detail-section">
+          <span class="detail-section-title">Informações do Aguardo</span>
+          <div class="detail-grid">
+            <div class="detail-item field-span-full">
+              <span class="detail-label">Tipo de Aguardo</span>
+              <strong>{{ proc.tipo_aguardo }}</strong>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Dias Decorridos</span>
+              <strong [class.text-red-600]="proc.prazo_critico">{{ proc.dias_aguardando }} dias</strong>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Responsável</span>
+              <strong>{{ proc.responsavel_acao }}</strong>
+            </div>
+          </div>
+        </div>
 
-      <ng-template pTemplate="body" let-proc>
-        <tr>
-          <td>
-            <div class="flex flex-col">
-              <span class="font-bold text-blue-600">{{ proc.numero_processo }}</span>
-              <p-tag [value]="proc.modalidade" [severity]="getModalidadeSeverity(proc.modalidade)" styleClass="text-[10px] px-1 py-0" />
+        <div class="detail-section">
+          <span class="detail-section-title">Detalhes e Pendências</span>
+          <div class="detail-grid">
+            <div class="detail-item field-span-full">
+              <span class="detail-label">Núcleo Urbano</span>
+              <strong>{{ proc.nucleo_nome }}</strong>
             </div>
-          </td>
-          <td>{{ proc.nucleo_nome }}</td>
-          <td>
-            <div class="flex flex-col">
-              <span>{{ proc.tipo_aguardo }}</span>
-              @if (proc.cartorio_registro_imoveis) {
-                <span class="text-xs text-gray-500">{{ proc.cartorio_registro_imoveis }}</span>
-              }
+            @if (proc.cartorio_registro_imoveis) {
+              <div class="detail-item field-span-full">
+                <span class="detail-label">Cartório</span>
+                <strong>{{ proc.cartorio_registro_imoveis }}</strong>
+              </div>
+            }
+            <div class="detail-item">
+              <span class="detail-label">Nota Devolutiva</span>
+              <p-tag
+                [value]="proc.possui_nota_devolutiva ? 'Sim' : 'Não'"
+                [severity]="proc.possui_nota_devolutiva ? 'danger' : 'success'"
+              />
             </div>
-          </td>
-          <td>
-            <span [class.text-red-600]="proc.prazo_critico" [class.font-bold]="proc.prazo_critico">
-              {{ proc.dias_aguardando }} dias
-            </span>
-          </td>
-          <td>{{ proc.responsavel_acao }}</td>
-          <td>
-            <div class="flex flex-col gap-1">
-              <p-tag [value]="proc.status.replace('_', ' ')" [severity]="getStatusSeverity(proc.status)" />
-              @if (proc.possui_nota_devolutiva) {
-                <p-tag value="Nota Devolutiva" severity="danger" icon="pi pi-exclamation-circle" styleClass="text-[9px]" />
-              }
-              @if (proc.notificacoes_vencidas > 0) {
-                <p-tag [value]="proc.notificacoes_vencidas + ' Notif. Vencidas'" severity="danger" styleClass="text-[9px]" />
-              }
+            <div class="detail-item">
+              <span class="detail-label">Notificações Venc.</span>
+              <strong>{{ proc.notificacoes_vencidas }}</strong>
             </div>
-          </td>
-          <td>
-            <button
-              pButton
-              icon="pi pi-arrow-right"
-              [rounded]="true"
-              [text]="true"
-              [routerLink]="['/process', proc.processo_id]"
-              pTooltip="Ver processo"
-            ></button>
-          </td>
-        </tr>
-      </ng-template>
+          </div>
+        </div>
 
-      <ng-template pTemplate="emptymessage">
-        <tr>
-          <td colspan="7" class="text-center py-8 text-gray-500">
-            Nenhum processo em aguardo encontrado.
-          </td>
-        </tr>
-      </ng-template>
-    </p-table>
-  </section>
+        <div class="detail-section">
+          <span class="detail-section-title">Datas</span>
+          <div class="detail-grid">
+            <div class="detail-item">
+              <span class="detail-label">Instauração</span>
+              <strong class="text-xs">{{ proc.data_instauracao | date: 'shortDate' }}</strong>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Última Atualiz.</span>
+              <strong class="text-xs">{{ proc.ultima_atualizacao | date: 'shortDate' }}</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="detail-actions mt-4">
+          <p-button
+            label="Ver Processo Completo"
+            icon="pi pi-external-link"
+            class="w-full"
+            styleClass="w-full"
+            [routerLink]="['/process', proc.processo_id]"
+          />
+        </div>
+      } @else {
+        <div class="empty-state">
+          <i class="pi pi-clock text-4xl mb-4"></i>
+          <span>Selecione um processo para visualizar os detalhes do aguardo.</span>
+        </div>
+      }
+    </aside>
+  </div>
 </div>
