@@ -11,6 +11,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/dashboard/dashboard.component').then((m) => m.DashboardComponent),
       },
+      {
+        path: 'dashboard/waiting',
+        loadComponent: () =>
+          import('./features/dashboard/dashboard-waiting/waiting.component').then(
+            (m) => m.WaitingComponent,
+          ),
+      },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       {
         path: 'process',

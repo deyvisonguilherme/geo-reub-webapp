@@ -1,0 +1,104 @@
+<div class="waiting-page">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Processos Aguardando</h1>
+      <p class="page-subtitle">Acompanhamento de processos com pendências externas ou aguardando prazos legais.</p>
+    </div>
+  </div>
+
+  <section class="card p-4">
+    <p-table
+      #dt
+      [value]="processes()"
+      [rows]="10"
+      [paginator]="true"
+      [globalFilterFields]="['numero_processo', 'nucleo_nome', 'responsavel_acao', 'tipo_aguardo']"
+      responsiveLayout="scroll"
+      styleClass="p-datatable-sm p-datatable-striped"
+      [rowHover]="true"
+      dataKey="processo_id"
+    >
+      <ng-template pTemplate="caption">
+        <div class="flex justify-between items-center flex-wrap gap-3">
+          <span class="text-xl font-bold">Listagem de Aguardando</span>
+          <p-iconfield iconPosition="left">
+            <p-inputicon styleClass="pi pi-search" />
+            <input
+              pInputText
+              type="text"
+              (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+              placeholder="Pesquisar..."
+            />
+          </p-iconfield>
+        </div>
+      </ng-template>
+
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="numero_processo">Processo <p-sortIcon field="numero_processo" /></th>
+          <th pSortableColumn="nucleo_nome">Núcleo <p-sortIcon field="nucleo_nome" /></th>
+          <th pSortableColumn="tipo_aguardo">Tipo de Aguardo <p-sortIcon field="tipo_aguardo" /></th>
+          <th pSortableColumn="dias_aguardando">Dias <p-sortIcon field="dias_aguardando" /></th>
+          <th pSortableColumn="responsavel_acao">Responsável <p-sortIcon field="responsavel_acao" /></th>
+          <th pSortableColumn="prazo_critico">Status <p-sortIcon field="prazo_critico" /></th>
+          <th style="width: 5rem"></th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-proc>
+        <tr>
+          <td>
+            <div class="flex flex-col">
+              <span class="font-bold text-blue-600">{{ proc.numero_processo }}</span>
+              <p-tag [value]="proc.modalidade" [severity]="getModalidadeSeverity(proc.modalidade)" styleClass="text-[10px] px-1 py-0" />
+            </div>
+          </td>
+          <td>{{ proc.nucleo_nome }}</td>
+          <td>
+            <div class="flex flex-col">
+              <span>{{ proc.tipo_aguardo }}</span>
+              @if (proc.cartorio_registro_imoveis) {
+                <span class="text-xs text-gray-500">{{ proc.cartorio_registro_imoveis }}</span>
+              }
+            </div>
+          </td>
+          <td>
+            <span [class.text-red-600]="proc.prazo_critico" [class.font-bold]="proc.prazo_critico">
+              {{ proc.dias_aguardando }} dias
+            </span>
+          </td>
+          <td>{{ proc.responsavel_acao }}</td>
+          <td>
+            <div class="flex flex-col gap-1">
+              <p-tag [value]="proc.status.replace('_', ' ')" [severity]="getStatusSeverity(proc.status)" />
+              @if (proc.possui_nota_devolutiva) {
+                <p-tag value="Nota Devolutiva" severity="danger" icon="pi pi-exclamation-circle" styleClass="text-[9px]" />
+              }
+              @if (proc.notificacoes_vencidas > 0) {
+                <p-tag [value]="proc.notificacoes_vencidas + ' Notif. Vencidas'" severity="danger" styleClass="text-[9px]" />
+              }
+            </div>
+          </td>
+          <td>
+            <button
+              pButton
+              icon="pi pi-arrow-right"
+              [rounded]="true"
+              [text]="true"
+              [routerLink]="['/process', proc.processo_id]"
+              pTooltip="Ver processo"
+            ></button>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="7" class="text-center py-8 text-gray-500">
+            Nenhum processo em aguardo encontrado.
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </section>
+</div>

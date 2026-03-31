@@ -21,7 +21,29 @@ export class AppMenu {
           {
             label: 'Dashboard',
             icon: 'pi pi-fw pi-home',
-            routerLink: ['/'],
+            routerLink: ['/dashboard'],
+            items: [
+              {
+                label: 'Aguardando',
+                icon: 'pi pi-fw pi-clock',
+                routerLink: ['/dashboard/waiting'],
+              },
+              {
+                label: 'Aprovados',
+                icon: 'pi pi-fw pi-check-circle',
+                routerLink: ['/dashboard'],
+              },
+              {
+                label: 'Beneficiários',
+                icon: 'pi pi-fw pi-users',
+                routerLink: ['/dashboard'],
+              },
+              {
+                label: 'Processos Ativos',
+                icon: 'pi pi-fw pi-play-circle',
+                routerLink: ['/dashboard'],
+              },
+            ],
           },
           {
             label: 'Processos REURB',

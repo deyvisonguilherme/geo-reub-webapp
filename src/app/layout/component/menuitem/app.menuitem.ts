@@ -33,19 +33,20 @@ export class AppMenuitem {
   hasRouterLink = computed(() => !!this.item()?.routerLink);
 
   fullPath = computed(() => {
-    const itemPath = this.item()?.path;
+    const itemPath = this.item()?.path || this.item()?.label;
     if (!itemPath) return this.parentPath();
     const parent = this.parentPath();
-    if (parent && !itemPath.startsWith(parent)) {
-      return parent + itemPath;
+    if (parent) {
+      return `${parent}/${itemPath}`;
     }
     return itemPath;
   });
 
   isActive = computed(() => {
     const activePath = this.layoutService.layoutState().activePath;
-    if (this.item()?.path) {
-      return activePath?.startsWith(this.fullPath() ?? '') ?? false;
+    const currentPath = this.fullPath();
+    if (currentPath) {
+      return activePath === currentPath || activePath?.startsWith(`${currentPath}/`) || false;
     }
     return false;
   });
@@ -84,13 +85,10 @@ export class AppMenuitem {
     });
 
     if (isRouteActive) {
-      const parentPath = this.parentPath();
-      if (parentPath) {
-        this.layoutService.layoutState.update((val) => ({
-          ...val,
-          activePath: parentPath,
-        }));
-      }
+      this.layoutService.layoutState.update((val) => ({
+        ...val,
+        activePath: this.fullPath(),
+      }));
     }
   }
 
