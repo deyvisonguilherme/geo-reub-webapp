@@ -1,0 +1,275 @@
+:host {
+  display: block;
+}
+
+// 1. Variáveis de Design
+$text-dark: #1f2937;
+$text-light: #6b7280;
+$border-light: #d1d5db;
+$accent-color: #3b82f6; // Azul vibrante
+$transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+// Gradiente de Botão (Verde -> Azul)
+$btn-gradient: linear-gradient(90deg, #10b981 0%, #3b82f6 100%);
+
+// Mix de Gradiente para Branding (Verde, Azul, Cinza)
+$branding-bg: radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.7) 0, transparent 50%), 
+              radial-gradient(at 100% 0%, rgba(59, 130, 246, 0.7) 0, transparent 50%), 
+              radial-gradient(at 100% 100%, rgba(148, 163, 184, 0.7) 0, transparent 50%), 
+              radial-gradient(at 0% 100%, rgba(59, 130, 246, 0.7) 0, transparent 50%),
+              linear-gradient(135deg, #10b981 0%, #3b82f6 100%);
+
+.login-page {
+  display: grid;
+  grid-template-columns: 45% 55%;
+  min-height: 100vh;
+  width: 100%;
+  animation: fadeIn 0.8s ease-out;
+
+  @media (max-width: 1024px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+// 2. Coluna Esquerda (Formulário)
+.form-column {
+  background-color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+
+  .form-container {
+    width: 100%;
+    max-width: 420px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+
+  .title-section {
+    text-align: left;
+    h1 {
+      font-size: 32px;
+      font-weight: 700;
+      color: $text-dark;
+      margin: 0;
+      letter-spacing: -0.02em;
+    }
+  }
+
+  .login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    label {
+      font-size: 14px;
+      font-weight: 500;
+      color: $text-light;
+    }
+  }
+
+  .input-icon-wrapper {
+    position: relative;
+    width: 100%;
+
+    i {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: $text-light;
+      z-index: 2;
+    }
+
+    .custom-input {
+      width: 100%;
+      height: 44px;
+      padding: 0 14px 0 42px !important; // Altura controlada pelo box-sizing e padding vertical 0
+      box-sizing: border-box;
+      border: 1.5px solid $border-light;
+      border-radius: 6px;
+      font-size: 15px;
+      transition: $transition-smooth;
+
+      &:focus {
+        border-color: $accent-color;
+        box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+        outline: none;
+      }
+    }
+  }
+
+  .actions-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+
+    .remember-me {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      color: $text-light;
+    }
+
+    .forgot-password {
+      color: $text-light;
+      text-decoration: none;
+      transition: $transition-smooth;
+
+      &:hover {
+        color: $accent-color;
+      }
+    }
+  }
+
+  .submit-button {
+    height: 48px;
+    background: $btn-gradient !important;
+    border: none !important;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    width: 100%;
+    box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.2);
+    transition: $transition-smooth;
+
+    &:hover {
+      filter: brightness(1.1);
+      transform: translateY(-1px);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+
+  .footer-section {
+    text-align: center;
+    font-size: 15px;
+    color: $text-light;
+
+    .create-now {
+      font-weight: 600;
+      color: $accent-color;
+      text-decoration: none;
+      margin-left: 4px;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+// 3. Coluna Direita (Branding)
+.branding-column {
+  background: #94a3b8;
+  background: $branding-bg;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  color: white;
+  position: relative;
+  overflow: hidden;
+
+  @media (max-width: 1024px) {
+    display: none;
+  }
+
+  // Efeito de ruído sutil para textura
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    opacity: 0.04;
+    mix-blend-mode: overlay;
+    pointer-events: none;
+  }
+
+  .illustration-container {
+    width: 100%;
+    max-width: 480px;
+    margin-bottom: 48px;
+    transform: translateY(-20px);
+    position: relative;
+    z-index: 2;
+    
+    svg {
+      width: 100%;
+      height: auto;
+      filter: drop-shadow(0 20px 50px rgba(0, 0, 0, 0.15));
+    }
+  }
+
+  .caption {
+    font-size: 12px;
+    opacity: 0.7;
+    margin-bottom: 24px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    position: relative;
+    z-index: 2;
+  }
+
+  .headline {
+    text-align: center;
+    max-width: 400px;
+    font-size: 22px;
+    line-height: 1.4;
+    font-weight: 500;
+    margin: 0;
+    position: relative;
+    z-index: 2;
+  }
+}
+
+// 4. Overrides PrimeNG
+::ng-deep {
+  .p-password {
+    width: 100%;
+
+    // Força a altura de 44px e o box-sizing no input interno do PrimeNG
+    .p-password-input {
+      width: 100% !important;
+      height: 44px !important;
+      padding: 0 14px 0 42px !important;
+      box-sizing: border-box !important;
+    }
+  }
+
+  .p-checkbox .p-checkbox-box {
+    border-radius: 4px;
+    border-color: $border-light;
+    width: 18px;
+    height: 18px;
+
+    &.p-highlight {
+      background: #10b981; // Verde no checkbox
+      border-color: #10b981;
+    }
+  }
+  
+  .p-password-icon {
+    right: 14px;
+    color: $text-light;
+  }
+}
+
+// 5. Animações
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}

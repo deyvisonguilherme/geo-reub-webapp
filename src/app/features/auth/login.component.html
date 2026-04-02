@@ -1,0 +1,102 @@
+<div class="login-page">
+  <!-- Coluna Esquerda: Formulário (45%) -->
+  <main class="form-column">
+    <div class="form-container">
+      <header class="title-section">
+        <h1>Faça seu login</h1>
+      </header>
+
+      <form class="login-form">
+        <!-- Campo E-mail -->
+        <div class="field-group">
+          <label for="username">E-mail</label>
+          <div class="input-icon-wrapper">
+            <i class="pi pi-envelope"></i>
+            <input
+              pInputText
+              id="username"
+              name="username"
+              placeholder="kaladin@gmail.com"
+              class="custom-input"
+              autocomplete="username"
+            />
+          </div>
+        </div>
+
+        <!-- Campo Senha -->
+        <div class="field-group">
+          <label for="password">Senha</label>
+          <div class="input-icon-wrapper">
+            <i class="pi pi-lock"></i>
+            <p-password
+              id="password"
+              name="password"
+              [feedback]="false"
+              [toggleMask]="true"
+              placeholder="Digite sua senha"
+              styleClass="w-full"
+              inputStyleClass="custom-input"
+              autocomplete="current-password"
+            ></p-password>
+          </div>
+        </div>
+
+        <!-- Ações: Checkbox e Esqueci Senha -->
+        <div class="actions-row">
+          <div class="remember-me">
+            <p-checkbox [binary]="true" inputId="remember" name="remember"></p-checkbox>
+            <label for="remember">Lembrar de mim</label>
+          </div>
+          <a href="javascript:void(0)" class="forgot-password">Esqueci minha senha</a>
+        </div>
+
+        <!-- Botão Entrar -->
+        <p-button type="submit" label="Entrar" [loading]="" styleClass="submit-button"></p-button>
+
+        <!-- Rodapé do Formulário -->
+        <footer class="footer-section">
+          <span>Não tem conta ainda?</span>
+          <a href="javascript:void(0)" class="create-now">Crie agora</a>
+        </footer>
+      </form>
+    </div>
+  </main>
+
+  <!-- Coluna Direita: Branding (55%) -->
+  <aside class="branding-column">
+    <div class="illustration-container">
+      <!-- Ilustração Flat Mockup + Pessoa -->
+      <svg viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="250" cy="250" r="200" fill="white" fill-opacity="0.05" />
+        <rect
+          x="180"
+          y="80"
+          width="140"
+          height="280"
+          rx="20"
+          fill="white"
+          fill-opacity="0.1"
+          stroke="white"
+          stroke-width="2"
+        />
+        <rect x="195" y="100" width="110" height="200" rx="10" fill="white" fill-opacity="0.2" />
+        <circle cx="250" cy="320" r="15" fill="white" fill-opacity="0.3" />
+        <path
+          d="M350 300 C 380 250, 420 250, 450 300"
+          stroke="white"
+          stroke-width="3"
+          stroke-linecap="round"
+        />
+        <circle cx="370" cy="220" r="40" fill="white" />
+        <rect x="350" y="260" width="40" height="80" rx="20" fill="white" />
+      </svg>
+    </div>
+
+    <span class="caption">GUAVA</span>
+
+    <h2 class="headline">
+      A melhor experiencia de login<br />
+      que você já teve na sua vida.
+    </h2>
+  </aside>
+</div>

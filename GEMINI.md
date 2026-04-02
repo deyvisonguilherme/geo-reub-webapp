@@ -63,6 +63,19 @@
 - **Gaps:** Standard `1.25rem` gap between fields.
 - **Spans:** Use `.field-span-full` or `.field-span-2` for wider fields like addresses or descriptions.
 
+### 6. Unified Authentication Layout (Split Screen)
+- **Grid Proportions:** 45% (Form) / 55% (Branding) on desktop. Branding hidden on mobile (`max-width: 1024px`).
+- **Form Section:**
+  - **Background:** `#FFFFFF`.
+  - **Max-Width:** `420px`.
+  - **Typography:** Titles at `32px` (bold, `#1F2937`), labels at `14px` (medium, `#6B7280`).
+  - **Inputs:** `44px` height, `1.5px` border (`#D1D5DB`), radius `6px`. Focus color: `#3B82F6`.
+  - **Buttons:** `48px` height, radius `6px`. Use gradient: `linear-gradient(90deg, #10B981 0%, #3B82F6 100%)`.
+- **Branding Section:**
+  - **Background:** Mesh Gradient (Green `#10B981`, Blue `#3B82F6`, Gray `#94A3B8`). Use subtle noise overlay.
+  - **Visuals:** Storyset flat illustrations, centered. Headline text `22px`, white.
+- **Motion:** `fade-in` (0.8s) on load. Smooth transitions (0.3s) for hover/focus states.
+
 ## Building and Running
 
 ### Prerequisites
