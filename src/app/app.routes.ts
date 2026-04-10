@@ -1,10 +1,12 @@
 import { Routes } from '@angular/router';
 import { AppLayout } from './layout/component/layout/app.layout';
+import { authGuard } from './core/auth/auth.guard';
 
 export const routes: Routes = [
   {
     path: '',
     component: AppLayout,
+    canActivate: [authGuard],
     children: [
       {
         path: 'dashboard',
@@ -78,11 +80,15 @@ export const routes: Routes = [
       },
       {
         path: 'settings',
+        canActivate: [authGuard],
+        data: { role: 'ADMIN' },
         loadComponent: () =>
           import('./features/settings/settings.component').then((m) => m.SettingsComponent),
       },
       {
         path: 'users',
+        canActivate: [authGuard],
+        data: { role: 'ADMIN' },
         loadComponent: () =>
           import('./features/users/users.component').then((m) => m.UsersComponent),
       },
@@ -94,6 +100,16 @@ export const routes: Routes = [
     ],
   },
   // Rotas fora do layout (ex: login)
-  // { path: 'auth/login', loadComponent: () => import('./features/auth/login.component').then(m => m.LoginComponent) },
+  {
+    path: 'auth',
+    children: [
+      {
+        path: 'login',
+        loadComponent: () =>
+          import('./features/auth/login.component').then((m) => m.LoginComponent),
+      },
+      { path: '', redirectTo: 'login', pathMatch: 'full' },
+    ],
+  },
   { path: '**', redirectTo: 'dashboard' },
 ];

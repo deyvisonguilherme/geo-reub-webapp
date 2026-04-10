@@ -6,19 +6,24 @@
         <h1>Faça seu login</h1>
       </header>
 
-      <form class="login-form">
-        <!-- Campo E-mail -->
+      @if (errorMessage()) {
+        <p-message severity="error" [text]="errorMessage()!" styleClass="w-full mb-4"></p-message>
+      }
+
+      <form class="login-form" (ngSubmit)="onLogin()">
+        <!-- Campo Usuário -->
         <div class="field-group">
-          <label for="username">E-mail</label>
+          <label for="username">Usuário</label>
           <div class="input-icon-wrapper">
-            <i class="pi pi-envelope"></i>
+            <i class="pi pi-user"></i>
             <input
               pInputText
               id="username"
               name="username"
-              placeholder="kaladin@gmail.com"
+              placeholder="Digite seu usuário"
               class="custom-input"
               autocomplete="username"
+              [(ngModel)]="username"
             />
           </div>
         </div>
@@ -37,6 +42,7 @@
               styleClass="w-full"
               inputStyleClass="custom-input"
               autocomplete="current-password"
+              [(ngModel)]="password"
             ></p-password>
           </div>
         </div>
@@ -44,14 +50,14 @@
         <!-- Ações: Checkbox e Esqueci Senha -->
         <div class="actions-row">
           <div class="remember-me">
-            <p-checkbox [binary]="true" inputId="remember" name="remember"></p-checkbox>
+            <p-checkbox [binary]="true" inputId="remember" name="remember" [(ngModel)]="rememberMe"></p-checkbox>
             <label for="remember">Lembrar de mim</label>
           </div>
           <a href="javascript:void(0)" class="forgot-password">Esqueci minha senha</a>
         </div>
 
         <!-- Botão Entrar -->
-        <p-button type="submit" label="Entrar" [loading]="" styleClass="submit-button"></p-button>
+        <p-button type="submit" label="Entrar" [loading]="loading()" styleClass="submit-button"></p-button>
 
         <!-- Rodapé do Formulário -->
         <footer class="footer-section">
