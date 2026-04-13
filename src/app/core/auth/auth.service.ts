@@ -10,7 +10,7 @@ export class AuthService {
   private http = inject(HttpClient);
   private readonly apiUrl = '/api/auth';
 
-  login(credentials: any): Observable<AuthResponse> {
+  login(credentials: { username: string; password: string; organizacao_id?: string }): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.apiUrl}/login`, credentials);
   }
 }

@@ -56,9 +56,17 @@ $branding-bg: radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.7) 0, transparent 5
       margin: 0;
       letter-spacing: -0.02em;
     }
+
+    .subtitle {
+      font-size: 14px;
+      font-weight: 600;
+      color: $accent-color;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
   }
 
-  .login-form {
+  .login-form, .org-selection-form {
     display: flex;
     flex-direction: column;
     gap: 24px;
@@ -73,6 +81,22 @@ $branding-bg: radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.7) 0, transparent 5
       font-size: 14px;
       font-weight: 500;
       color: $text-light;
+    }
+  }
+
+  .actions-column {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .back-button {
+    color: $text-light !important;
+    font-weight: 500 !important;
+    
+    &:hover {
+      color: $text-dark !important;
+      background: rgba(0,0,0,0.05) !important;
     }
   }
 

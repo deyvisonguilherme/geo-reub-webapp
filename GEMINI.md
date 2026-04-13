@@ -130,9 +130,8 @@ Prettier is configured in `package.json` with the following settings:
 - `src/app/shared/`: Shared components and utilities.
 
 ## Recent Changes
+- 002-auth-multi-org: Added [if applicable, e.g., PostgreSQL, CoreData, files or N/A]
 - 001-user-auth-authz: Added TypeScript, Angular 21 (Zoneless) + `HttpClient`, `Router`, `Signal`, `PrimeNG 21`
 - 001-user-auth-authz: Added [if applicable, e.g., PostgreSQL, CoreData, files or N/A]
 
 ## Active Technologies
-- TypeScript, Angular 21 (Zoneless) + `HttpClient`, `Router`, `Signal`, `PrimeNG 21` (001-user-auth-authz)
-- `localStorage` for JWT persistence (001-user-auth-authz)
