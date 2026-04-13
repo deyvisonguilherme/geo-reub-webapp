@@ -20,7 +20,7 @@
 
 ## Architecture
 - **Feature-Based Routing:** Routes are organized by functional domain in `src/app/features/`.
-- **Repository Pattern:** HTTP logic is isolated in Domain Repositories (e.g., `ProcessRepository`). Stores MUST inject Repositories instead of `HttpClient`.
+- **Repository Pattern:** HTTP logic is isolated in Domain Repositories (e.g., `ProcessRepository`, `NucleusRepository`, `AlertRepository`). Stores MUST inject Repositories instead of `HttpClient`.
 - **Zoneless Design:** Uses `provideZonelessChangeDetection` for performance and modern Angular alignment.
 - **Centralized Stores:** State is managed via Signal-based stores (e.g., `ProcessStore` in `src/app/features/process/process.store.ts`).
 - **Layout:** Standard application layout is managed in `src/app/layout/`.
@@ -131,10 +131,10 @@ Prettier is configured in `package.json` with the following settings:
 - `src/app/shared/`: Shared components and utilities.
 
 ## Recent Changes
+- 004-domain-repositories: Added TypeScript / Angular 21 (Zoneless) + `@angular/common/http`, `rxjs`, `Angular Signals`
 - 003-domain-repositories: Added TypeScript 5.6+ / Angular 21 (Zoneless) + `@angular/common/http`, `rxjs`, `@ngrx/signals`
 - 002-auth-multi-org: Added [if applicable, e.g., PostgreSQL, CoreData, files or N/A]
-- 001-user-auth-authz: Added TypeScript, Angular 21 (Zoneless) + `HttpClient`, `Router`, `Signal`, `PrimeNG 21`
 
 ## Active Technologies
-- TypeScript 5.6+ / Angular 21 (Zoneless) + `@angular/common/http`, `rxjs`, `@ngrx/signals` (003-domain-repositories)
-- N/A (Client-side API consumption) (003-domain-repositories)
+- TypeScript / Angular 21 (Zoneless) + `@angular/common/http`, `rxjs`, `Angular Signals` (004-domain-repositories)
+- N/A (Consumes external REST API) (004-domain-repositories)

@@ -1,10 +1,23 @@
-import { Injectable, computed, signal } from '@angular/core';
+import { Injectable, computed, signal, inject } from '@angular/core';
 import { NucleusFormModel } from './nucleus.types';
+import { NucleusRepository } from './nucleus.repository';
 
 @Injectable({ providedIn: 'root' })
 export class NucleusStore {
-  private readonly records = signal<NucleusFormModel[]>(this.buildSeedData());
+  private repository = inject(NucleusRepository);
+  private readonly records = signal<NucleusFormModel[]>([]);
   readonly nuclei = computed(() => this.records());
+
+  constructor() {
+    this.loadNuclei();
+  }
+
+  loadNuclei(): void {
+    this.repository.getAll().subscribe({
+      next: (items) => this.records.set(items),
+      error: (err) => console.error('Erro ao carregar núcleos:', err),
+    });
+  }
 
   list(): NucleusFormModel[] {
     return this.records();
@@ -16,31 +29,45 @@ export class NucleusStore {
 
   createNucleus(nucleus: Partial<NucleusFormModel>): string {
     const id = this.generateId();
-    const newNucleus = {
+    const payload = {
       ...this.buildEmptyNucleus(id),
       ...nucleus,
       criadoEm: new Date().toISOString(),
     } as NucleusFormModel;
-    this.records.update((items) => [newNucleus, ...items]);
+
+    this.repository.create(payload).subscribe({
+      next: (newItem) => {
+        this.records.update((items) => [newItem, ...items]);
+      },
+      error: (err) => console.error('Erro ao criar núcleo:', err),
+    });
+
     return id;
   }
 
   updateNucleus(id: string, changes: Partial<NucleusFormModel>): void {
-    this.records.update((items) =>
-      items.map((item) =>
-        item.id === id
-          ? {
-              ...item,
-              ...changes,
-              atualizadoEm: new Date().toISOString(),
-            }
-          : item,
-      ),
-    );
+    const updatedChanges = {
+      ...changes,
+      atualizadoEm: new Date().toISOString(),
+    };
+
+    this.repository.update(id, updatedChanges).subscribe({
+      next: (updatedItem) => {
+        this.records.update((items) =>
+          items.map((item) => (item.id === id ? updatedItem : item)),
+        );
+      },
+      error: (err) => console.error('Erro ao atualizar núcleo:', err),
+    });
   }
 
   deleteNucleus(id: string): void {
-    this.records.update((items) => items.filter((item) => item.id !== id));
+    this.repository.delete(id).subscribe({
+      next: () => {
+        this.records.update((items) => items.filter((item) => item.id !== id));
+      },
+      error: (err) => console.error('Erro ao excluir núcleo:', err),
+    });
   }
 
   private buildEmptyNucleus(id: string): NucleusFormModel {
@@ -63,49 +90,6 @@ export class NucleusStore {
       atualizadoPor: '',
       atualizadoEm: '',
     };
-  }
-
-  private buildSeedData(): NucleusFormModel[] {
-    return [
-      {
-        id: this.generateId(),
-        codigo: 'NUC-001',
-        nome: 'Vale Verde',
-        descricao: 'Núcleo urbano consolidado em área de proteção ambiental parcial.',
-        situacaoGeografica: 'Perímetro Urbano',
-        consolidado: true,
-        areaTotalM2: 25000,
-        perimetroM: 850,
-        numeroFamiliasEstimado: 120,
-        dataOcupacaoInicial: '2005-03-15',
-        municipioId: 'MUN-001',
-        poligonalGeorreferenciada: 'POLYGON((...))',
-        centroide: 'POINT(-46.63 -23.55)',
-        criadoPor: 'admin',
-        criadoEm: '2026-01-10T10:00:00Z',
-        atualizadoPor: 'admin',
-        atualizadoEm: '2026-03-20T15:30:00Z',
-      },
-      {
-        id: this.generateId(),
-        codigo: 'NUC-002',
-        nome: 'Colina Azul',
-        descricao: 'Área em processo de expansão com ocupação recente.',
-        situacaoGeografica: 'Zona de Expansão Urbana',
-        consolidado: false,
-        areaTotalM2: 15000,
-        perimetroM: 600,
-        numeroFamiliasEstimado: 45,
-        dataOcupacaoInicial: '2018-11-20',
-        municipioId: 'MUN-001',
-        poligonalGeorreferenciada: 'POLYGON((...))',
-        centroide: 'POINT(-46.65 -23.57)',
-        criadoPor: 'admin',
-        criadoEm: '2026-02-05T09:00:00Z',
-        atualizadoPor: 'admin',
-        atualizadoEm: '2026-03-24T11:20:00Z',
-      },
-    ];
   }
 
   private generateId(): string {

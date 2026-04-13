@@ -1,11 +1,11 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, catchError, of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { Beneficiario } from '../process/process.types';
-import { handleRepositoryError } from '../../core/utils/repository-errors';
+import { IRepository } from '../../core/repositories/repository.interface';
 
 @Injectable({ providedIn: 'root' })
-export class BeneficiaryRepository {
+export class BeneficiaryRepository implements IRepository<Beneficiario> {
   private http = inject(HttpClient);
   private readonly baseUrl = '/api/v1/beneficiaries';
 

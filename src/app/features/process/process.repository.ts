@@ -1,15 +1,15 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, catchError, of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { ProcessRecord } from './process.types';
-import { handleRepositoryError } from '../../core/utils/repository-errors';
+import { IRepository } from '../../core/repositories/repository.interface';
 
 @Injectable({ providedIn: 'root' })
-export class ProcessRepository {
+export class ProcessRepository implements IRepository<ProcessRecord> {
   private http = inject(HttpClient);
   private readonly baseUrl = '/api/v1/processes';
 
-  // Seed data for demonstration/initial state
+  // Seed data for simulation (matching the previous implementation's data)
   private seedData: ProcessRecord[] = [
     {
       id: '1',
@@ -74,30 +74,24 @@ export class ProcessRepository {
   ];
 
   getAll(): Observable<ProcessRecord[]> {
-    // In a real scenario, this would be:
-    // return this.http.get<ProcessRecord[]>(this.baseUrl).pipe(catchError(handleRepositoryError));
+    // In a real scenario: return this.http.get<ProcessRecord[]>(this.baseUrl);
     return of(this.seedData);
   }
 
   getById(id: string): Observable<ProcessRecord> {
     const record = this.seedData.find((r) => r.id === id);
-    if (record) {
-      return of(record);
-    }
-    // Simulate 404
+    if (record) return of(record);
     throw new Error('Processo não encontrado');
   }
 
-  create(process: Partial<ProcessRecord>): Observable<ProcessRecord> {
-    const newRecord = { ...process, id: Math.random().toString(36).substr(2, 9) } as ProcessRecord;
+  create(data: Partial<ProcessRecord>): Observable<ProcessRecord> {
+    const newRecord = { ...data, id: Math.random().toString(36).substr(2, 9) } as ProcessRecord;
     return of(newRecord);
   }
 
-  update(id: string, updates: Partial<ProcessRecord>): Observable<ProcessRecord> {
+  update(id: string, data: Partial<ProcessRecord>): Observable<ProcessRecord> {
     const record = this.seedData.find((r) => r.id === id);
-    if (record) {
-      return of({ ...record, ...updates });
-    }
+    if (record) return of({ ...record, ...data });
     throw new Error('Processo não encontrado');
   }
 
