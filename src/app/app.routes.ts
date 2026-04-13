@@ -1,15 +1,50 @@
 import { Routes } from '@angular/router';
-import { AppLayout } from './layout/component/app.layout';
+import { AppLayout } from './layout/component/layout/app.layout';
+import { authGuard } from './core/auth/auth.guard';
 
 export const routes: Routes = [
   {
     path: '',
     component: AppLayout,
+    canActivate: [authGuard],
     children: [
       {
         path: 'dashboard',
+        redirectTo: 'dashboard/general',
+        pathMatch: 'full',
+      },
+      {
+        path: 'dashboard/general',
         loadComponent: () =>
           import('./features/dashboard/dashboard.component').then((m) => m.DashboardComponent),
+      },
+      {
+        path: 'dashboard/waiting',
+        loadComponent: () =>
+          import('./features/dashboard/dashboard-waiting/waiting.component').then(
+            (m) => m.WaitingComponent,
+          ),
+      },
+      {
+        path: 'dashboard/beneficiaries',
+        loadComponent: () =>
+          import('./features/dashboard/dashboard-beneficiarie/dashboard-beneficiarie.component').then(
+            (m) => m.DashboardBeneficiarieComponent,
+          ),
+      },
+      {
+        path: 'dashboard/active',
+        loadComponent: () =>
+          import('./features/dashboard/dashboard-active-processes/active-processes.component').then(
+            (m) => m.ActiveProcessesComponent,
+          ),
+      },
+      {
+        path: 'dashboard/approved',
+        loadComponent: () =>
+          import('./features/dashboard/dashboard-approved/approved.component').then(
+            (m) => m.ApprovedComponent,
+          ),
       },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       {
@@ -45,27 +80,36 @@ export const routes: Routes = [
       },
       {
         path: 'settings',
+        canActivate: [authGuard],
+        data: { role: 'ADMIN' },
         loadComponent: () =>
           import('./features/settings/settings.component').then((m) => m.SettingsComponent),
       },
       {
-        path: 'documents',
-        loadComponent: () =>
-          import('./features/documents/documents.component').then((m) => m.DocumentsComponent),
-      },
-      {
-        path: 'reports',
-        loadComponent: () =>
-          import('./features/reports/reports.component').then((m) => m.ReportsComponent),
-      },
-      {
         path: 'users',
+        canActivate: [authGuard],
+        data: { role: 'ADMIN' },
         loadComponent: () =>
           import('./features/users/users.component').then((m) => m.UsersComponent),
+      },
+      {
+        path: 'alerts',
+        loadComponent: () =>
+          import('./features/alert/alert.component').then((m) => m.AlertComponent),
       },
     ],
   },
   // Rotas fora do layout (ex: login)
-  // { path: 'auth/login', loadComponent: () => import('./features/auth/login.component').then(m => m.LoginComponent) },
+  {
+    path: 'auth',
+    children: [
+      {
+        path: 'login',
+        loadComponent: () =>
+          import('./features/auth/login.component').then((m) => m.LoginComponent),
+      },
+      { path: '', redirectTo: 'login', pathMatch: 'full' },
+    ],
+  },
   { path: '**', redirectTo: 'dashboard' },
 ];

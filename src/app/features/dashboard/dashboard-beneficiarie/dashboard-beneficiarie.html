@@ -1,0 +1,201 @@
+<div class="beneficiarie-page">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Indicadores de Beneficiários</h1>
+      <p class="page-subtitle">
+        Análise sociodemográfica e acompanhamento documental por processo.
+      </p>
+    </div>
+  </div>
+
+  <div class="beneficiarie-grid">
+    <section class="beneficiarie-card table-card">
+      <p-table
+        #dt
+        [value]="data()"
+        [rows]="10"
+        [paginator]="true"
+        [globalFilterFields]="['numero_processo', 'nucleo_nome']"
+        styleClass="p-datatable-sm p-datatable-striped"
+        [rowHover]="true"
+        dataKey="processo_id"
+        selectionMode="single"
+        [selection]="selectedItem()"
+        (onRowSelect)="selectItem($event.data)"
+      >
+        <ng-template pTemplate="caption">
+          <div class="table-header">
+            <span class="text-xl font-bold">Listagem por Processo</span>
+            <p-iconfield iconPosition="left">
+              <p-inputicon styleClass="pi pi-search" />
+              <input
+                pInputText
+                type="text"
+                (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+                placeholder="Pesquisar..."
+              />
+            </p-iconfield>
+          </div>
+        </ng-template>
+
+        <ng-template pTemplate="header">
+          <tr>
+            <th pSortableColumn="numero_processo">Processo <p-sortIcon field="numero_processo" /></th>
+            <th pSortableColumn="nucleo_nome">Núcleo <p-sortIcon field="nucleo_nome" /></th>
+            <th pSortableColumn="total_beneficiarios">Total <p-sortIcon field="total_beneficiarios" /></th>
+            <th pSortableColumn="baixa_renda">Baixa Renda <p-sortIcon field="baixa_renda" /></th>
+            <th pSortableColumn="percentual_docs_completos">Docs (%) <p-sortIcon field="percentual_docs_completos" /></th>
+            <th style="width: 5rem">Ações</th>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-item>
+          <tr [pSelectableRow]="item" class="table-row">
+            <td>
+              <div class="flex flex-col">
+                <span class="font-bold text-blue-600">{{ item.numero_processo }}</span>
+                <p-tag
+                  [value]="item.modalidade"
+                  [severity]="getModalidadeSeverity(item.modalidade)"
+                  styleClass="text-[10px] px-1 py-0"
+                />
+              </div>
+            </td>
+            <td>{{ item.nucleo_nome }}</td>
+            <td>{{ item.total_beneficiarios }}</td>
+            <td>{{ item.baixa_renda }}</td>
+            <td>
+              <div class="flex items-center gap-2">
+                <p-progressbar 
+                  [value]="item.percentual_docs_completos" 
+                  [showValue]="false" 
+                  class="w-16"
+                  [styleClass]="'p-progressbar-' + getDocPercentageSeverity(item.percentual_docs_completos)"
+                />
+                <span class="text-xs font-semibold">{{ item.percentual_docs_completos | number:'1.0-1' }}%</span>
+              </div>
+            </td>
+            <td>
+              <div class="row-actions">
+                <p-button
+                  icon="pi pi-users"
+                  [rounded]="true"
+                  [text]="true"
+                  [routerLink]="['/beneficiaries']"
+                  [queryParams]="{ processo: item.processo_id }"
+                  pTooltip="Ver beneficiários"
+                  (onClick)="$event.stopPropagation()"
+                />
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="6" class="text-center py-8 text-gray-500">
+              Nenhum dado encontrado.
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </section>
+
+    <aside class="beneficiarie-card detail-card">
+      @if (selectedItem(); as item) {
+        <div class="detail-header">
+          <div>
+            <span class="detail-kicker">Resumo Sociodemográfico</span>
+            <h2>{{ item.nucleo_nome }}</h2>
+          </div>
+          <p-tag [value]="item.numero_processo" severity="info" />
+        </div>
+
+        <div class="detail-section">
+          <span class="detail-section-title">Perfil dos Beneficiários</span>
+          <div class="detail-grid">
+            <div class="detail-item">
+              <span class="detail-label">Total Geral</span>
+              <strong>{{ item.total_beneficiarios }}</strong>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Baixa Renda</span>
+              <strong>{{ item.baixa_renda }}</strong>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Idosos</span>
+              <strong>{{ item.idosos }}</strong>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">PCDs</span>
+              <strong>{{ item.deficientes }}</strong>
+            </div>
+            <div class="detail-item field-span-full">
+              <span class="detail-label">Mulheres Chefe de Família</span>
+              <strong>{{ item.mulheres_chefe_familia }}</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="detail-section">
+          <span class="detail-section-title">Documentação</span>
+          <div class="detail-grid">
+            <div class="detail-item">
+              <span class="detail-label">Completos</span>
+              <strong class="text-green-600">{{ item.docs_completos }}</strong>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Pendentes</span>
+              <strong class="text-red-600">{{ item.docs_pendentes }}</strong>
+            </div>
+            <div class="detail-item field-span-full">
+              <span class="detail-label">Progresso Documental</span>
+              <div class="flex items-center gap-3 mt-1">
+                <p-progressbar 
+                  [value]="item.percentual_docs_completos" 
+                  class="flex-1"
+                  [styleClass]="'p-progressbar-' + getDocPercentageSeverity(item.percentual_docs_completos)"
+                />
+                <span class="text-sm font-bold">{{ item.percentual_docs_completos | number:'1.1-1' }}%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="detail-section">
+          <span class="detail-section-title">Ocupação e Área</span>
+          <div class="detail-grid">
+            <div class="detail-item">
+              <span class="detail-label">Tempo Médio</span>
+              <strong>{{ item.tempo_medio_ocupacao }} anos</strong>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Área Média Lote</span>
+              <strong>{{ item.area_media_lote | number:'1.0-0' }} m²</strong>
+            </div>
+            <div class="detail-item field-span-full">
+              <span class="detail-label">Área Total Ocupada</span>
+              <strong>{{ item.area_total_ocupada | number:'1.1-1' }} m²</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="detail-actions mt-4">
+          <p-button
+            label="Análise Detalhada"
+            icon="pi pi-chart-bar"
+            class="w-full"
+            styleClass="w-full"
+            [routerLink]="['/reports']"
+            [queryParams]="{ type: 'beneficiaries', processo: item.processo_id }"
+          />
+        </div>
+      } @else {
+        <div class="empty-state">
+          <i class="pi pi-users text-4xl mb-4"></i>
+          <span>Selecione um processo para visualizar os indicadores dos beneficiários.</span>
+        </div>
+      }
+    </aside>
+  </div>
+</div>

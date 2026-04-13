@@ -1,22 +1,23 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, signal, computed } from '@angular/core';
+import { CommonModule, DecimalPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
 import { TimelineModule } from 'primeng/timeline';
 import { MessageModule } from 'primeng/message';
+import { DashboardSummary } from './dashboard.types';
 
 type TagSeverity = 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast';
 type MessageSeverity = 'success' | 'info' | 'warn' | 'error' | 'secondary' | 'contrast';
 
 interface DashboardKpi {
   label: string;
-  value: string;
+  value: string | number | null;
   icon: string;
   color: string;
-  delta: string;
-  deltaUp: boolean;
+  delta?: string;
+  deltaUp?: boolean;
   severity: TagSeverity;
 }
 
@@ -61,49 +62,81 @@ interface DashboardAlert {
     TagModule,
     TimelineModule,
     MessageModule,
+    DecimalPipe
   ],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent {
-  kpis: DashboardKpi[] = [
+  summary = signal<DashboardSummary>({
+    total_processos: 452,
+    processos_ativos: 347,
+    processos_concluidos: 105,
+    total_reurb_s: 320,
+    total_reurb_e: 132,
+    total_beneficiarios: 3891,
+    beneficiarios_baixa_renda: 2850,
+    crfs_emitidas: 84,
+    registros_concluidos: 72,
+    prazos_classificacao_vencidos: 12,
+    tempo_medio_conclusao_dias: 145,
+    area_total_regularizada_m2: 45800.5,
+  });
+
+  kpis = computed<DashboardKpi[]>(() => [
     {
       label: 'Processos ativos',
-      value: '347',
+      value: this.summary().processos_ativos,
       icon: 'pi-file',
       color: 'blue',
-      delta: '8% vs mês anterior',
+      delta: `${this.summary().total_processos} no total`,
       deltaUp: true,
       severity: 'info',
     },
     {
-      label: 'Lotes regularizados',
-      value: '1.284',
+      label: 'Beneficiários',
+      value: this.summary().total_beneficiarios,
+      icon: 'pi-users',
+      color: 'amber',
+      delta: `${this.summary().beneficiarios_baixa_renda} de baixa renda`,
+      deltaUp: true,
+      severity: 'warn',
+    },
+    {
+      label: 'CRFs Emitidas',
+      value: this.summary().crfs_emitidas,
       icon: 'pi-check-circle',
       color: 'green',
-      delta: '14% vs mês anterior',
+      delta: `${this.summary().registros_concluidos} registrados`,
       deltaUp: true,
       severity: 'success',
     },
     {
-      label: 'Pendências críticas',
-      value: '23',
+      label: 'Área Regularizada',
+      value: this.summary().area_total_regularizada_m2,
+      icon: 'pi-map',
+      color: 'purple',
+      delta: `${this.summary().tempo_medio_conclusao_dias} dias médios`,
+      deltaUp: false,
+      severity: 'secondary',
+    },
+    {
+      label: 'REURB-S / REURB-E',
+      value: `${this.summary().total_reurb_s} / ${this.summary().total_reurb_e}`,
+      icon: 'pi-list',
+      color: 'cyan',
+      severity: 'contrast',
+    },
+    {
+      label: 'Prazos Vencidos',
+      value: this.summary().prazos_classificacao_vencidos,
       icon: 'pi-exclamation-triangle',
       color: 'red',
       delta: 'Requer atenção imediata',
       deltaUp: false,
       severity: 'danger',
     },
-    {
-      label: 'Beneficiários',
-      value: '3.891',
-      icon: 'pi-users',
-      color: 'amber',
-      delta: '5% vs mês anterior',
-      deltaUp: true,
-      severity: 'warn',
-    },
-  ];
+  ]);
 
   processos: DashboardProcess[] = [
     {

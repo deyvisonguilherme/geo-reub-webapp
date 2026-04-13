@@ -20,7 +20,7 @@
   </div>
 
   <div class="kpi-grid">
-    @for (kpi of kpis; track kpi.label) {
+    @for (kpi of kpis(); track kpi.label) {
       <p-card styleClass="kpi-card">
         <ng-template #content>
           <div class="kpi-header">
@@ -29,14 +29,24 @@
               <i [class]="'pi ' + kpi.icon"></i>
             </div>
           </div>
-          <div class="kpi-value">{{ kpi.value }}</div>
-          <p-tag
-            [severity]="kpi.severity"
-            [rounded]="true"
-            [icon]="kpi.deltaUp ? 'pi pi-arrow-up' : 'pi pi-arrow-down'"
-            [value]="kpi.delta"
-            styleClass="kpi-delta-tag"
-          />
+          <div class="kpi-value">
+            @if (kpi.label === 'Área Regularizada') {
+               {{ kpi.value | number:'1.1-2' }} m²
+            } @else if (kpi.label === 'REURB-S / REURB-E') {
+               {{ kpi.value }}
+            } @else {
+               {{ kpi.value | number }}
+            }
+          </div>
+          @if (kpi.delta) {
+            <p-tag
+              [severity]="kpi.severity"
+              [rounded]="true"
+              [icon]="kpi.deltaUp ? 'pi pi-arrow-up' : 'pi pi-arrow-down'"
+              [value]="kpi.delta"
+              styleClass="kpi-delta-tag"
+            />
+          }
         </ng-template>
       </p-card>
     }

@@ -1,4 +1,4 @@
-<section class="section-card">
+<section class="card">
   <div class="section-header">
     <div>
       <h2 class="section-title">Emissão de CRF</h2>
@@ -25,75 +25,99 @@
 
   <div class="form-grid">
     <div class="form-field">
-      <label>Número CRF</label>
-      <input [(ngModel)]="draft.numeroCrf" />
+      <label for="numeroCrf">Número CRF</label>
+      <input id="numeroCrf" pInputText [(ngModel)]="draft.numeroCrf" />
     </div>
     <div class="form-field">
-      <label>Modalidade</label>
-      <select [(ngModel)]="draft.modalidadeReurb">
-        <option value="">Selecione</option>
-        <option value="REURB-S">REURB-S</option>
-        <option value="REURB-E">REURB-E</option>
-      </select>
+      <label for="modalidadeCrf">Modalidade</label>
+      <p-select
+        id="modalidadeCrf"
+        [options]="modalidadeOptions"
+        [(ngModel)]="draft.modalidadeReurb"
+        optionLabel="label"
+        optionValue="value"
+        placeholder="Selecione"
+      />
     </div>
     <div class="form-field">
-      <label>Área total m²</label>
-      <input type="number" [(ngModel)]="draft.areaTotalM2" />
+      <label for="areaTotal">Área total m²</label>
+      <p-inputnumber
+        id="areaTotal"
+        [(ngModel)]="draft.areaTotalM2"
+        mode="decimal"
+        [minFractionDigits]="2"
+        [maxFractionDigits]="2"
+      />
     </div>
     <div class="form-field">
-      <label>Número beneficiários</label>
-      <input type="number" [(ngModel)]="draft.numeroBeneficiarios" />
+      <label for="numeroBeneficiarios">Número beneficiários</label>
+      <p-inputnumber id="numeroBeneficiarios" [(ngModel)]="draft.numeroBeneficiarios" />
     </div>
     <div class="form-field">
-      <label>Data emissão</label>
-      <input type="date" [(ngModel)]="draft.dataEmissao" />
+      <label for="dataEmissao">Data emissão</label>
+      <p-datepicker
+        id="dataEmissao"
+        [(ngModel)]="draft.dataEmissao"
+        dateFormat="dd/mm/yy"
+        appendTo="body"
+      />
     </div>
     <div class="form-field">
-      <label>Emitido por</label>
-      <input [(ngModel)]="draft.emitidoPor" />
+      <label for="emitidoPor">Emitido por</label>
+      <input id="emitidoPor" pInputText [(ngModel)]="draft.emitidoPor" />
     </div>
     <div class="form-field">
-      <label>Arquivo CRF ID</label>
-      <input [(ngModel)]="draft.arquivoCrfId" />
+      <label for="arquivoCrf">Arquivo CRF ID</label>
+      <input id="arquivoCrf" pInputText [(ngModel)]="draft.arquivoCrfId" />
     </div>
     <div class="form-field">
-      <label>Arquivo memorial ID</label>
-      <input [(ngModel)]="draft.arquivoMemorialDescritivoId" />
+      <label for="arquivoMemorial">Arquivo memorial ID</label>
+      <input id="arquivoMemorial" pInputText [(ngModel)]="draft.arquivoMemorialDescritivoId" />
     </div>
     <div class="form-field">
-      <label>Arquivo projeto urbanístico ID</label>
-      <input [(ngModel)]="draft.arquivoProjetoUrbanisticoId" />
+      <label for="arquivoProjeto">Arquivo projeto urbanístico ID</label>
+      <input id="arquivoProjeto" pInputText [(ngModel)]="draft.arquivoProjetoUrbanisticoId" />
     </div>
     <div class="form-field">
-      <label>Arquivo lista beneficiários ID</label>
-      <input [(ngModel)]="draft.arquivoListaBeneficiariosId" />
+      <label for="arquivoLista">Arquivo lista beneficiários ID</label>
+      <input id="arquivoLista" pInputText [(ngModel)]="draft.arquivoListaBeneficiariosId" />
     </div>
     <div class="form-field">
-      <label>Arquivo planta ID</label>
-      <input [(ngModel)]="draft.arquivoPlantaId" />
+      <label for="arquivoPlanta">Arquivo planta ID</label>
+      <input id="arquivoPlanta" pInputText [(ngModel)]="draft.arquivoPlantaId" />
     </div>
     <div class="form-field">
-      <label>Data cancelamento</label>
-      <input type="date" [(ngModel)]="draft.dataCancelamento" />
+      <label for="dataCancelamento">Data cancelamento</label>
+      <p-datepicker
+        id="dataCancelamento"
+        [(ngModel)]="draft.dataCancelamento"
+        dateFormat="dd/mm/yy"
+        appendTo="body"
+      />
     </div>
     <div class="form-field field-span-full">
-      <label>Descrição núcleo</label>
-      <textarea [(ngModel)]="draft.descricaoNucleo"></textarea>
+      <label for="descricaoNucleo">Descrição núcleo</label>
+      <textarea id="descricaoNucleo" pTextarea [(ngModel)]="draft.descricaoNucleo" rows="3"></textarea>
     </div>
     <div class="form-field field-span-full">
-      <label>Motivo cancelamento</label>
-      <textarea [(ngModel)]="draft.motivoCancelamento"></textarea>
+      <label for="motivoCancelamento">Motivo cancelamento</label>
+      <textarea
+        id="motivoCancelamento"
+        pTextarea
+        [(ngModel)]="draft.motivoCancelamento"
+        rows="3"
+      ></textarea>
     </div>
   </div>
 
   <div class="checkbox-grid">
-    <label class="checkbox-field">
-      <input type="checkbox" [(ngModel)]="draft.valida" />
-      CRF válida
-    </label>
+    <div class="checkbox-field">
+      <p-checkbox id="valida" [(ngModel)]="draft.valida" [binary]="true"></p-checkbox>
+      <label for="valida">CRF válida</label>
+    </div>
   </div>
 
   <div class="form-actions">
-    <button type="button" class="primary-button" (click)="submit()">Salvar etapa</button>
+    <p-button label="Salvar etapa" [rounded]="true" (click)="submit()" />
   </div>
 </section>

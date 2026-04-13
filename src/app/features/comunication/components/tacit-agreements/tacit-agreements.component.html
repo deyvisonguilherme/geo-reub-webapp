@@ -1,0 +1,27 @@
+<p-table [value]="agreements()" [rows]="10" [paginator]="true" styleClass="p-datatable-sm p-datatable-striped">
+  <ng-template pTemplate="header">
+    <tr>
+      <th>Processo</th>
+      <th>Notificado</th>
+      <th>Data Entrega</th>
+      <th>Prazo (dias)</th>
+      <th>Vencimento</th>
+      <th>Status</th>
+      <th style="width: 5rem"></th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-tacit>
+    <tr>
+      <td><span class="font-bold text-blue-600">{{ tacit.numero_processo }}</span></td>
+      <td>{{ tacit.notificado }}</td>
+      <td>{{ tacit.data_entrega_ar | date:'shortDate' }}</td>
+      <td>{{ tacit.prazo_dias }}</td>
+      <td>{{ tacit.data_vencimento | date:'shortDate' }}</td>
+      <td><p-tag [value]="tacit.status" [severity]="getTacitSeverity(tacit.status)" /></td>
+      <td>
+        <button pButton icon="pi pi-check" [rounded]="true" [text]="true" 
+          pTooltip="Consolidar" (click)="consolidate.emit(tacit)" [disabled]="tacit.status === 'CONSOLIDADO'"></button>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>

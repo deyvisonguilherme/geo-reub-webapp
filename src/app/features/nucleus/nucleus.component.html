@@ -1,219 +1,144 @@
 <div class="nucleus-page">
   <div class="page-header">
     <div>
-      <h1 class="page-title">Núcleos urbanos</h1>
+      <h1 class="page-title">Núcleos Urbanos</h1>
       <p class="page-subtitle">
-        Listagem operacional com os principais dados para triagem e acesso rápido ao cadastro
-        completo.
+        Gestão e cadastramento de núcleos informais para regularização fundiária.
       </p>
     </div>
 
     <p-button
-      label="Criar núcleo"
+      label="Novo núcleo"
       icon="pi pi-plus"
-      styleClass="header-action"
-      (onClick)="openCreateDialog()"
+      [rounded]="true"
+      (onClick)="createNucleus()"
     />
   </div>
 
   <div class="nucleus-grid">
     <section class="nucleus-card table-card">
-      <div class="table-toolbar">
-        <div class="toolbar-summary">
-          <span class="toolbar-label">Itens {{ filteredNuclei.length }}</span>
-        </div>
+      <p-table
+        [value]="filteredNuclei"
+        [paginator]="true"
+        [rows]="rows"
+        [rowsPerPageOptions]="[5, 10, 20, 50]"
+        styleClass="p-datatable-sm p-datatable-striped"
+        [tableStyle]="{ 'min-width': '50rem' }"
+        selectionMode="single"
+        [selection]="selectedNucleus()"
+        (onRowSelect)="selectNucleus($event.data)"
+      >
+        <ng-template pTemplate="caption">
+          <div class="table-header">
+            <span class="text-xl font-bold">Listagem de Núcleos</span>
+            <p-iconfield iconPosition="left">
+              <p-inputicon styleClass="pi pi-search" />
+              <input
+                type="text"
+                pInputText
+                [ngModel]="searchTerm"
+                (ngModelChange)="onSearchTermChange($event)"
+                placeholder="Pesquisar por código, nome, descrição..."
+              />
+            </p-iconfield>
+          </div>
+        </ng-template>
 
-        <div class="toolbar-search">
-          <input
-            id="nucleus-search"
-            type="text"
-            [ngModel]="searchTerm"
-            (ngModelChange)="onSearchTermChange($event)"
-            placeholder="Código, nome, descrição, município..."
-          />
-        </div>
+        <ng-template pTemplate="header">
+          <tr>
+            <th pSortableColumn="codigo">Código <p-sortIcon field="codigo" /></th>
+            <th pSortableColumn="nome">Nome <p-sortIcon field="nome" /></th>
+            <th pSortableColumn="situacaoGeografica">Situação <p-sortIcon field="situacaoGeografica" /></th>
+            <th pSortableColumn="consolidado">Consolidado <p-sortIcon field="consolidado" /></th>
+            <th style="width: 100px">Ações</th>
+          </tr>
+        </ng-template>
 
-        <div class="toolbar-select">
-          <label for="rows">Linhas</label>
-          <select id="rows" [ngModel]="rows" (ngModelChange)="onRowsChange($event)">
-            @for (option of rowSizeOptions; track option.value) {
-              <option [ngValue]="option.value">{{ option.label }}</option>
-            }
-          </select>
-        </div>
-      </div>
+        <ng-template pTemplate="body" let-nucleus>
+          <tr [pSelectableRow]="nucleus" class="table-row">
+            <td>
+              <span class="font-bold text-blue-600">{{ nucleus.codigo }}</span>
+            </td>
+            <td>{{ nucleus.nome }}</td>
+            <td>{{ nucleus.situacaoGeografica }}</td>
+            <td>
+              <p-tag [value]="nucleus.consolidado ? 'Sim' : 'Não'" [severity]="getConsolidadoSeverity(nucleus)" />
+            </td>
+            <td>
+              <div class="row-actions">
+                <p-button
+                  icon="pi pi-pencil"
+                  [rounded]="true"
+                  [text]="true"
+                  severity="secondary"
+                  (onClick)="editNucleus(nucleus); $event.stopPropagation()"
+                  pTooltip="Editar Núcleo"
+                />
+                <p-button
+                  icon="pi pi-trash"
+                  [rounded]="true"
+                  [text]="true"
+                  severity="danger"
+                  (onClick)="deleteNucleus(nucleus); $event.stopPropagation()"
+                  pTooltip="Excluir"
+                />
+              </div>
+            </td>
+          </tr>
+        </ng-template>
 
-      <div class="native-table-wrapper">
-        <table class="native-table">
-          <thead>
-            <tr>
-              <th>Código</th>
-              <th>Núcleo urbano</th>
-              <th>Situação geográfica</th>
-              <th>Famílias</th>
-              <th>Área</th>
-              <th>Consolidado</th>
-              <th class="actions-column">Ações</th>
-            </tr>
-          </thead>
-          <tbody>
-            @if (paginatedNuclei.length) {
-              @for (nucleus of paginatedNuclei; track nucleus.id) {
-                <tr
-                  class="table-row"
-                  [class.selected]="selectedNucleus?.id === nucleus.id"
-                  (click)="selectNucleus(nucleus)"
-                >
-                  <td>
-                    <span class="cell-code">{{ nucleus.codigo }}</span>
-                  </td>
-                  <td>
-                    <div class="cell-title">
-                      <strong>{{ nucleus.nome }}</strong>
-                      <span>{{ nucleus.descricao || 'Sem descrição informada' }}</span>
-                    </div>
-                  </td>
-                  <td>{{ nucleus.situacaoGeografica || 'Não informada' }}</td>
-                  <td>{{ nucleus.numeroFamiliasEstimado ?? 'Não informado' }}</td>
-                  <td>{{ getAreaLabel(nucleus.areaTotalM2) }}</td>
-                  <td>
-                    <p-tag
-                      [value]="nucleus.consolidado ? 'Sim' : 'Não'"
-                      [severity]="getConsolidadoSeverity(nucleus.consolidado)"
-                    />
-                  </td>
-                  <td class="actions-column">
-                    <div class="row-actions">
-                      <p-button
-                        icon="pi pi-pencil"
-                        severity="secondary"
-                        [text]="true"
-                        [rounded]="true"
-                        (onClick)="openEditDialog(nucleus); $event.stopPropagation()"
-                      />
-                      <p-button
-                        icon="pi pi-trash"
-                        severity="danger"
-                        [text]="true"
-                        [rounded]="true"
-                        (onClick)="openDeleteDialog(nucleus); $event.stopPropagation()"
-                      />
-                    </div>
-                  </td>
-                </tr>
-              }
-            } @else {
-              <tr>
-                <td colspan="7">
-                  <div class="empty-state">
-                    <i class="pi pi-inbox"></i>
-                    <span>Nenhum núcleo urbano cadastrado.</span>
-                  </div>
-                </td>
-              </tr>
-            }
-          </tbody>
-        </table>
-      </div>
-
-      <div class="pagination-bar">
-        <span class="pagination-report">
-          Exibindo {{ pageStart }} a {{ pageEnd }} de {{ filteredNuclei.length }} núcleos
-        </span>
-
-        <div class="pagination-actions">
-          <button
-            type="button"
-            class="page-button"
-            [disabled]="currentPage === 1"
-            (click)="goToPage(currentPage - 1)"
-          >
-            Anterior
-          </button>
-
-          @for (page of pageNumbers; track page) {
-            <button
-              type="button"
-              class="page-button"
-              [class.active]="page === currentPage"
-              (click)="goToPage(page)"
-            >
-              {{ page }}
-            </button>
-          }
-
-          <button
-            type="button"
-            class="page-button"
-            [disabled]="currentPage === totalPages"
-            (click)="goToPage(currentPage + 1)"
-          >
-            Próxima
-          </button>
-        </div>
-      </div>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="5" class="text-center py-8 text-gray-500">
+              Nenhum núcleo urbano encontrado.
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
     </section>
 
     <aside class="nucleus-card detail-card">
-      @if (selectedNucleus; as nucleus) {
+      @if (selectedNucleus(); as nucleus) {
         <div class="detail-header">
           <div>
-            <span class="detail-kicker">Cadastro selecionado</span>
+            <span class="detail-kicker">Núcleo selecionado</span>
             <h2>{{ nucleus.nome }}</h2>
           </div>
-          <p-tag
-            [value]="nucleus.consolidado ? 'Consolidado' : 'Em consolidação'"
-            [severity]="getConsolidadoSeverity(nucleus.consolidado)"
-          />
+          <p-tag [value]="nucleus.codigo" severity="info" />
         </div>
 
         <div class="detail-section">
-          <span class="detail-section-title">Resumo</span>
+          <span class="detail-section-title">Dados Gerais</span>
           <div class="detail-grid">
             <div class="detail-item">
-              <span class="detail-label">Código</span>
-              <strong>{{ nucleus.codigo }}</strong>
+              <span class="detail-label">Situação</span>
+              <strong>{{ nucleus.situacaoGeografica }}</strong>
             </div>
             <div class="detail-item">
-              <span class="detail-label">Situação geográfica</span>
-              <strong>{{ nucleus.situacaoGeografica || 'Não informada' }}</strong>
+              <span class="detail-label">Famílias Est.</span>
+              <strong>{{ nucleus.numeroFamiliasEstimado || '0' }}</strong>
             </div>
             <div class="detail-item">
-              <span class="detail-label">Famílias estimadas</span>
-              <strong>{{ nucleus.numeroFamiliasEstimado ?? 'Não informado' }}</strong>
-            </div>
-            <div class="detail-item">
-              <span class="detail-label">Data de ocupação inicial</span>
-              <strong>{{ getDateLabel(nucleus.dataOcupacaoInicial) }}</strong>
-            </div>
-            <div class="detail-item">
-              <span class="detail-label">Área total</span>
-              <strong>{{ getAreaLabel(nucleus.areaTotalM2) }}</strong>
+              <span class="detail-label">Área Total</span>
+              <strong>{{ nucleus.areaTotalM2 || '0' }} m²</strong>
             </div>
             <div class="detail-item">
               <span class="detail-label">Perímetro</span>
-              <strong>{{ getPerimetroLabel(nucleus.perimetroM) }}</strong>
+              <strong>{{ nucleus.perimetroM || '0' }} m</strong>
             </div>
           </div>
-          <p class="detail-description">
-            {{ nucleus.descricao || 'Sem descrição informada para este núcleo.' }}
-          </p>
         </div>
 
         <div class="detail-section">
-          <span class="detail-section-title">Campos técnicos</span>
-          <div class="detail-stack">
-            <div class="detail-item mono">
-              <span class="detail-label">Município ID</span>
-              <strong>{{ nucleus.municipioId || 'Não informado' }}</strong>
-            </div>
-            <div class="detail-item mono">
-              <span class="detail-label">Poligonal georreferenciada</span>
-              <strong>{{ nucleus.poligonalGeorreferenciada || 'Não informada' }}</strong>
-            </div>
-            <div class="detail-item mono">
+          <span class="detail-section-title">Localização</span>
+          <div class="detail-grid">
+            <div class="detail-item field-span-full">
               <span class="detail-label">Centroide</span>
-              <strong>{{ nucleus.centroide || 'Não informado' }}</strong>
+              <strong class="text-xs">{{ nucleus.centroide || 'Não informado' }}</strong>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Data Ocupação</span>
+              <strong>{{ nucleus.dataOcupacaoInicial || 'Não informado' }}</strong>
             </div>
           </div>
         </div>
@@ -221,71 +146,41 @@
         <div class="detail-section">
           <span class="detail-section-title">Auditoria</span>
           <div class="detail-grid">
-            <div class="detail-item mono">
-              <span class="detail-label">ID</span>
-              <strong>{{ nucleus.id }}</strong>
-            </div>
-            <div class="detail-item mono">
+            <div class="detail-item">
               <span class="detail-label">Criado por</span>
-              <strong>{{ nucleus.criadoPor }}</strong>
+              <strong class="text-xs">{{ nucleus.criadoPor }}</strong>
             </div>
             <div class="detail-item">
               <span class="detail-label">Criado em</span>
-              <strong>{{ getDateLabel(nucleus.criadoEm) }}</strong>
-            </div>
-            <div class="detail-item mono">
-              <span class="detail-label">Atualizado por</span>
-              <strong>{{ nucleus.atualizadoPor || 'Não informado' }}</strong>
-            </div>
-            <div class="detail-item">
-              <span class="detail-label">Atualizado em</span>
-              <strong>{{ getDateLabel(nucleus.atualizadoEm) }}</strong>
+              <strong class="text-xs">{{ nucleus.criadoEm | date:'shortDate' }}</strong>
             </div>
           </div>
         </div>
+
+        <div class="detail-actions mt-4">
+          <p-button
+            label="Editar núcleo completo"
+            icon="pi pi-pencil"
+            class="w-full"
+            styleClass="w-full"
+            (onClick)="editNucleus(nucleus)"
+          />
+        </div>
       } @else {
         <div class="empty-state">
-          <i class="pi pi-info-circle"></i>
+          <i class="pi pi-map-marker text-4xl mb-4"></i>
           <span>Selecione um núcleo para visualizar os detalhes.</span>
         </div>
       }
     </aside>
   </div>
+
+  <app-nucleus-form-dialog
+    [visible]="displayDialog"
+    (visibleChange)="displayDialog = $event"
+    [title]="nucleusToEdit?.id ? 'Editar Núcleo' : 'Novo Núcleo'"
+    [model]="nucleusToEdit!"
+    [situacaoOptions]="situacaoOptions"
+    (save)="onSaveNucleus()"
+  />
 </div>
-
-<app-nucleus-form-dialog
-  [title]="dialogTitle"
-  [(visible)]="isFormDialogVisible"
-  [model]="formModel"
-  [situacaoOptions]="situacaoOptions"
-  (save)="saveNucleus()"
-/>
-
-<p-dialog
-  header="Confirmar exclusão"
-  [(visible)]="isDeleteDialogVisible"
-  [modal]="true"
-  [draggable]="false"
-  [resizable]="false"
-  [style]="{ width: 'min(420px, 92vw)' }"
->
-  <p class="delete-copy">
-    Excluir o núcleo
-    <strong>{{ nucleusPendingDelete?.nome }}</strong>
-    de código
-    <strong>{{ nucleusPendingDelete?.codigo }}</strong
-    >?
-  </p>
-
-  <ng-template #footer>
-    <div class="dialog-actions">
-      <p-button
-        label="Cancelar"
-        severity="secondary"
-        [text]="true"
-        (onClick)="isDeleteDialogVisible = false"
-      />
-      <p-button label="Excluir" severity="danger" icon="pi pi-trash" (onClick)="confirmDelete()" />
-    </div>
-  </ng-template>
-</p-dialog>

@@ -1,4 +1,4 @@
-<section class="section-card">
+<section class="card">
   <div class="section-header">
     <div>
       <h2 class="section-title">Levantamentos Topográficos</h2>
@@ -10,97 +10,126 @@
 
   <div class="form-grid">
     <div class="form-field">
-      <label>Sistema referência</label>
-      <input [(ngModel)]="draft.sistemaReferencia" />
+      <label for="sistemaReferencia">Sistema referência</label>
+      <input id="sistemaReferencia" type="text" pInputText [(ngModel)]="draft.sistemaReferencia" />
     </div>
     <div class="form-field">
-      <label>Datum</label>
-      <input [(ngModel)]="draft.datum" />
+      <label for="datum">Datum</label>
+      <input id="datum" type="text" pInputText [(ngModel)]="draft.datum" />
     </div>
     <div class="form-field">
-      <label>Fuso UTM</label>
-      <input [(ngModel)]="draft.fusoUtm" />
+      <label for="fusoUtm">Fuso UTM</label>
+      <input id="fusoUtm" type="text" pInputText [(ngModel)]="draft.fusoUtm" />
     </div>
     <div class="form-field">
-      <label>Precisão planimétrica (cm)</label>
-      <input type="number" [(ngModel)]="draft.precisaoPlanimetricaCm" />
+      <label for="precisaoPlanimetricaCm">Precisão planimétrica (cm)</label>
+      <p-inputnumber
+        id="precisaoPlanimetricaCm"
+        [(ngModel)]="draft.precisaoPlanimetricaCm"
+        styleClass="w-full"
+      />
     </div>
     <div class="form-field">
-      <label>Precisão altimétrica (cm)</label>
-      <input type="number" [(ngModel)]="draft.precisaoAltimetricaCm" />
+      <label for="precisaoAltimetricaCm">Precisão altimétrica (cm)</label>
+      <p-inputnumber
+        id="precisaoAltimetricaCm"
+        [(ngModel)]="draft.precisaoAltimetricaCm"
+        styleClass="w-full"
+      />
     </div>
     <div class="form-field">
-      <label>Responsável técnico</label>
-      <input [(ngModel)]="draft.responsavelTecnico" />
+      <label for="responsavelTecnico">Responsável técnico</label>
+      <input id="responsavelTecnico" type="text" pInputText [(ngModel)]="draft.responsavelTecnico" />
     </div>
     <div class="form-field">
-      <label>CREA/ART</label>
-      <input [(ngModel)]="draft.creaArt" />
+      <label for="creaArt">CREA/ART</label>
+      <input id="creaArt" type="text" pInputText [(ngModel)]="draft.creaArt" />
     </div>
     <div class="form-field">
-      <label>Empresa executora</label>
-      <input [(ngModel)]="draft.empresaExecutora" />
+      <label for="empresaExecutora">Empresa executora</label>
+      <input id="empresaExecutora" type="text" pInputText [(ngModel)]="draft.empresaExecutora" />
     </div>
     <div class="form-field">
-      <label>Data levantamento</label>
-      <input type="date" [(ngModel)]="draft.dataLevantamento" />
+      <label for="dataLevantamento">Data levantamento</label>
+      <p-datepicker
+        id="dataLevantamento"
+        [(ngModel)]="draft.dataLevantamento"
+        dateFormat="dd/mm/yy"
+        appendTo="body"
+        styleClass="w-full"
+      />
     </div>
     <div class="form-field">
-      <label>Data aprovação</label>
-      <input type="date" [(ngModel)]="draft.dataAprovacao" />
+      <label for="dataAprovacao">Data aprovação</label>
+      <p-datepicker
+        id="dataAprovacao"
+        [(ngModel)]="draft.dataAprovacao"
+        dateFormat="dd/mm/yy"
+        appendTo="body"
+        styleClass="w-full"
+      />
     </div>
     <div class="form-field">
-      <label>Arquivo planta ID</label>
-      <input [(ngModel)]="draft.arquivoPlantaId" />
+      <label for="arquivoPlantaId">Arquivo planta ID</label>
+      <input id="arquivoPlantaId" type="text" pInputText [(ngModel)]="draft.arquivoPlantaId" />
     </div>
     <div class="form-field">
-      <label>Arquivo memorial ID</label>
-      <input [(ngModel)]="draft.arquivoMemorialId" />
+      <label for="arquivoMemorialId">Arquivo memorial ID</label>
+      <input id="arquivoMemorialId" type="text" pInputText [(ngModel)]="draft.arquivoMemorialId" />
     </div>
     <div class="form-field field-span-2">
-      <label>Arquivo shapefile ID</label>
-      <input [(ngModel)]="draft.arquivoShapefileId" />
+      <label for="arquivoShapefileId">Arquivo shapefile ID</label>
+      <input id="arquivoShapefileId" type="text" pInputText [(ngModel)]="draft.arquivoShapefileId" />
     </div>
   </div>
 
   <div class="form-actions">
-    <button type="button" class="secondary-button" (click)="resetDraft()">Limpar</button>
-    <button type="button" class="primary-button" (click)="upsert()">Salvar levantamento</button>
+    <p-button label="Limpar" [text]="true" [rounded]="true" (click)="resetDraft()" />
+    <p-button label="Salvar Levantamento" [rounded]="true" (click)="upsert()" />
   </div>
 
-  <table class="list-table">
-    <thead>
-      <tr>
-        <th>Referência</th>
-        <th>Responsável</th>
-        <th>Levantamento</th>
-        <th>Aprovação</th>
-        <th>Ações</th>
-      </tr>
-    </thead>
-    <tbody>
-      @if (localItems.length) {
-        @for (item of localItems; track item.id) {
-          <tr>
-            <td>{{ item.sistemaReferencia || '-' }} / {{ item.fusoUtm || '-' }}</td>
-            <td>{{ item.responsavelTecnico || '-' }}</td>
-            <td>{{ item.dataLevantamento || '-' }}</td>
-            <td>{{ item.dataAprovacao || '-' }}</td>
-            <td>
-              <div class="row-actions">
-                <button type="button" class="secondary-button" (click)="edit(item)">Editar</button>
-                <button type="button" class="danger-button" (click)="remove(item.id)">
-                  Excluir
-                </button>
-              </div>
-            </td>
-          </tr>
-        }
-      } @else {
+  <div class="mt-6">
+    <p-table [value]="localItems" [responsiveLayout]="'stack'" styleClass="p-datatable-sm">
+      <ng-template pTemplate="header">
         <tr>
-          <td colspan="5" class="text-muted">Nenhum levantamento cadastrado.</td>
+          <th>Referência</th>
+          <th>Responsável</th>
+          <th>Levantamento</th>
+          <th>Aprovação</th>
+          <th style="width: 8rem">Ações</th>
         </tr>
-      }
-    </tbody>
-  </table>
+      </ng-template>
+      <ng-template pTemplate="body" let-item>
+        <tr>
+          <td>{{ item.sistemaReferencia || '-' }} / {{ item.fusoUtm || '-' }}</td>
+          <td>{{ item.responsavelTecnico || '-' }}</td>
+          <td>{{ item.dataLevantamento || '-' }}</td>
+          <td>{{ item.dataAprovacao || '-' }}</td>
+          <td>
+            <div class="flex gap-2">
+              <p-button
+                icon="pi pi-pencil"
+                [text]="true"
+                [rounded]="true"
+                severity="secondary"
+                (click)="edit(item)"
+              />
+              <p-button
+                icon="pi pi-trash"
+                [text]="true"
+                [rounded]="true"
+                severity="danger"
+                (click)="remove(item.id)"
+              />
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="5" class="text-center p-4 text-muted">Nenhum levantamento cadastrado.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
 </section>

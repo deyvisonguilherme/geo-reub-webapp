@@ -1,0 +1,66 @@
+<div class="alert-list-container">
+    <div class="alert-header-area flex justify-between items-center">
+        <span class="title">Alertas</span>
+        <span class="text-xs bg-primary-100 text-primary-700 px-2 py-0.5 rounded-full font-semibold">
+            {{ alertStore.alerts().length }} novas
+        </span>
+    </div>
+
+    <div class="alert-scroll-area">
+        @if (alertStore.loading()) {
+            <div class="flex flex-col items-center justify-center p-12 text-muted-color gap-3">
+                <i class="pi pi-spin pi-spinner text-2xl"></i>
+            </div>
+        } @else if (alertStore.alerts().length === 0) {
+            <div class="empty-state">
+                <i class="pi pi-inbox"></i>
+                <p>Nenhum alerta recente</p>
+            </div>
+        } @else {
+            @for (alert of alertStore.alerts(); track alert.id) {
+                <div 
+                    class="alert-item"
+                    [class.unread]="!alert.visualizado"
+                    (click)="onAlertClick(alert)"
+                >
+                    <div class="alert-icon-wrapper" [ngClass]="alert.severidade">
+                        <i [class]="getIcon(alert.severidade)"></i>
+                    </div>
+
+                    <div class="alert-content">
+                        <div class="alert-top-row">
+                            <span class="alert-title">{{ alert.titulo }}</span>
+                        </div>
+                        
+                        <p class="alert-message">
+                            {{ alert.mensagem }}
+                        </p>
+
+                        <div class="alert-meta">
+                            <div class="meta-item">
+                                <i class="pi pi-calendar text-[10px]"></i>
+                                <span>{{ alert.criado_em | date: 'dd/MM' }}</span>
+                            </div>
+
+                            @if (alert.dias_restantes !== undefined) {
+                                <div class="meta-item deadline" [class.critical]="alert.dias_restantes <= 5">
+                                    <i class="pi pi-clock text-[10px]"></i>
+                                    <span>{{ alert.dias_restantes }}d</span>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+
+    <div class="alert-footer-area">
+        <button 
+            class="text-xs text-primary-600 font-bold hover:text-primary-800 transition-colors uppercase tracking-wider"
+            (click)="goToAll()"
+        >
+            Ver todas
+        </button>
+    </div>
+</div>

@@ -2,7 +2,10 @@
   <div class="workflow-page">
     <div class="workflow-header">
       <div>
-        <a class="back-link" routerLink="/process"> <i class="pi pi-arrow-left"></i> Voltar </a>
+        <a class="back-link" routerLink="/process">
+          <i class="pi pi-arrow-left"></i>
+          Voltar para listagem
+        </a>
         <h1>{{ processTitle }}</h1>
         <p>
           Workflow operacional da REURB com etapas destacadas na timeline e formulários separados
@@ -17,6 +20,7 @@
           [text]="true"
           [rounded]="true"
           routerLink="/process"
+          pTooltip="Fechar"
         />
         <p-button
           icon="pi pi-trash"
@@ -24,6 +28,7 @@
           [text]="true"
           [rounded]="true"
           (click)="removeProcess()"
+          pTooltip="Excluir Processo"
         />
       </div>
     </div>
@@ -34,13 +39,12 @@
           <span class="timeline-kicker">Timeline REURB</span>
           <h2>Etapas para conclusão</h2>
           <p class="timeline-intro">
-            Verde representa etapa concluída. Tons de cinza diferenciam os blocos ativos ainda
-            pendentes.
+            Verde representa etapa concluída. Blocos em cinza indicam etapas pendentes.
           </p>
 
           <div class="timeline-list">
             @for (stage of stages(); track stage.id) {
-              <div class="timeline-stage" [class.completed]="stage.completed" [class]="stage.tone">
+              <div class="timeline-stage" [class.completed]="stage.completed">
                 <div class="stage-header">
                   <div class="stage-bullet"></div>
                   <div>
@@ -54,7 +58,7 @@
                     <button
                       type="button"
                       class="stage-link"
-                      [class.active]="activeSection === section.key"
+                      [class.active]="activeSection() === section.key"
                       (click)="openSection(section.key)"
                     >
                       <span>{{ section.label }}</span>
@@ -73,24 +77,24 @@
           <div class="summary-grid">
             <div>
               <span class="summary-label">Status</span>
-              <strong>{{ process.status }}</strong>
+              <span class="summary-value">{{ process.status }}</span>
             </div>
             <div>
               <span class="summary-label">Modalidade</span>
-              <strong>{{ process.modalidade || 'Não definida' }}</strong>
+              <span class="summary-value">{{ process.modalidade || 'Não definida' }}</span>
             </div>
             <div>
               <span class="summary-label">Prazo admissibilidade</span>
-              <strong>{{ process.prazoAnaliseAdmissibilidade || 'Não informado' }}</strong>
+              <span class="summary-value">{{ process.prazoAnaliseAdmissibilidade || 'Não informado' }}</span>
             </div>
             <div>
               <span class="summary-label">Prazo conclusão</span>
-              <strong>{{ process.prazoConclusaoEstimado || 'Não informado' }}</strong>
+              <span class="summary-value">{{ process.prazoConclusaoEstimado || 'Não informado' }}</span>
             </div>
           </div>
         </div>
 
-        @switch (activeSection) {
+        @switch (activeSection()) {
           @case ('abertura') {
             <app-abertura-processo-form [model]="process" (save)="saveAbertura($event)" />
           }
@@ -174,6 +178,6 @@
   <div class="missing-process">
     <h1>Processo não encontrado</h1>
     <p>O registro solicitado não existe mais na memória local da aplicação.</p>
-    <a routerLink="/process">Voltar para a listagem</a>
+    <p-button label="Voltar para listagem" [text]="true" routerLink="/process" icon="pi pi-arrow-left" />
   </div>
 }

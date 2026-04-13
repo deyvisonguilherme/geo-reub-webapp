@@ -1,0 +1,226 @@
+<div class="form-grid">
+  <!-- Identificação Pessoal -->
+  <div class="field-span-full">
+    <h3 class="section-title text-sm mt-2 mb-1">Identificação Pessoal</h3>
+  </div>
+  <div class="form-field field-span-2">
+    <label for="nomeCompleto">Nome completo</label>
+    <input
+      id="nomeCompleto"
+      pInputText
+      [(ngModel)]="draft.nomeCompleto"
+      placeholder="Nome Completo"
+    />
+  </div>
+  <div class="form-field">
+    <label for="cpf">CPF</label>
+    <input id="cpf" pInputText [(ngModel)]="draft.cpf" placeholder="000.000.000-00" />
+  </div>
+  <div class="form-field">
+    <label for="rg">RG</label>
+    <input id="rg" pInputText [(ngModel)]="draft.rg" placeholder="RG" />
+  </div>
+  <div class="form-field">
+    <label for="orgaoExpedidor">Órgão expedidor</label>
+    <input
+      id="orgaoExpedidor"
+      pInputText
+      [(ngModel)]="draft.orgaoExpedidor"
+      placeholder="Ex: SSP/SP"
+    />
+  </div>
+  <div class="form-field">
+    <label for="dataNascimento">Data nascimento</label>
+    <p-datepicker
+      id="dataNascimento"
+      [(ngModel)]="draft.dataNascimento"
+      dateFormat="dd/mm/yy"
+      appendTo="body"
+      [showIcon]="true"
+    />
+  </div>
+  <div class="form-field">
+    <label for="nacionalidade">Nacionalidade</label>
+    <input id="nacionalidade" pInputText [(ngModel)]="draft.nacionalidade" />
+  </div>
+  <div class="form-field">
+    <label for="naturalidade">Naturalidade</label>
+    <input id="naturalidade" pInputText [(ngModel)]="draft.naturalidade" />
+  </div>
+  <div class="form-field">
+    <label for="estadoCivil">Estado civil</label>
+    <input id="estadoCivil" pInputText [(ngModel)]="draft.estadoCivil" />
+  </div>
+
+  <!-- Contato e Filiação -->
+  <div class="field-span-full">
+    <h3 class="section-title text-sm mt-4 mb-1">Contato e Filiação</h3>
+  </div>
+  <div class="form-field">
+    <label for="telefone">Telefone</label>
+    <input id="telefone" pInputText [(ngModel)]="draft.telefone" placeholder="(00) 00000-0000" />
+  </div>
+  <div class="form-field field-span-2">
+    <label for="email">E-mail</label>
+    <input id="email" pInputText [(ngModel)]="draft.email" placeholder="email@exemplo.com" />
+  </div>
+  <div class="form-field">
+    <label for="nomePai">Nome do pai</label>
+    <input id="nomePai" pInputText [(ngModel)]="draft.nomePai" />
+  </div>
+  <div class="form-field">
+    <label for="nomeMae">Nome da mãe</label>
+    <input id="nomeMae" pInputText [(ngModel)]="draft.nomeMae" />
+  </div>
+  <div class="form-field">
+    <label for="regimeCasamento">Regime casamento</label>
+    <input id="regimeCasamento" pInputText [(ngModel)]="draft.regimeCasamento" />
+  </div>
+  <div class="form-field">
+    <label for="nomeConjuge">Nome cônjuge</label>
+    <input id="nomeConjuge" pInputText [(ngModel)]="draft.nomeConjuge" />
+  </div>
+  <div class="form-field">
+    <label for="cpfConjuge">CPF cônjuge</label>
+    <input id="cpfConjuge" pInputText [(ngModel)]="draft.cpfConjuge" />
+  </div>
+
+  <!-- Localização do Lote -->
+  <div class="field-span-full">
+    <h3 class="section-title text-sm mt-4 mb-1">Localização do Lote</h3>
+  </div>
+  <div class="form-field field-span-2">
+    <label for="logradouro">Logradouro</label>
+    <input id="logradouro" pInputText [(ngModel)]="draft.logradouro" />
+  </div>
+  <div class="form-field">
+    <label for="numeroLote">Número lote</label>
+    <input id="numeroLote" pInputText [(ngModel)]="draft.numeroLote" />
+  </div>
+  <div class="form-field">
+    <label for="quadra">Quadra</label>
+    <input id="quadra" pInputText [(ngModel)]="draft.quadra" />
+  </div>
+  <div class="form-field">
+    <label for="complemento">Complemento</label>
+    <input id="complemento" pInputText [(ngModel)]="draft.complemento" />
+  </div>
+  <div class="form-field">
+    <label for="areaOcupada">Área ocupada m²</label>
+    <p-inputnumber
+      id="areaOcupada"
+      [(ngModel)]="draft.areaOcupadaM2"
+      mode="decimal"
+      [minFractionDigits]="2"
+      [maxFractionDigits]="2"
+    />
+  </div>
+  <div class="form-field field-span-full">
+    <label for="coordenadas">Coordenadas lote (Georreferenciamento)</label>
+    <input
+      id="coordenadas"
+      pInputText
+      [(ngModel)]="draft.coordenadasLote"
+      placeholder="Latitude, Longitude"
+    />
+  </div>
+
+  <!-- Situação Socioeconômica -->
+  <div class="field-span-full">
+    <h3 class="section-title text-sm mt-4 mb-1">Situação Socioeconômica</h3>
+  </div>
+  <div class="form-field">
+    <label for="rendaFamiliar">Renda familiar mensal</label>
+    <p-inputnumber
+      id="rendaFamiliar"
+      [(ngModel)]="draft.rendaFamiliarMensal"
+      mode="currency"
+      currency="BRL"
+      locale="pt-BR"
+    />
+  </div>
+  <div class="form-field">
+    <label for="numeroDependentes">Número dependentes</label>
+    <p-inputnumber id="numeroDependentes" [(ngModel)]="draft.numeroDependentes" [min]="0" />
+  </div>
+  <div class="form-field">
+    <label for="tempoOcupacao">Tempo ocupação anos</label>
+    <p-inputnumber id="tempoOcupacao" [(ngModel)]="draft.tempoOcupacaoAnos" [min]="0" />
+  </div>
+  <div class="form-field">
+    <label for="dataOcupacao">Data ocupação inicial</label>
+    <p-datepicker
+      id="dataOcupacao"
+      [(ngModel)]="draft.dataOcupacaoInicial"
+      dateFormat="dd/mm/yy"
+      appendTo="body"
+      [showIcon]="true"
+    />
+  </div>
+  <div class="form-field field-span-2">
+    <label for="direitoReal">Direito real conferido</label>
+    <input
+      id="direitoReal"
+      pInputText
+      [(ngModel)]="draft.direitoRealConferido"
+      placeholder="Ex: Legitimação Fundiária"
+    />
+  </div>
+
+  <div class="checkbox-grid field-span-full">
+    <div class="checkbox-field">
+      <p-checkbox
+        id="rendaAte5Sm"
+        [(ngModel)]="draft.rendaFamiliarAte5Sm"
+        [binary]="true"
+      ></p-checkbox>
+      <label for="rendaAte5Sm">Renda até 5 SM</label>
+    </div>
+    <div class="checkbox-field">
+      <p-checkbox id="idoso" [(ngModel)]="draft.idoso" [binary]="true"></p-checkbox>
+      <label for="idoso">Idoso</label>
+    </div>
+    <div class="checkbox-field">
+      <p-checkbox id="deficiente" [(ngModel)]="draft.deficiente" [binary]="true"></p-checkbox>
+      <label for="deficiente">Deficiente</label>
+    </div>
+    <div class="checkbox-field">
+      <p-checkbox
+        id="mulherChefe"
+        [(ngModel)]="draft.mulherChefeFamilia"
+        [binary]="true"
+      ></p-checkbox>
+      <label for="mulherChefe">Mulher chefe família</label>
+    </div>
+    <div class="checkbox-field">
+      <p-checkbox
+        id="docCompleta"
+        [(ngModel)]="draft.possuiDocumentacaoCompleta"
+        [binary]="true"
+      ></p-checkbox>
+      <label for="docCompleta">Documentação completa</label>
+    </div>
+  </div>
+
+  <div class="form-field field-span-full mt-4">
+    <label for="observacoes">Observações</label>
+    <textarea
+      id="observacoes"
+      pTextarea
+      [(ngModel)]="draft.observacoes"
+      rows="3"
+      placeholder="Informações adicionais relevantes"
+    ></textarea>
+  </div>
+</div>
+
+<div class="form-actions">
+  <p-button
+    label="Cancelar"
+    [text]="true"
+    [rounded]="true"
+    severity="secondary"
+    (click)="cancel.emit()"
+  />
+  <p-button label="Salvar Beneficiário" [rounded]="true" icon="pi pi-check" (click)="onSubmit()" />
+</div>

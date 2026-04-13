@@ -1,0 +1,33 @@
+<p-table [value]="deadlines()" [rows]="10" [paginator]="true" styleClass="p-datatable-sm p-datatable-striped">
+  <ng-template pTemplate="header">
+    <tr>
+      <th>Processo</th>
+      <th>Cartório</th>
+      <th>Data Prenotação</th>
+      <th>Vencimento</th>
+      <th>Nota Devolutiva</th>
+      <th>Restante</th>
+      <th style="width: 5rem"></th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-reg>
+    <tr>
+      <td><span class="font-bold text-blue-600">{{ reg.numero_processo }}</span></td>
+      <td>{{ reg.cartorio }}</td>
+      <td>{{ reg.data_prenotacao | date:'shortDate' }}</td>
+      <td>{{ reg.prazo_vencimento | date:'shortDate' }}</td>
+      <td>
+        <p-tag [value]="reg.possui_nota_devolutiva ? 'SIM' : 'NÃO'" 
+          [severity]="reg.possui_nota_devolutiva ? 'danger' : 'success'" />
+      </td>
+      <td>
+        <span [class.text-red-600]="reg.dias_restantes < 5" [class.font-bold]="reg.dias_restantes < 5">
+          {{ reg.dias_restantes }} dias
+        </span>
+      </td>
+      <td>
+        <button pButton icon="pi pi-eye" [rounded]="true" [text]="true" pTooltip="Ver detalhes" (click)="viewDetails.emit(reg)"></button>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>

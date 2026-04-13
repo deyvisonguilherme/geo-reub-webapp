@@ -1,16 +1,34 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ProcessStore } from './process.store';
 import { ProcessRecord } from './process.types';
 import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
+import { TableModule } from 'primeng/table';
+import { InputTextModule } from 'primeng/inputtext';
+import { SelectModule } from 'primeng/select';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
+import { TooltipModule } from 'primeng/tooltip';
+import { TagSeverity } from '../nucleus/nucleus.types';
 
 @Component({
   selector: 'app-process',
   standalone: true,
-  imports: [CommonModule, FormsModule, ButtonModule, TagModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ButtonModule,
+    TagModule,
+    TableModule,
+    InputTextModule,
+    SelectModule,
+    IconFieldModule,
+    InputIconModule,
+    TooltipModule,
+  ],
   templateUrl: './process.component.html',
   styleUrl: './process.component.scss',
 })
@@ -18,10 +36,21 @@ export class ProcessComponent {
   private readonly router = inject(Router);
   private readonly store = inject(ProcessStore);
 
-  readonly rowSizeOptions = [5, 10, 20, 50];
+  readonly rowSizeOptions = [
+    { label: '5', value: 5 },
+    { label: '10', value: 10 },
+    { label: '20', value: 20 },
+    { label: '50', value: 50 },
+  ];
+
   searchTerm = '';
   rows = 10;
-  currentPage = 1;
+  
+  private readonly selectedId = signal<string | null>(null);
+  readonly selectedProcess = computed(() => {
+    const id = this.selectedId();
+    return id ? this.processes().find(p => p.id === id) : null;
+  });
 
   readonly processes = computed(() => this.store.processes());
 
@@ -44,29 +73,10 @@ export class ProcessComponent {
     );
   }
 
-  get totalPages(): number {
-    return Math.max(1, Math.ceil(this.filteredProcesses.length / this.rows));
-  }
-
-  get paginatedProcesses(): ProcessRecord[] {
-    const start = (this.currentPage - 1) * this.rows;
-    return this.filteredProcesses.slice(start, start + this.rows);
-  }
-
-  get pageStart(): number {
-    if (!this.filteredProcesses.length) {
-      return 0;
+  selectProcess(data: any): void {
+    if (data && 'id' in data) {
+      this.selectedId.set(data.id);
     }
-
-    return (this.currentPage - 1) * this.rows + 1;
-  }
-
-  get pageEnd(): number {
-    return Math.min(this.currentPage * this.rows, this.filteredProcesses.length);
-  }
-
-  get pageNumbers(): number[] {
-    return Array.from({ length: this.totalPages }, (_, index) => index + 1);
   }
 
   createProcess(): void {
@@ -80,25 +90,30 @@ export class ProcessComponent {
 
   deleteProcess(process: ProcessRecord): void {
     this.store.deleteProcess(process.id);
-    this.currentPage = Math.min(this.currentPage, this.totalPages);
-  }
-
-  goToPage(page: number): void {
-    this.currentPage = Math.min(Math.max(page, 1), this.totalPages);
-  }
-
-  onRowsChange(value: number): void {
-    this.rows = Number(value);
-    this.currentPage = 1;
+    if (this.selectedId() === process.id) {
+      this.selectedId.set(null);
+    }
   }
 
   onSearchTermChange(value: string): void {
     this.searchTerm = value;
-    this.currentPage = 1;
   }
 
   getCompletionLabel(process: ProcessRecord): string {
-    const score = [
+    const score = this.calculateScore(process);
+    return `${score}/5 etapas`;
+  }
+
+  getSeverity(process: ProcessRecord): TagSeverity {
+    const score = this.calculateScore(process);
+    if (score === 5) return 'success';
+    if (score >= 3) return 'info';
+    if (score >= 1) return 'warn';
+    return 'secondary';
+  }
+
+  private calculateScore(process: ProcessRecord): number {
+    return [
       Boolean(
         process.numeroProcesso &&
         process.nucleoId &&
@@ -114,7 +129,5 @@ export class ProcessComponent {
       Boolean(process.beneficiarios.length),
       Boolean(process.certidaoCrf && process.registrosTitulos.length),
     ].filter(Boolean).length;
-
-    return `${score}/5 etapas`;
   }
 }

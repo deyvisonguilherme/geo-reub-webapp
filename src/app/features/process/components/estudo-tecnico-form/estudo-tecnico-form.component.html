@@ -1,4 +1,4 @@
-<section class="section-card">
+<section class="card">
   <div class="section-header">
     <div>
       <h2 class="section-title">Estudo Técnico Preliminar</h2>
@@ -10,63 +10,84 @@
 
   <div class="form-grid">
     <div class="form-field">
-      <label>Tipo de estudo</label>
-      <input [(ngModel)]="draft.tipoEstudo" />
+      <label for="tipoEstudo">Tipo de estudo</label>
+      <input id="tipoEstudo" type="text" pInputText [(ngModel)]="draft.tipoEstudo" />
     </div>
     <div class="form-field">
-      <label>Título</label>
-      <input [(ngModel)]="draft.titulo" />
+      <label for="titulo">Título</label>
+      <input id="titulo" type="text" pInputText [(ngModel)]="draft.titulo" />
     </div>
     <div class="form-field">
-      <label>Nível de risco</label>
-      <input [(ngModel)]="draft.nivelRisco" />
+      <label for="nivelRisco">Nível de risco</label>
+      <input id="nivelRisco" type="text" pInputText [(ngModel)]="draft.nivelRisco" />
     </div>
     <div class="form-field">
-      <label>Famílias afetadas</label>
-      <input type="number" [(ngModel)]="draft.familiasAfetadas" />
+      <label for="familiasAfetadas">Famílias afetadas</label>
+      <p-inputnumber
+        inputId="familiasAfetadas"
+        [(ngModel)]="draft.familiasAfetadas"
+        [useGrouping]="false"
+      />
     </div>
     <div class="form-field">
-      <label>Responsável técnico</label>
-      <input [(ngModel)]="draft.responsavelTecnico" />
+      <label for="responsavelTecnico">Responsável técnico</label>
+      <input id="responsavelTecnico" type="text" pInputText [(ngModel)]="draft.responsavelTecnico" />
     </div>
     <div class="form-field">
-      <label>Registro profissional</label>
-      <input [(ngModel)]="draft.registroProfissional" />
+      <label for="registroProfissional">Registro profissional</label>
+      <input
+        id="registroProfissional"
+        type="text"
+        pInputText
+        [(ngModel)]="draft.registroProfissional"
+      />
     </div>
     <div class="form-field">
-      <label>Arquivo estudo ID</label>
-      <input [(ngModel)]="draft.arquivoEstudoId" />
+      <label for="arquivoEstudoId">Arquivo estudo ID</label>
+      <input id="arquivoEstudoId" type="text" pInputText [(ngModel)]="draft.arquivoEstudoId" />
     </div>
     <div class="form-field">
-      <label>Data elaboração</label>
-      <input type="date" [(ngModel)]="draft.dataElaboracao" />
+      <label for="dataElaboracao">Data elaboração</label>
+      <p-datepicker
+        id="dataElaboracao"
+        [(ngModel)]="draft.dataElaboracao"
+        dateFormat="dd/mm/yy"
+        appendTo="body"
+        styleClass="w-full"
+      />
     </div>
     <div class="form-field">
-      <label>Data aprovação</label>
-      <input type="date" [(ngModel)]="draft.dataAprovacao" />
+      <label for="dataAprovacao">Data aprovação</label>
+      <p-datepicker
+        id="dataAprovacao"
+        [(ngModel)]="draft.dataAprovacao"
+        dateFormat="dd/mm/yy"
+        appendTo="body"
+        styleClass="w-full"
+      />
     </div>
     <div class="form-field field-span-full">
-      <label>Resumo executivo</label>
-      <textarea [(ngModel)]="draft.resumoExecutivo"></textarea>
+      <label for="resumoExecutivo">Resumo executivo</label>
+      <textarea id="resumoExecutivo" pTextarea [(ngModel)]="draft.resumoExecutivo" rows="3"></textarea>
     </div>
     <div class="form-field field-span-full">
-      <label>Conclusões</label>
-      <textarea [(ngModel)]="draft.conclusoes"></textarea>
+      <label for="conclusoes">Conclusões</label>
+      <textarea id="conclusoes" pTextarea [(ngModel)]="draft.conclusoes" rows="3"></textarea>
     </div>
     <div class="form-field field-span-full">
-      <label>Recomendações</label>
-      <textarea [(ngModel)]="draft.recomendacoes"></textarea>
+      <label for="recomendacoes">Recomendações</label>
+      <textarea id="recomendacoes" pTextarea [(ngModel)]="draft.recomendacoes" rows="3"></textarea>
     </div>
   </div>
 
   <div class="checkbox-grid">
-    <label class="checkbox-field">
-      <input type="checkbox" [(ngModel)]="draft.necessitaRemocao" />
-      Necessita remoção
-    </label>
+    <div class="checkbox-field">
+      <p-checkbox inputId="necessitaRemocao" [binary]="true" [(ngModel)]="draft.necessitaRemocao" />
+      <label for="necessitaRemocao">Necessita remoção</label>
+    </div>
   </div>
 
   <div class="form-actions">
-    <button type="button" class="primary-button" (click)="submit()">Salvar etapa</button>
+    <p-button label="Salvar Etapa" [rounded]="true" [text]="true" (onClick)="submit()" />
   </div>
 </section>

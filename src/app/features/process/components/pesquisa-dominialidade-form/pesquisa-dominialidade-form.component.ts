@@ -1,21 +1,37 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { PROCESS_FORM_STYLES } from '../../process-form.styles';
+import { ButtonModule } from 'primeng/button';
+import { CheckboxModule } from 'primeng/checkbox';
+import { DatePickerModule } from 'primeng/datepicker';
+import { InputTextModule } from 'primeng/inputtext';
+import { TextareaModule } from 'primeng/textarea';
 import { PesquisaDominialidade } from '../../process.types';
+
+interface PesquisaDominialidadeDraft extends Omit<PesquisaDominialidade, 'dataElaboracao'> {
+  dataElaboracao: Date | null;
+}
 
 @Component({
   selector: 'app-pesquisa-dominialidade-form',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ButtonModule,
+    CheckboxModule,
+    DatePickerModule,
+    InputTextModule,
+    TextareaModule,
+  ],
   templateUrl: './pesquisa-dominialidade-form.component.html',
-  styles: [PROCESS_FORM_STYLES],
+  styleUrl: './pesquisa-dominialidade-form.component.scss',
 })
 export class PesquisaDominialidadeFormComponent implements OnChanges {
   @Input() model: PesquisaDominialidade | null = null;
   @Output() save = new EventEmitter<PesquisaDominialidade | null>();
 
-  draft: PesquisaDominialidade = this.createDraft();
+  draft: PesquisaDominialidadeDraft = this.createDraft();
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['model']) {
@@ -24,10 +40,13 @@ export class PesquisaDominialidadeFormComponent implements OnChanges {
   }
 
   submit(): void {
-    this.save.emit({ ...this.draft });
+    this.save.emit({
+      ...this.draft,
+      dataElaboracao: this.toDateString(this.draft.dataElaboracao),
+    } as PesquisaDominialidade);
   }
 
-  private createDraft(): PesquisaDominialidade {
+  private createDraft(): PesquisaDominialidadeDraft {
     return {
       id: this.model?.id ?? this.generateId(),
       matriculaBase: this.model?.matriculaBase ?? '',
@@ -41,11 +60,23 @@ export class PesquisaDominialidadeFormComponent implements OnChanges {
       arquivoPlantaSobreposicaoId: this.model?.arquivoPlantaSobreposicaoId ?? '',
       arquivoCertidaoMatriculaId: this.model?.arquivoCertidaoMatriculaId ?? '',
       elaboradoPor: this.model?.elaboradoPor ?? '',
-      dataElaboracao: this.model?.dataElaboracao ?? '',
+      dataElaboracao: this.parseDate(this.model?.dataElaboracao),
     };
+  }
+
+  private parseDate(dateStr: string | undefined): Date | null {
+    if (!dateStr) return null;
+    const date = new Date(dateStr);
+    return isNaN(date.getTime()) ? null : date;
+  }
+
+  private toDateString(date: Date | null): string {
+    if (!date) return '';
+    return date.toISOString().slice(0, 10);
   }
 
   private generateId(): string {
     return crypto.randomUUID();
   }
 }
+

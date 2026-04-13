@@ -1,93 +1,152 @@
 :host {
-  display: contents;
+  display: block;
 }
 
-.dialog-grid {
+.section-card {
+  /* Removed border and background as it's inside the dialog now */
+  padding: 0;
+}
+
+.section-header {
+  margin-bottom: 1.5rem;
+}
+
+.section-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #111827;
+
+  &.text-sm {
+    font-size: 0.875rem;
+    color: #4b5563;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid #f3f4f6;
+    padding-bottom: 0.5rem;
+  }
+}
+
+.section-subtitle {
+  margin: 0.25rem 0 0;
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.form-grid {
   display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 1.25rem;
 }
 
-.form-block {
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  label {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #374151;
+  }
+
+  select {
+    width: 100%;
+    border: 1px solid #cfd4dc;
+    border-radius: 8px;
+    padding: 0.55rem 0.75rem;
+    background: #fff;
+    color: #111827;
+    font: inherit;
+  }
+}
+
+.field-span-2 {
+  grid-column: span 2;
+}
+
+.field-span-full {
+  grid-column: 1 / -1;
+}
+
+.checkbox-grid {
   display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 1rem;
+  margin-top: 1rem;
   padding: 1rem;
-  border: 1px solid #e3ebf4;
-  border-radius: 1rem;
-  background: #fbfdff;
-}
-
-.form-block-title {
-  display: block;
-  font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: #5f7896;
-}
-
-.field-grid {
-  display: grid;
-  gap: 1rem;
-}
-
-.two-columns {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-.three-columns {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-
-.field {
-  display: grid;
-  gap: 0.45rem;
-}
-
-.field label {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: #34506c;
-}
-
-.field select {
-  min-height: 2.75rem;
-  width: 100%;
-  border: 1px solid #cfdceb;
-  border-radius: 0.85rem;
-  padding: 0.65rem 0.85rem;
-  background: #fff;
-  color: #16324f;
+  background: #f9fafb;
+  border-radius: 12px;
 }
 
 .checkbox-field {
-  align-content: start;
-}
-
-.checkbox-wrapper {
-  min-height: 2.75rem;
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  gap: 0.6rem;
-  color: #16324f;
-  font-weight: 600;
+  gap: 0.75rem;
+
+  label {
+    font-size: 0.875rem;
+    color: #374151;
+    cursor: pointer;
+  }
 }
 
-.dialog-actions {
+.dialog-header-custom {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.form-actions {
   display: flex;
   justify-content: flex-end;
-  gap: 0.75rem;
+  gap: 1rem;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e5e7eb;
 }
 
-:host ::ng-deep .p-inputtext,
-:host ::ng-deep .p-inputnumber,
-:host ::ng-deep .p-datepicker,
-:host ::ng-deep textarea.p-textarea {
-  width: 100%;
+@media (max-width: 1024px) {
+  .form-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
-@media (max-width: 768px) {
-  .two-columns,
-  .three-columns {
+@media (max-width: 640px) {
+  .form-grid {
     grid-template-columns: 1fr;
+  }
+
+  .field-span-2 {
+    grid-column: span 1;
+  }
+}
+
+/* PrimeNG Overrides within component scope */
+:host ::ng-deep {
+  .p-dialog-content {
+    padding: 0 1.5rem 1.5rem 1.5rem;
+    border-radius: 0 0 20px 20px;
+  }
+
+  .p-dialog-header {
+    padding: 1.5rem 1.5rem 0.5rem 1.5rem;
+    border-radius: 20px 20px 0 0;
+  }
+
+  .p-inputtext,
+  .p-datepicker,
+  .p-inputnumber {
+    width: 100% !important;
+  }
+
+  .p-inputtext {
+    border-radius: 8px;
+  }
+
+  .p-datepicker .p-inputtext {
+    border-radius: 8px;
   }
 }

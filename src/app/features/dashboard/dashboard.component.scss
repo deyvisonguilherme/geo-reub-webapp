@@ -163,6 +163,30 @@ $accent: #1e7e5a;
       color: #854f0b;
     }
   }
+
+  &.purple {
+    background: #f3e8ff;
+
+    i {
+      color: #7e22ce;
+    }
+  }
+
+  &.cyan {
+    background: #ecfeff;
+
+    i {
+      color: #0e7490;
+    }
+  }
+
+  &.contrast {
+    background: #f1f5f9;
+
+    i {
+      color: #0f172a;
+    }
+  }
 }
 
 .kpi-value {

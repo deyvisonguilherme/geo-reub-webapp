@@ -1,0 +1,34 @@
+<p-table [value]="notifications()" [rows]="10" [paginator]="true" styleClass="p-datatable-sm p-datatable-striped">
+  <ng-template pTemplate="header">
+    <tr>
+      <th>Processo</th>
+      <th>Destinatário</th>
+      <th>Tipo</th>
+      <th>Status AR</th>
+      <th>Rastreio</th>
+      <th>Vencimento</th>
+      <th style="width: 12rem">Ações</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-notif>
+    <tr>
+      <td><span class="font-bold text-blue-600">{{ notif.numero_processo }}</span></td>
+      <td>{{ notif.destinatario }}</td>
+      <td><p-tag [value]="notif.tipo" severity="secondary" styleClass="text-[10px]" /></td>
+      <td><p-tag [value]="notif.status_ar" [severity]="getNotificationSeverity(notif.status_ar)" /></td>
+      <td>{{ notif.codigo_rastreio || '---' }}</td>
+      <td>{{ notif.prazo_vencimento | date:'shortDate' }}</td>
+      <td>
+        <div class="flex gap-2">
+          <button pButton icon="pi pi-truck" class="p-button-sm p-button-text p-button-info" 
+            pTooltip="Atualizar AR" (click)="updateAr.emit(notif)"></button>
+          
+          @if (notif.status_ar === 'RECUSADO' || notif.status_ar === 'AUSENTE') {
+            <button pButton icon="pi pi-megaphone" label="Edital" class="p-button-sm p-button-outlined p-button-contrast" 
+              pTooltip="Converter para Edital" (click)="convertToEdital.emit(notif)"></button>
+          }
+        </div>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>

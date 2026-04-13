@@ -1,4 +1,4 @@
-<section class="section-card">
+<section class="card">
   <div class="section-header">
     <div>
       <h2 class="section-title">Registro de Títulos</h2>
@@ -11,86 +11,130 @@
 
   <div class="form-grid">
     <div class="form-field">
-      <label>Beneficiário</label>
-      <select [(ngModel)]="draft.beneficiarioId">
-        <option value="">Selecione</option>
-        @for (beneficiario of beneficiarios; track beneficiario.id) {
-          <option [value]="beneficiario.id">{{ beneficiario.nomeCompleto }}</option>
-        }
-      </select>
+      <label for="beneficiarioId">Beneficiário</label>
+      <p-select
+        id="beneficiarioId"
+        [options]="beneficiarioOptions"
+        [(ngModel)]="draft.beneficiarioId"
+        optionLabel="label"
+        optionValue="value"
+        placeholder="Selecione"
+        [filter]="true"
+        appendTo="body"
+        styleClass="w-full"
+      />
     </div>
     <div class="form-field">
-      <label>Número item</label>
-      <input type="number" [(ngModel)]="draft.numeroItem" />
+      <label for="numeroItem">Número item</label>
+      <p-inputnumber inputId="numeroItem" [(ngModel)]="draft.numeroItem" [useGrouping]="false" />
     </div>
     <div class="form-field">
-      <label>Identificação lote</label>
-      <input [(ngModel)]="draft.identificacaoLote" />
+      <label for="identificacaoLote">Identificação lote</label>
+      <input id="identificacaoLote" type="text" pInputText [(ngModel)]="draft.identificacaoLote" />
     </div>
     <div class="form-field">
-      <label>Área lote m²</label>
-      <input type="number" [(ngModel)]="draft.areaLoteM2" />
+      <label for="areaLoteM2">Área lote m²</label>
+      <p-inputnumber
+        inputId="areaLoteM2"
+        [(ngModel)]="draft.areaLoteM2"
+        mode="decimal"
+        [minFractionDigits]="2"
+        [maxFractionDigits]="2"
+      />
     </div>
     <div class="form-field">
-      <label>Frente (m)</label>
-      <input type="number" [(ngModel)]="draft.frenteM" />
+      <label for="frenteM">Frente (m)</label>
+      <p-inputnumber
+        inputId="frenteM"
+        [(ngModel)]="draft.frenteM"
+        mode="decimal"
+        [minFractionDigits]="2"
+        [maxFractionDigits]="2"
+      />
     </div>
     <div class="form-field">
-      <label>Fundos (m)</label>
-      <input type="number" [(ngModel)]="draft.fundosM" />
+      <label for="fundosM">Fundos (m)</label>
+      <p-inputnumber
+        inputId="fundosM"
+        [(ngModel)]="draft.fundosM"
+        mode="decimal"
+        [minFractionDigits]="2"
+        [maxFractionDigits]="2"
+      />
     </div>
     <div class="form-field">
-      <label>Lateral direita (m)</label>
-      <input type="number" [(ngModel)]="draft.lateralDireitaM" />
+      <label for="lateralDireitaM">Lateral direita (m)</label>
+      <p-inputnumber
+        inputId="lateralDireitaM"
+        [(ngModel)]="draft.lateralDireitaM"
+        mode="decimal"
+        [minFractionDigits]="2"
+        [maxFractionDigits]="2"
+      />
     </div>
     <div class="form-field">
-      <label>Lateral esquerda (m)</label>
-      <input type="number" [(ngModel)]="draft.lateralEsquerdaM" />
+      <label for="lateralEsquerdaM">Lateral esquerda (m)</label>
+      <p-inputnumber
+        inputId="lateralEsquerdaM"
+        [(ngModel)]="draft.lateralEsquerdaM"
+        mode="decimal"
+        [minFractionDigits]="2"
+        [maxFractionDigits]="2"
+      />
     </div>
     <div class="form-field field-span-full">
-      <label>Confrontações</label>
-      <textarea [(ngModel)]="draft.confrontacoes"></textarea>
+      <label for="confrontacoes">Confrontações</label>
+      <textarea id="confrontacoes" pTextarea [(ngModel)]="draft.confrontacoes" rows="3"></textarea>
     </div>
   </div>
 
   <div class="form-actions">
-    <button type="button" class="secondary-button" (click)="resetDraft()">Limpar</button>
-    <button type="button" class="primary-button" (click)="upsert()">Salvar registro</button>
+    <p-button label="Limpar" severity="secondary" [text]="true" (onClick)="resetDraft()" />
+    <p-button label="Salvar Registro" [rounded]="true" (onClick)="upsert()" />
   </div>
 
-  <table class="list-table">
-    <thead>
-      <tr>
-        <th>Item</th>
-        <th>Beneficiário</th>
-        <th>Lote</th>
-        <th>Área</th>
-        <th>Ações</th>
-      </tr>
-    </thead>
-    <tbody>
-      @if (localItems.length) {
-        @for (item of localItems; track item.id) {
-          <tr>
-            <td>{{ item.numeroItem ?? '-' }}</td>
-            <td>{{ getBeneficiarioNome(item.beneficiarioId) }}</td>
-            <td>{{ item.identificacaoLote || '-' }}</td>
-            <td>{{ item.areaLoteM2 ?? '-' }}</td>
-            <td>
-              <div class="row-actions">
-                <button type="button" class="secondary-button" (click)="edit(item)">Editar</button>
-                <button type="button" class="danger-button" (click)="remove(item.id)">
-                  Excluir
-                </button>
-              </div>
-            </td>
-          </tr>
-        }
-      } @else {
+  <div class="list-container">
+    <p-table [value]="localItems" styleClass="p-datatable-sm" responsiveLayout="scroll">
+      <ng-template pTemplate="header">
         <tr>
-          <td colspan="5" class="text-muted">Nenhum título registrado.</td>
+          <th>Item</th>
+          <th>Beneficiário</th>
+          <th>Lote</th>
+          <th>Área</th>
+          <th style="width: 150px">Ações</th>
         </tr>
-      }
-    </tbody>
-  </table>
+      </ng-template>
+      <ng-template pTemplate="body" let-item>
+        <tr>
+          <td>{{ item.numeroItem ?? '-' }}</td>
+          <td>{{ getBeneficiarioNome(item.beneficiarioId) }}</td>
+          <td>{{ item.identificacaoLote || '-' }}</td>
+          <td>{{ item.areaLoteM2 ?? '-' }} m²</td>
+          <td>
+            <div class="row-actions">
+              <p-button
+                icon="pi pi-pencil"
+                [rounded]="true"
+                [text]="true"
+                severity="secondary"
+                (onClick)="edit(item)"
+              />
+              <p-button
+                icon="pi pi-trash"
+                [rounded]="true"
+                [text]="true"
+                severity="danger"
+                (onClick)="remove(item.id)"
+              />
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="5" class="text-center py-4 text-muted">Nenhum título registrado.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
 </section>

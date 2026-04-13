@@ -1,0 +1,184 @@
+<div class="alerts-page">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Gerenciamento de Alertas</h1>
+      <p class="page-subtitle">Visualize e gerencie todos os alertas e notificações do sistema.</p>
+    </div>
+  </div>
+
+  <div class="alerts-grid">
+    <section class="alerts-card table-card">
+      <p-table
+        #dt
+        [value]="alertStore.alerts()"
+        [rows]="10"
+        [paginator]="true"
+        [globalFilterFields]="['titulo', 'mensagem', 'tipo_alerta']"
+        [tableStyle]="{ 'min-width': '50rem' }"
+        [rowHover]="true"
+        dataKey="id"
+        selectionMode="single"
+        [selection]="selectedAlert()"
+        (onRowSelect)="selectAlert($event.data)"
+        currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} alertas"
+        [showCurrentPageReport]="true"
+        styleClass="p-datatable-sm p-datatable-striped"
+      >
+        <ng-template pTemplate="caption">
+          <div class="table-header">
+            <span class="text-xl font-bold">Listagem de Alertas</span>
+            <p-iconfield iconPosition="left">
+              <p-inputicon styleClass="pi pi-search" />
+              <input
+                pInputText
+                type="text"
+                (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+                placeholder="Pesquisar alertas..."
+              />
+            </p-iconfield>
+          </div>
+        </ng-template>
+
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="width: 3rem"></th>
+            <th pSortableColumn="titulo">Título <p-sortIcon field="titulo" /></th>
+            <th pSortableColumn="tipo_alerta">Tipo <p-sortIcon field="tipo_alerta" /></th>
+            <th pSortableColumn="criado_em">Data <p-sortIcon field="criado_em" /></th>
+            <th pSortableColumn="visualizado">Status <p-sortIcon field="visualizado" /></th>
+            <th style="width: 8rem">Ações</th>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-alert>
+          <tr [pSelectableRow]="alert" class="table-row" [class.font-bold]="!alert.visualizado">
+            <td>
+              <i [class]="getIcon(alert.severidade)" [ngClass]="'text-' + alert.severidade"></i>
+            </td>
+            <td>
+              <div class="flex flex-col">
+                <span [class.text-blue-600]="!alert.visualizado">{{ alert.titulo }}</span>
+                <span class="text-xs text-gray-500 font-normal line-clamp-1">{{ alert.mensagem }}</span>
+              </div>
+            </td>
+            <td>
+              <p-tag [severity]="getSeverity(alert.severidade)" [value]="alert.tipo_alerta" />
+            </td>
+            <td>{{ alert.criado_em | date: 'dd/MM/yyyy HH:mm' }}</td>
+            <td>
+              @if (alert.visualizado) {
+                <p-tag severity="success" value="Lido" [rounded]="true" />
+              } @else {
+                <p-tag severity="info" value="Novo" [rounded]="true" />
+              }
+            </td>
+            <td>
+              <div class="row-actions">
+                <p-button
+                  icon="pi pi-eye"
+                  [rounded]="true"
+                  [text]="true"
+                  severity="secondary"
+                  (onClick)="markAsRead(alert); $event.stopPropagation()"
+                  pTooltip="Marcar como lido"
+                  [disabled]="alert.visualizado"
+                />
+                <p-button
+                  icon="pi pi-trash"
+                  [rounded]="true"
+                  [text]="true"
+                  severity="danger"
+                  (onClick)="deleteAlert(alert.id); $event.stopPropagation()"
+                  pTooltip="Excluir"
+                />
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="6" class="text-center py-8 text-gray-500">Nenhum alerta encontrado.</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </section>
+
+    <aside class="alerts-card detail-card">
+      @if (selectedAlert(); as alert) {
+        <div class="detail-header">
+          <div>
+            <span class="detail-kicker">Detalhes do Alerta</span>
+            <h2>{{ alert.titulo }}</h2>
+          </div>
+          <p-tag [severity]="getSeverity(alert.severidade)" [value]="alert.tipo_alerta" />
+        </div>
+
+        <div class="detail-section">
+          <span class="detail-section-title">Mensagem</span>
+          <p class="text-sm leading-relaxed text-gray-700">{{ alert.mensagem }}</p>
+        </div>
+
+        <div class="detail-section">
+          <span class="detail-section-title">Informações</span>
+          <div class="detail-grid">
+            <div class="detail-item">
+              <span class="detail-label">Data de Criação</span>
+              <strong>{{ alert.criado_em | date: 'dd/MM/yyyy HH:mm' }}</strong>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Severidade</span>
+              <strong class="capitalize">{{ alert.severidade }}</strong>
+            </div>
+            @if (alert.prazo_vencimento) {
+              <div class="detail-item">
+                <span class="detail-label">Vencimento</span>
+                <strong>{{ alert.prazo_vencimento | date: 'dd/MM/yyyy' }}</strong>
+              </div>
+            }
+            @if (alert.dias_restantes !== undefined) {
+              <div class="detail-item">
+                <span class="detail-label">Dias Restantes</span>
+                <strong [class.text-red-600]="alert.dias_restantes <= 5">
+                  {{ alert.dias_restantes }} dias
+                </strong>
+              </div>
+            }
+          </div>
+        </div>
+
+        <div class="detail-section">
+          <span class="detail-section-title">Status e Auditoria</span>
+          <div class="detail-grid">
+            <div class="detail-item">
+              <span class="detail-label">Visualizado</span>
+              <strong>{{ alert.visualizado ? 'Sim' : 'Não' }}</strong>
+            </div>
+            @if (alert.data_visualizacao) {
+              <div class="detail-item">
+                <span class="detail-label">Data Visualização</span>
+                <strong>{{ alert.data_visualizacao | date: 'dd/MM/yyyy HH:mm' }}</strong>
+              </div>
+            }
+          </div>
+        </div>
+
+        <div class="detail-actions mt-4">
+          <p-button
+            label="Excluir Alerta"
+            icon="pi pi-trash"
+            severity="danger"
+            class="w-full"
+            styleClass="w-full"
+            (onClick)="deleteAlert(alert.id)"
+          />
+        </div>
+      } @else {
+        <div class="empty-state">
+          <i class="pi pi-bell text-4xl mb-4"></i>
+          <span>Selecione um alerta para visualizar os detalhes completos.</span>
+        </div>
+      }
+    </aside>
+  </div>
+</div>
