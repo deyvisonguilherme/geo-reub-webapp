@@ -1,23 +1,26 @@
 export interface Organization {
   id: string;
-  name: string;
+  nome: string;
+  perfil: string;
 }
 
 export interface UserProfile {
   id: string;
-  username: string;
-  fullName: string;
-  email: string;
-  roles: string[];
-  organizationId: string;
-  organizationName: string;
+  organizacao: Organization;
+  permissoes: string[];
+}
+
+export interface AuthResponseData {
+  access_token: string;
+  refresh_token: string;
+  usuario: UserProfile;
 }
 
 export interface AuthResponse {
-  token: string;
-  user: UserProfile;
+  success: boolean;
+  data: AuthResponseData;
   error?: string;
-  organizations?: Organization[];
+  organizations?: any[]; // For multi-org handling if needed
 }
 
 export interface AuthState {

@@ -6,6 +6,5 @@ export interface BadgeConfig {
 }
 
 export interface UserPermissions {
-  roles: string[];
-  permissions: string[];
+  permissoes: string[];
 }

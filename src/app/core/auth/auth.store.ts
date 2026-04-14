@@ -9,7 +9,12 @@ export class AuthStore {
   private platformId = inject(PLATFORM_ID);
   private readonly STORAGE_KEY = 'auth_state';
 
-  private state = signal<AuthState>(this.loadInitialState());
+  private state = signal<AuthState>({ user: null, token: null });
+  isHydrated = signal(false);
+
+  constructor() {
+    this.rehydrate();
+  }
 
   // Selectors
   user = computed(() => this.state().user);
@@ -18,6 +23,21 @@ export class AuthStore {
   isAdmin = computed(() => this.hasRole('ADMIN'));
 
   // Actions
+  rehydrate() {
+    if (isPlatformBrowser(this.platformId)) {
+      const storedState = localStorage.getItem(this.STORAGE_KEY);
+      if (storedState) {
+        try {
+          const parsed = JSON.parse(storedState);
+          this.state.set(parsed);
+        } catch (e) {
+          console.error('Error parsing stored auth state', e);
+        }
+      }
+      this.isHydrated.set(true);
+    }
+  }
+
   setAuth(user: UserProfile, token: string) {
     this.state.set({ user, token });
     this.saveStateToStorage();
@@ -30,21 +50,7 @@ export class AuthStore {
 
   hasRole(role: string): boolean {
     const user = this.user();
-    return !!user && user.roles.includes(role);
-  }
-
-  private loadInitialState(): AuthState {
-    if (isPlatformBrowser(this.platformId)) {
-      const storedState = localStorage.getItem(this.STORAGE_KEY);
-      if (storedState) {
-        try {
-          return JSON.parse(storedState);
-        } catch (e) {
-          console.error('Error parsing stored auth state', e);
-        }
-      }
-    }
-    return { user: null, token: null };
+    return !!user && user.permissoes.includes(role);
   }
 
   private saveStateToStorage() {

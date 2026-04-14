@@ -1,5 +1,5 @@
-import { Component, signal, computed } from '@angular/core';
-import { CommonModule, DecimalPipe } from '@angular/common';
+import { Component, signal, computed, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
@@ -8,6 +8,7 @@ import { TimelineModule } from 'primeng/timeline';
 import { MessageModule } from 'primeng/message';
 import { DashboardSummary } from './dashboard.types';
 import { StatisticCardSkeletonComponent } from '../../shared/ui/skeletons/statistic-card-skeleton/statistic-card-skeleton.component';
+import { AuthStore } from '../../core/auth/auth.store';
 
 type TagSeverity = 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast';
 type MessageSeverity = 'success' | 'info' | 'warn' | 'error' | 'secondary' | 'contrast';
@@ -63,14 +64,16 @@ interface DashboardAlert {
     TagModule,
     TimelineModule,
     MessageModule,
-    DecimalPipe,
     StatisticCardSkeletonComponent
   ],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent {
+  private authStore = inject(AuthStore);
+
   loading = signal<boolean>(false);
+  isHydrating = computed(() => !this.authStore.isHydrated());
   summary = signal<DashboardSummary>({
     total_processos: 452,
     processos_ativos: 347,

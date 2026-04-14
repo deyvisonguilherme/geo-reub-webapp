@@ -22,13 +22,11 @@ export class HasPermissionDirective {
       if (user) {
         const requiredArray = Array.isArray(required) ? required : [required];
         
-        // Simple logic: check if user has any of the required roles or permissions
-        // Assuming user.roles and user.permissions are available based on spec
-        const userRoles = user.roles || [];
-        const userPerms = (user as any).permissions || []; // Cast to any if permissions field not yet in type
+        // Simple logic: check if user has any of the required permissoes
+        const userPerms = user.permissoes || [];
 
         hasAccess = requiredArray.some(req => 
-          userRoles.includes(req) || userPerms.includes(req)
+          userPerms.includes(req)
         );
       }
 

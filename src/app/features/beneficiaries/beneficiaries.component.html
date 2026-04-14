@@ -7,11 +7,7 @@
       </p>
     </div>
 
-    <app-button
-      label="Novo beneficiário"
-      icon="pi pi-user-plus"
-      (onClick)="createBeneficiary()"
-    />
+    <app-button label="Novo beneficiário" icon="pi pi-user-plus" (onClick)="createBeneficiary()" />
   </div>
 
   <div class="beneficiaries-grid">
@@ -220,10 +216,12 @@
             Preencha os dados socioeconômicos e de localização para o processo de regularização.
           </p>
         </div>
-        <app-button
+        <p-button
           icon="pi pi-times"
           variant="text"
-          customClass="text-gray-500"
+          [rounded]="true"
+          [text]="true"
+          severity="secondary"
           (onClick)="displayDialog = false"
         />
       </div>

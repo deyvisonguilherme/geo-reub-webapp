@@ -7,12 +7,7 @@
       </p>
     </div>
 
-    <p-button
-      label="Novo núcleo"
-      icon="pi pi-plus"
-      [rounded]="true"
-      (onClick)="createNucleus()"
-    />
+    <p-button label="Novo núcleo" icon="pi pi-plus" (onClick)="createNucleus()" />
   </div>
 
   <div class="nucleus-grid">
@@ -48,7 +43,9 @@
           <tr>
             <th pSortableColumn="codigo">Código <p-sortIcon field="codigo" /></th>
             <th pSortableColumn="nome">Nome <p-sortIcon field="nome" /></th>
-            <th pSortableColumn="situacaoGeografica">Situação <p-sortIcon field="situacaoGeografica" /></th>
+            <th pSortableColumn="situacaoGeografica">
+              Situação <p-sortIcon field="situacaoGeografica" />
+            </th>
             <th pSortableColumn="consolidado">Consolidado <p-sortIcon field="consolidado" /></th>
             <th style="width: 100px">Ações</th>
           </tr>
@@ -62,7 +59,10 @@
             <td>{{ nucleus.nome }}</td>
             <td>{{ nucleus.situacaoGeografica }}</td>
             <td>
-              <p-tag [value]="nucleus.consolidado ? 'Sim' : 'Não'" [severity]="getConsolidadoSeverity(nucleus)" />
+              <p-tag
+                [value]="nucleus.consolidado ? 'Sim' : 'Não'"
+                [severity]="getConsolidadoSeverity(nucleus)"
+              />
             </td>
             <td>
               <div class="row-actions">
@@ -152,7 +152,7 @@
             </div>
             <div class="detail-item">
               <span class="detail-label">Criado em</span>
-              <strong class="text-xs">{{ nucleus.criadoEm | date:'shortDate' }}</strong>
+              <strong class="text-xs">{{ nucleus.criadoEm | date: 'shortDate' }}</strong>
             </div>
           </div>
         </div>

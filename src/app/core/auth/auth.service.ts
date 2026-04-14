@@ -8,9 +8,13 @@ import { AuthResponse } from './auth.types';
 })
 export class AuthService {
   private http = inject(HttpClient);
-  private readonly apiUrl = '/api/auth';
+  private readonly apiUrl = 'http://localhost:8082/auth';
 
-  login(credentials: { username: string; password: string; organizacao_id?: string }): Observable<AuthResponse> {
+  login(credentials: {
+    username: string;
+    password: string;
+    organizacao_id?: string;
+  }): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.apiUrl}/login`, credentials);
   }
 }

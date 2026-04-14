@@ -59,16 +59,20 @@ export class LoginComponent {
       organizacao_id: this.selectedOrganization()?.id
     }).subscribe({
       next: (response) => {
-        this.authStore.setAuth(response.user, response.token);
-        this.router.navigate(['/']);
+        if (response.success && response.data) {
+          this.authStore.setAuth(response.data.usuario, response.data.access_token);
+          this.router.navigate(['/']);
+        }
       },
       error: (err) => {
         this.loading.set(false);
-        if (err.error?.error === 'MULTIPLE_ORGANIZATIONS') {
-          this.organizations.set(err.error.organizations);
+        // Map error to correct structure
+        const errorData = err.error;
+        if (errorData?.error === 'MULTIPLE_ORGANIZATIONS') {
+          this.organizations.set(errorData.organizations);
           this.showOrgSelection.set(true);
         } else {
-          this.errorMessage.set(err.error?.error || 'Erro ao realizar login. Verifique suas credenciais.');
+          this.errorMessage.set(errorData?.message || errorData?.error || 'Erro ao realizar login. Verifique suas credenciais.');
         }
       },
       complete: () => {
