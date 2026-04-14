@@ -1,0 +1,21 @@
+@use 'primeng/resources/themes/lara-light-blue/theme.css';
+
+.app-button-primary {
+  @apply bg-blue-600 border-blue-600 text-white hover:bg-blue-700;
+}
+
+.app-button-secondary {
+  @apply bg-gray-100 border-gray-100 text-gray-700 hover:bg-gray-200;
+}
+
+.app-button-danger {
+  @apply bg-red-500 border-red-500 text-white hover:bg-red-600;
+}
+
+.app-badge-reurb-s {
+  @apply bg-green-100 text-green-800 border-green-200;
+}
+
+.app-badge-reurb-e {
+  @apply bg-blue-100 text-blue-800 border-blue-200;
+}

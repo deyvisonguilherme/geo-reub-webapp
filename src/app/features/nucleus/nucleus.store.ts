@@ -1,10 +1,12 @@
 import { Injectable, computed, signal, inject } from '@angular/core';
 import { NucleusFormModel } from './nucleus.types';
 import { NucleusRepository } from './nucleus.repository';
+import { GlobalFeedbackService } from '../../core/feedback/global-feedback.service';
 
 @Injectable({ providedIn: 'root' })
 export class NucleusStore {
   private repository = inject(NucleusRepository);
+  private feedback = inject(GlobalFeedbackService);
   private readonly records = signal<NucleusFormModel[]>([]);
   readonly nuclei = computed(() => this.records());
 
@@ -38,8 +40,12 @@ export class NucleusStore {
     this.repository.create(payload).subscribe({
       next: (newItem) => {
         this.records.update((items) => [newItem, ...items]);
+        this.feedback.notifySuccess('Núcleo criado', `O núcleo ${newItem.nome} foi criado com sucesso.`);
       },
-      error: (err) => console.error('Erro ao criar núcleo:', err),
+      error: (err) => {
+        console.error('Erro ao criar núcleo:', err);
+        this.feedback.notifyError('Erro ao criar núcleo', err.message);
+      },
     });
 
     return id;
@@ -56,17 +62,33 @@ export class NucleusStore {
         this.records.update((items) =>
           items.map((item) => (item.id === id ? updatedItem : item)),
         );
+        this.feedback.notifySuccess('Núcleo atualizado', 'As informações foram salvas com sucesso.');
       },
-      error: (err) => console.error('Erro ao atualizar núcleo:', err),
+      error: (err) => {
+        console.error('Erro ao atualizar núcleo:', err);
+        this.feedback.notifyError('Erro ao atualizar núcleo', err.message);
+      },
     });
   }
 
   deleteNucleus(id: string): void {
-    this.repository.delete(id).subscribe({
-      next: () => {
-        this.records.update((items) => items.filter((item) => item.id !== id));
+    const nucleus = this.getById(id);
+    this.feedback.confirmAction({
+      header: 'Confirmar Exclusão',
+      message: `Deseja realmente excluir o núcleo ${nucleus?.nome || id}?`,
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        this.repository.delete(id).subscribe({
+          next: () => {
+            this.records.update((items) => items.filter((item) => item.id !== id));
+            this.feedback.notifySuccess('Núcleo excluído', 'O registro foi removido com sucesso.');
+          },
+          error: (err) => {
+            console.error('Erro ao excluir núcleo:', err);
+            this.feedback.notifyError('Erro ao excluir núcleo', err.message);
+          },
+        });
       },
-      error: (err) => console.error('Erro ao excluir núcleo:', err),
     });
   }
 

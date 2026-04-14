@@ -1,0 +1,24 @@
+<div class="table-card skeleton">
+  <div class="table-header mb-4 flex justify-between items-center">
+    <p-skeleton width="150px" height="2rem" />
+    <p-skeleton width="250px" height="2.5rem" />
+  </div>
+  
+  <div class="table-content">
+    <div class="header-row border-b border-gray-200 py-3 flex gap-4">
+      @for (c of [].constructor(cols()); track $index) {
+        <p-skeleton [width]="(100 / cols()) + '%'" height="1rem" />
+      }
+    </div>
+
+    @for (r of [].constructor(rows()); track $index) {
+      <div class="data-row border-b border-gray-100 py-4 flex gap-4 items-center">
+        @for (c of [].constructor(cols()); track $index) {
+          <div [style.width]="(100 / cols()) + '%'">
+            <p-skeleton width="80%" height="1.25rem" />
+          </div>
+        }
+      </div>
+    }
+  </div>
+</div>

@@ -14,45 +14,50 @@
       <p-button
         label="Novo processo"
         icon="pi pi-plus"
-        styleClass="dashboard-action dashboard-action-primary"
-      />
-    </div>
-  </div>
-
-  <div class="kpi-grid">
-    @for (kpi of kpis(); track kpi.label) {
-      <p-card styleClass="kpi-card">
-        <ng-template #content>
-          <div class="kpi-header">
-            <span class="kpi-label">{{ kpi.label }}</span>
-            <div class="kpi-icon" [ngClass]="kpi.color">
-              <i [class]="'pi ' + kpi.icon"></i>
-            </div>
+        <div class="page-header">
+        ...
           </div>
-          <div class="kpi-value">
-            @if (kpi.label === 'Área Regularizada') {
-               {{ kpi.value | number:'1.1-2' }} m²
-            } @else if (kpi.label === 'REURB-S / REURB-E') {
-               {{ kpi.value }}
-            } @else {
-               {{ kpi.value | number }}
+        </div>
+
+        @if (loading()) {
+          <app-statistic-card-skeleton [count]="6" />
+        } @else {
+          <div class="kpi-grid">
+            @for (kpi of kpis(); track kpi.label) {
+              <p-card styleClass="kpi-card">
+                <ng-template #content>
+                  <div class="kpi-header">
+                    <span class="kpi-label">{{ kpi.label }}</span>
+                    <div class="kpi-icon" [ngClass]="kpi.color">
+                      <i [class]="'pi ' + kpi.icon"></i>
+                    </div>
+                  </div>
+                  <div class="kpi-value">
+                    @if (kpi.label === 'Área Regularizada') {
+                       {{ kpi.value | number:'1.1-2' }} m²
+                    } @else if (kpi.label === 'REURB-S / REURB-E') {
+                       {{ kpi.value }}
+                    } @else {
+                       {{ kpi.value | number }}
+                    }
+                  </div>
+                  @if (kpi.delta) {
+                    <p-tag
+                      [severity]="kpi.severity"
+                      [rounded]="true"
+                      [icon]="kpi.deltaUp ? 'pi pi-arrow-up' : 'pi pi-arrow-down'"
+                      [value]="kpi.delta"
+                      styleClass="kpi-delta-tag"
+                    />
+                  }
+                </ng-template>
+              </p-card>
             }
           </div>
-          @if (kpi.delta) {
-            <p-tag
-              [severity]="kpi.severity"
-              [rounded]="true"
-              [icon]="kpi.deltaUp ? 'pi pi-arrow-up' : 'pi pi-arrow-down'"
-              [value]="kpi.delta"
-              styleClass="kpi-delta-tag"
-            />
-          }
-        </ng-template>
-      </p-card>
-    }
-  </div>
+        }
 
-  <div class="mid-grid">
+        <div class="mid-grid">
+
     <p-card styleClass="dashboard-card">
       <ng-template #header>
         <div class="card-header">

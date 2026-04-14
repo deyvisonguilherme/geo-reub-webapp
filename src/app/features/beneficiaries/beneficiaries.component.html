@@ -7,10 +7,9 @@
       </p>
     </div>
 
-    <p-button
+    <app-button
       label="Novo beneficiário"
       icon="pi pi-user-plus"
-      [rounded]="true"
       (onClick)="createBeneficiary()"
     />
   </div>
@@ -61,33 +60,29 @@
             <td>
               <span class="font-bold text-blue-600">{{ beneficiary.nomeCompleto }}</span>
             </td>
-            <td>{{ beneficiary.cpf }}</td>
+            <td>{{ beneficiary.cpf | cpfCnpj }}</td>
             <td>
               <span class="text-xs"
                 >Q: {{ beneficiary.quadra }} / L: {{ beneficiary.numeroLote }}</span
               >
             </td>
             <td>
-              <p-tag
-                [value]="getStatusLabel(beneficiary)"
+              <app-status-badge
+                [label]="getStatusLabel(beneficiary)"
                 [severity]="getStatusSeverity(beneficiary)"
               />
             </td>
             <td>
               <div class="row-actions">
-                <p-button
+                <app-button
                   icon="pi pi-pencil"
-                  [rounded]="true"
-                  [text]="true"
-                  severity="secondary"
+                  variant="secondary"
                   (onClick)="editBeneficiary(beneficiary); $event.stopPropagation()"
                   pTooltip="Editar Cadastro"
                 />
-                <p-button
+                <app-button
                   icon="pi pi-trash"
-                  [rounded]="true"
-                  [text]="true"
-                  severity="danger"
+                  variant="danger"
                   (onClick)="deleteBeneficiary(beneficiary); $event.stopPropagation()"
                   pTooltip="Excluir"
                 />
@@ -113,8 +108,8 @@
             <span class="detail-kicker">Beneficiário selecionado</span>
             <h2>{{ beneficiary.nomeCompleto }}</h2>
           </div>
-          <p-tag
-            [value]="beneficiary.direitoRealConferido || 'Pendente'"
+          <app-status-badge
+            [label]="beneficiary.direitoRealConferido || 'Pendente'"
             [severity]="getStatusSeverity(beneficiary)"
           />
         </div>
@@ -124,7 +119,7 @@
           <div class="detail-grid">
             <div class="detail-item">
               <span class="detail-label">CPF</span>
-              <strong>{{ beneficiary.cpf || 'Não informado' }}</strong>
+              <strong>{{ beneficiary.cpf | cpfCnpj }}</strong>
             </div>
             <div class="detail-item">
               <span class="detail-label">RG</span>
@@ -158,7 +153,7 @@
             </div>
             <div class="detail-item">
               <span class="detail-label">Área (m²)</span>
-              <strong>{{ beneficiary.areaOcupadaM2 || '0' }} m²</strong>
+              <strong>{{ beneficiary.areaOcupadaM2 | area }}</strong>
             </div>
           </div>
         </div>
@@ -177,23 +172,22 @@
           </div>
           <div class="flex gap-2 mt-2">
             @if (beneficiary.idoso) {
-              <p-tag value="Idoso" severity="info" />
+              <app-status-badge label="Idoso" severity="info" />
             }
             @if (beneficiary.deficiente) {
-              <p-tag value="PCD" severity="info" />
+              <app-status-badge label="PCD" severity="info" />
             }
             @if (beneficiary.mulherChefeFamilia) {
-              <p-tag value="Chefe de Família" severity="info" />
+              <app-status-badge label="Chefe de Família" severity="info" />
             }
           </div>
         </div>
 
         <div class="detail-actions mt-4">
-          <p-button
+          <app-button
             label="Editar cadastro completo"
             icon="pi pi-user-edit"
-            class="w-full"
-            styleClass="w-full"
+            customClass="w-full"
             (onClick)="editBeneficiary(beneficiary)"
           />
         </div>
@@ -226,11 +220,10 @@
             Preencha os dados socioeconômicos e de localização para o processo de regularização.
           </p>
         </div>
-        <p-button
+        <app-button
           icon="pi pi-times"
-          [rounded]="true"
-          [text]="true"
-          severity="secondary"
+          variant="text"
+          customClass="text-gray-500"
           (onClick)="displayDialog = false"
         />
       </div>

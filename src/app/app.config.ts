@@ -15,6 +15,8 @@ import { provideClientHydration, withEventReplay } from '@angular/platform-brows
 import { registerLocaleData } from '@angular/common';
 import localePt from '@angular/common/locales/pt';
 
+import { MessageService, ConfirmationService } from 'primeng/api';
+
 registerLocaleData(localePt);
 
 export const appConfig: ApplicationConfig = {
@@ -34,5 +36,7 @@ export const appConfig: ApplicationConfig = {
         },
       },
     }),
+    MessageService,
+    ConfirmationService,
   ],
 };

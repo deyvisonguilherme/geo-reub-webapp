@@ -14,10 +14,12 @@ import {
   TitularConfrontante,
 } from './process.types';
 import { ProcessRepository } from './process.repository';
+import { GlobalFeedbackService } from '../../core/feedback/global-feedback.service';
 
 @Injectable({ providedIn: 'root' })
 export class ProcessStore {
   private repository = inject(ProcessRepository);
+  private feedback = inject(GlobalFeedbackService);
   private readonly records = signal<ProcessRecord[]>([]);
   readonly processes = computed(() => this.records());
 
@@ -28,7 +30,10 @@ export class ProcessStore {
   loadProcesses(): void {
     this.repository.getAll().subscribe({
       next: (items) => this.records.set(items),
-      error: (err) => console.error('Erro ao carregar processos:', err),
+      error: (err) => {
+        console.error('Erro ao carregar processos:', err);
+        this.feedback.notifyError('Erro ao carregar processos', err.message);
+      },
     });
   }
 
@@ -48,8 +53,12 @@ export class ProcessStore {
     this.repository.create(process).subscribe({
       next: (newProcess) => {
         this.records.update((items) => [newProcess, ...items]);
+        this.feedback.notifySuccess('Processo criado', `O processo ${newProcess.numeroProcesso || id} foi criado com sucesso.`);
       },
-      error: (err) => console.error('Erro ao criar processo:', err),
+      error: (err) => {
+        console.error('Erro ao criar processo:', err);
+        this.feedback.notifyError('Erro ao criar processo', err.message);
+      },
     });
     
     return id;
@@ -59,8 +68,12 @@ export class ProcessStore {
     this.repository.delete(id).subscribe({
       next: () => {
         this.records.update((items) => items.filter((item) => item.id !== id));
+        this.feedback.notifySuccess('Processo excluído', 'O processo foi removido com sucesso.');
       },
-      error: (err) => console.error('Erro ao excluir processo:', err),
+      error: (err) => {
+        console.error('Erro ao excluir processo:', err),
+        this.feedback.notifyError('Erro ao excluir processo', err.message);
+      }
     });
   }
 
@@ -75,8 +88,12 @@ export class ProcessStore {
         this.records.update((items) =>
           items.map((item) => (item.id === id ? updatedProcess : item)),
         );
+        this.feedback.notifySuccess('Processo atualizado', 'As alterações foram salvas com sucesso.');
       },
-      error: (err) => console.error('Erro ao atualizar processo:', err),
+      error: (err) => {
+        console.error('Erro ao atualizar processo:', err);
+        this.feedback.notifyError('Erro ao atualizar processo', err.message);
+      },
     });
   }
 

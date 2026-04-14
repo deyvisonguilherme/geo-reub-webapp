@@ -1,0 +1,15 @@
+<div class="stats-grid">
+  @for (i of [].constructor(count()); track $index) {
+    <div class="stat-card skeleton">
+      <div class="flex items-center gap-4">
+        <div class="icon-wrapper">
+          <p-skeleton shape="circle" size="3rem" />
+        </div>
+        <div class="flex flex-col gap-2 flex-1">
+          <p-skeleton width="40%" height="0.75rem" />
+          <p-skeleton width="60%" height="1.5rem" />
+        </div>
+      </div>
+    </div>
+  }
+</div>

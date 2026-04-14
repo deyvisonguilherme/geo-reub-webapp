@@ -13,6 +13,11 @@ import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { TooltipModule } from 'primeng/tooltip';
 import { TagSeverity } from '../nucleus/nucleus.types';
+import { GlobalFeedbackService } from '../../core/feedback/global-feedback.service';
+import { ButtonComponent } from '../../shared/ui/button/button.component';
+import { StatusBadgeComponent } from '../../shared/ui/badge/status-badge.component';
+import { HasPermissionDirective } from '../../shared/directives/has-permission.directive';
+import { TableSkeletonComponent } from '../../shared/ui/skeletons/table-skeleton/table-skeleton.component';
 
 @Component({
   selector: 'app-process',
@@ -28,6 +33,10 @@ import { TagSeverity } from '../nucleus/nucleus.types';
     IconFieldModule,
     InputIconModule,
     TooltipModule,
+    ButtonComponent,
+    StatusBadgeComponent,
+    HasPermissionDirective,
+    TableSkeletonComponent,
   ],
   templateUrl: './process.component.html',
   styleUrl: './process.component.scss',
@@ -35,6 +44,9 @@ import { TagSeverity } from '../nucleus/nucleus.types';
 export class ProcessComponent {
   private readonly router = inject(Router);
   private readonly store = inject(ProcessStore);
+  private readonly feedback = inject(GlobalFeedbackService);
+
+  loading = signal<boolean>(false);
 
   readonly rowSizeOptions = [
     { label: '5', value: 5 },
@@ -89,10 +101,17 @@ export class ProcessComponent {
   }
 
   deleteProcess(process: ProcessRecord): void {
-    this.store.deleteProcess(process.id);
-    if (this.selectedId() === process.id) {
-      this.selectedId.set(null);
-    }
+    this.feedback.confirmAction({
+      header: 'Confirmar Exclusão',
+      message: `Deseja realmente excluir o processo ${process.numeroProcesso || process.id}? Esta ação não pode ser desfeita.`,
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        this.store.deleteProcess(process.id);
+        if (this.selectedId() === process.id) {
+          this.selectedId.set(null);
+        }
+      },
+    });
   }
 
   onSearchTermChange(value: string): void {

@@ -64,18 +64,18 @@
 - **Gaps:** Standard `1.25rem` gap between fields.
 - **Spans:** Use `.field-span-full` or `.field-span-2` for wider fields like addresses or descriptions.
 
-### 6. Unified Authentication Layout (Split Screen)
-- **Grid Proportions:** 45% (Form) / 55% (Branding) on desktop. Branding hidden on mobile (`max-width: 1024px`).
-- **Form Section:**
-  - **Background:** `#FFFFFF`.
-  - **Max-Width:** `420px`.
-  - **Typography:** Titles at `32px` (bold, `#1F2937`), labels at `14px` (medium, `#6B7280`).
-  - **Inputs:** `44px` height, `1.5px` border (`#D1D5DB`), radius `6px`. Focus color: `#3B82F6`.
-  - **Buttons:** `48px` height, radius `6px`. Use gradient: `linear-gradient(90deg, #10B981 0%, #3B82F6 100%)`.
-- **Branding Section:**
-  - **Background:** Mesh Gradient (Green `#10B981`, Blue `#3B82F6`, Gray `#94A3B8`). Use subtle noise overlay.
-  - **Visuals:** Storyset flat illustrations, centered. Headline text `22px`, white.
-- **Motion:** `fade-in` (0.8s) on load. Smooth transitions (0.3s) for hover/focus states.
+### 7. Shared Library (Reusable Elements)
+- **Location**: `src/app/shared/`
+- **Components**: 
+  - `app-button`: Standardized buttons with variants (`primary`, `secondary`, `danger`, `text`).
+  - `app-status-badge`: Rounded tags for statuses and modalities.
+- **Pipes**:
+  - `cpfCnpj`: Formats numeric strings to Brazilian documents.
+  - `area`: Formats numeric values to `m²` with locale-aware decimal separation.
+  - `processStatus`: Maps internal status codes to user-friendly labels.
+- **Directives**:
+  - `hasPermission`: Reactive ACL directive using `AuthStore`.
+  - `appMask`: Input masking for `cpf`, `cnpj`, and `cep`.
 
 ## Building and Running
 
@@ -131,10 +131,9 @@ Prettier is configured in `package.json` with the following settings:
 - `src/app/shared/`: Shared components and utilities.
 
 ## Recent Changes
-- 004-domain-repositories: Added TypeScript / Angular 21 (Zoneless) + `@angular/common/http`, `rxjs`, `Angular Signals`
-- 003-domain-repositories: Added TypeScript 5.6+ / Angular 21 (Zoneless) + `@angular/common/http`, `rxjs`, `@ngrx/signals`
-- 002-auth-multi-org: Added [if applicable, e.g., PostgreSQL, CoreData, files or N/A]
+- 007-ssr-skeleton-screens: Added TypeScript 5.6+ / Angular 21 (Zoneless) + PrimeNG 21 (`p-skeleton`), Tailwind CSS 4
+- 006-structure-shared-folder: Added TypeScript 5.x / Angular 21 (Zoneless) + PrimeNG 21, Tailwind CSS 4, Angular Signals
+- 005-global-feedback-system: Added TypeScript 5.6+ / Angular 21 (Zoneless) + PrimeNG 21 (`MessageService`, `ConfirmationService`), Angular Signals
 
 ## Active Technologies
-- TypeScript / Angular 21 (Zoneless) + `@angular/common/http`, `rxjs`, `Angular Signals` (004-domain-repositories)
-- N/A (Consumes external REST API) (004-domain-repositories)
+- TypeScript 5.6+ / Angular 21 (Zoneless) + PrimeNG 21 (`p-skeleton`), Tailwind CSS 4 (007-ssr-skeleton-screens)

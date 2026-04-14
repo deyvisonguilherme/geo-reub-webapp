@@ -7,96 +7,96 @@
       </p>
     </div>
 
-    <p-button
+    <app-button
       label="Criar processo"
       icon="pi pi-plus"
-      [rounded]="true"
       (onClick)="createProcess()"
     />
   </div>
 
   <div class="process-grid">
     <section class="process-card table-card">
-      <p-table
-        [value]="filteredProcesses"
-        [paginator]="true"
-        [rows]="rows"
-        [rowsPerPageOptions]="[5, 10, 20, 50]"
-        styleClass="p-datatable-sm p-datatable-striped"
-        [tableStyle]="{ 'min-width': '50rem' }"
-        selectionMode="single"
-        [selection]="selectedProcess()"
-        (onRowSelect)="selectProcess($event.data)"
-      >
-        <ng-template pTemplate="caption">
-          <div class="table-header">
-            <span class="text-xl font-bold">Processos</span>
-            <p-iconfield iconPosition="left">
-              <p-inputicon styleClass="pi pi-search" />
-              <input
-                type="text"
-                pInputText
-                [ngModel]="searchTerm"
-                (ngModelChange)="onSearchTermChange($event)"
-                placeholder="Pesquisar..."
-              />
-            </p-iconfield>
-          </div>
-        </ng-template>
-
-        <ng-template pTemplate="header">
-          <tr>
-            <th pSortableColumn="numeroProcesso">Número <p-sortIcon field="numeroProcesso" /></th>
-            <th pSortableColumn="nucleoId">Núcleo <p-sortIcon field="nucleoId" /></th>
-            <th pSortableColumn="status">Status <p-sortIcon field="status" /></th>
-            <th>Progresso</th>
-            <th style="width: 100px">Ações</th>
-          </tr>
-        </ng-template>
-
-        <ng-template pTemplate="body" let-process>
-          <tr [pSelectableRow]="process" class="table-row">
-            <td>
-              <span class="font-bold text-blue-600">{{
-                process.numeroProcesso || 'Novo processo'
-              }}</span>
-            </td>
-            <td>{{ process.nucleoId || 'Não informado' }}</td>
-            <td>{{ process.status }}</td>
-            <td>
-              <p-tag [value]="getCompletionLabel(process)" [severity]="getSeverity(process)" />
-            </td>
-            <td>
-              <div class="row-actions">
-                <p-button
-                  icon="pi pi-pencil"
-                  [rounded]="true"
-                  [text]="true"
-                  severity="secondary"
-                  (onClick)="editProcess(process); $event.stopPropagation()"
-                  pTooltip="Abrir Workflow"
+      @if (loading()) {
+        <app-table-skeleton [rows]="rows" [cols]="5" />
+      } @else {
+        <p-table
+          [value]="filteredProcesses"
+          [paginator]="true"
+          [rows]="rows"
+          [rowsPerPageOptions]="[5, 10, 20, 50]"
+          styleClass="p-datatable-sm p-datatable-striped"
+          [tableStyle]="{ 'min-width': '50rem' }"
+          selectionMode="single"
+          [selection]="selectedProcess()"
+          (onRowSelect)="selectProcess($event.data)"
+        >
+          <ng-template pTemplate="caption">
+            <div class="table-header">
+              <span class="text-xl font-bold">Processos</span>
+              <p-iconfield iconPosition="left">
+                <p-inputicon styleClass="pi pi-search" />
+                <input
+                  type="text"
+                  pInputText
+                  [ngModel]="searchTerm"
+                  (ngModelChange)="onSearchTermChange($event)"
+                  placeholder="Pesquisar..."
                 />
-                <p-button
-                  icon="pi pi-trash"
-                  [rounded]="true"
-                  [text]="true"
-                  severity="danger"
-                  (onClick)="deleteProcess(process); $event.stopPropagation()"
-                  pTooltip="Excluir"
-                />
-              </div>
-            </td>
-          </tr>
-        </ng-template>
+              </p-iconfield>
+            </div>
+          </ng-template>
 
-        <ng-template pTemplate="emptymessage">
-          <tr>
-            <td colspan="5" class="text-center py-8 text-gray-500">
-              Nenhum processo REURB cadastrado.
-            </td>
-          </tr>
-        </ng-template>
-      </p-table>
+          <ng-template pTemplate="header">
+            <tr>
+              <th pSortableColumn="numeroProcesso">Número <p-sortIcon field="numeroProcesso" /></th>
+              <th pSortableColumn="nucleoId">Núcleo <p-sortIcon field="nucleoId" /></th>
+              <th pSortableColumn="status">Status <p-sortIcon field="status" /></th>
+              <th>Progresso</th>
+              <th style="width: 100px">Ações</th>
+            </tr>
+          </ng-template>
+
+          <ng-template pTemplate="body" let-process>
+            <tr [pSelectableRow]="process" class="table-row">
+              <td>
+                <span class="font-bold text-blue-600">{{
+                  process.numeroProcesso || 'Novo processo'
+                }}</span>
+              </td>
+              <td>{{ process.nucleoId || 'Não informado' }}</td>
+              <td>{{ process.status }}</td>
+              <td>
+                <app-status-badge [label]="getCompletionLabel(process)" [severity]="getSeverity(process)" />
+              </td>
+              <td>
+                <div class="row-actions">
+                  <app-button
+                    icon="pi pi-pencil"
+                    variant="secondary"
+                    (onClick)="editProcess(process); $event.stopPropagation()"
+                    pTooltip="Abrir Workflow"
+                  />
+                  <app-button
+                    *hasPermission="'ADMIN'"
+                    icon="pi pi-trash"
+                    variant="danger"
+                    (onClick)="deleteProcess(process); $event.stopPropagation()"
+                    pTooltip="Excluir"
+                  />
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="5" class="text-center py-8 text-gray-500">
+                Nenhum processo REURB cadastrado.
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      }
     </section>
 
     <aside class="process-card detail-card">
@@ -106,7 +106,7 @@
             <span class="detail-kicker">Processo selecionado</span>
             <h2>{{ process.numeroProcesso || 'Novo processo' }}</h2>
           </div>
-          <p-tag [value]="process.modalidade || 'Pendente'" [severity]="getSeverity(process)" />
+          <app-status-badge [label]="process.modalidade || 'Pendente'" [severity]="getSeverity(process)" />
         </div>
 
         <div class="detail-section">
@@ -160,11 +160,10 @@
         </div>
 
         <div class="detail-actions mt-4">
-          <p-button
+          <app-button
             label="Abrir workflow completo"
             icon="pi pi-external-link"
-            class="w-full"
-            styleClass="w-full"
+            customClass="w-full"
             (onClick)="editProcess(process)"
           />
         </div>

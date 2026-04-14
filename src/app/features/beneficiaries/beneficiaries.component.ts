@@ -12,6 +12,10 @@ import { InputIconModule } from 'primeng/inputicon';
 import { TooltipModule } from 'primeng/tooltip';
 import { DialogModule } from 'primeng/dialog';
 import { BeneficiaryFormComponent } from './components/beneficiary-form/beneficiary-form.component';
+import { ButtonComponent } from '../../shared/ui/button/button.component';
+import { StatusBadgeComponent } from '../../shared/ui/badge/status-badge.component';
+import { CpfCnpjPipe } from '../../shared/pipes/cpf-cnpj.pipe';
+import { AreaPipe } from '../../shared/pipes/area.pipe';
 
 @Component({
   selector: 'app-beneficiaries',
@@ -28,6 +32,10 @@ import { BeneficiaryFormComponent } from './components/beneficiary-form/benefici
     TooltipModule,
     DialogModule,
     BeneficiaryFormComponent,
+    ButtonComponent,
+    StatusBadgeComponent,
+    CpfCnpjPipe,
+    AreaPipe,
   ],
   templateUrl: './beneficiaries.component.html',
   styleUrl: './beneficiaries.component.scss',

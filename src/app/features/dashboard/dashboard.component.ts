@@ -7,6 +7,7 @@ import { TagModule } from 'primeng/tag';
 import { TimelineModule } from 'primeng/timeline';
 import { MessageModule } from 'primeng/message';
 import { DashboardSummary } from './dashboard.types';
+import { StatisticCardSkeletonComponent } from '../../shared/ui/skeletons/statistic-card-skeleton/statistic-card-skeleton.component';
 
 type TagSeverity = 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast';
 type MessageSeverity = 'success' | 'info' | 'warn' | 'error' | 'secondary' | 'contrast';
@@ -62,12 +63,14 @@ interface DashboardAlert {
     TagModule,
     TimelineModule,
     MessageModule,
-    DecimalPipe
+    DecimalPipe,
+    StatisticCardSkeletonComponent
   ],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent {
+  loading = signal<boolean>(false);
   summary = signal<DashboardSummary>({
     total_processos: 452,
     processos_ativos: 347,
