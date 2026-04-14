@@ -43,10 +43,8 @@ import { TableSkeletonComponent } from '../../shared/ui/skeletons/table-skeleton
 })
 export class ProcessComponent {
   private readonly router = inject(Router);
-  private readonly store = inject(ProcessStore);
+  protected readonly store = inject(ProcessStore);
   private readonly feedback = inject(GlobalFeedbackService);
-
-  loading = signal<boolean>(false);
 
   readonly rowSizeOptions = [
     { label: '5', value: 5 },

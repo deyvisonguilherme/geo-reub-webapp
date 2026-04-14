@@ -2,31 +2,40 @@ import { Injectable, computed, signal, inject } from '@angular/core';
 import { NucleusFormModel } from './nucleus.types';
 import { NucleusRepository } from './nucleus.repository';
 import { GlobalFeedbackService } from '../../core/feedback/global-feedback.service';
+import { AsyncState, createInitialAsyncState, updateAsyncError, updateAsyncLoading, updateAsyncSuccess } from '../../core/models/repository.types';
 
 @Injectable({ providedIn: 'root' })
 export class NucleusStore {
   private repository = inject(NucleusRepository);
   private feedback = inject(GlobalFeedbackService);
-  private readonly records = signal<NucleusFormModel[]>([]);
-  readonly nuclei = computed(() => this.records());
+  
+  private readonly _nuclei = signal<AsyncState<NucleusFormModel[]>>(createInitialAsyncState([]));
+  readonly nucleiState = computed(() => this._nuclei());
+  readonly nuclei = computed(() => this._nuclei().data || []);
 
   constructor() {
     this.loadNuclei();
   }
 
   loadNuclei(): void {
+    this._nuclei.update(state => updateAsyncLoading(state));
     this.repository.getAll().subscribe({
-      next: (items) => this.records.set(items),
-      error: (err) => console.error('Erro ao carregar núcleos:', err),
+      next: (items) => this._nuclei.set(updateAsyncSuccess(items)),
+      error: (err) => {
+        console.error('Erro ao carregar núcleos:', err);
+        const errorMessage = err.message || 'Erro ao carregar núcleos';
+        this._nuclei.set(updateAsyncError(errorMessage, this._nuclei().data));
+        this.feedback.notifyError('Erro ao carregar núcleos', errorMessage);
+      },
     });
   }
 
   list(): NucleusFormModel[] {
-    return this.records();
+    return this.nuclei();
   }
 
   getById(id: string): NucleusFormModel | undefined {
-    return this.records().find((item) => item.id === id);
+    return this.nuclei().find((item) => item.id === id);
   }
 
   createNucleus(nucleus: Partial<NucleusFormModel>): string {
@@ -39,7 +48,10 @@ export class NucleusStore {
 
     this.repository.create(payload).subscribe({
       next: (newItem) => {
-        this.records.update((items) => [newItem, ...items]);
+        this._nuclei.update(state => ({
+          ...state,
+          data: [newItem, ...(state.data || [])]
+        }));
         this.feedback.notifySuccess('Núcleo criado', `O núcleo ${newItem.nome} foi criado com sucesso.`);
       },
       error: (err) => {
@@ -59,9 +71,10 @@ export class NucleusStore {
 
     this.repository.update(id, updatedChanges).subscribe({
       next: (updatedItem) => {
-        this.records.update((items) =>
-          items.map((item) => (item.id === id ? updatedItem : item)),
-        );
+        this._nuclei.update(state => ({
+          ...state,
+          data: (state.data || []).map((item) => (item.id === id ? updatedItem : item))
+        }));
         this.feedback.notifySuccess('Núcleo atualizado', 'As informações foram salvas com sucesso.');
       },
       error: (err) => {
@@ -80,7 +93,10 @@ export class NucleusStore {
       accept: () => {
         this.repository.delete(id).subscribe({
           next: () => {
-            this.records.update((items) => items.filter((item) => item.id !== id));
+            this._nuclei.update(state => ({
+              ...state,
+              data: (state.data || []).filter((item) => item.id !== id)
+            }));
             this.feedback.notifySuccess('Núcleo excluído', 'O registro foi removido com sucesso.');
           },
           error: (err) => {

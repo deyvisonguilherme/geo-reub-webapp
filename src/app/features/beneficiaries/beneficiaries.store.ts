@@ -2,31 +2,40 @@ import { Injectable, computed, signal, inject } from '@angular/core';
 import { Beneficiario } from '../process/process.types';
 import { BeneficiaryRepository } from './beneficiaries.repository';
 import { GlobalFeedbackService } from '../../core/feedback/global-feedback.service';
+import { AsyncState, createInitialAsyncState, updateAsyncError, updateAsyncLoading, updateAsyncSuccess } from '../../core/models/repository.types';
 
 @Injectable({ providedIn: 'root' })
 export class BeneficiariesStore {
   private repository = inject(BeneficiaryRepository);
   private feedback = inject(GlobalFeedbackService);
-  private readonly records = signal<Beneficiario[]>([]);
-  readonly beneficiaries = computed(() => this.records());
+  
+  private readonly _beneficiaries = signal<AsyncState<Beneficiario[]>>(createInitialAsyncState([]));
+  readonly beneficiariesState = computed(() => this._beneficiaries());
+  readonly beneficiaries = computed(() => this._beneficiaries().data || []);
 
   constructor() {
     this.loadBeneficiaries();
   }
 
   loadBeneficiaries(): void {
+    this._beneficiaries.update(state => updateAsyncLoading(state));
     this.repository.getAll().subscribe({
-      next: (items) => this.records.set(items),
-      error: (err) => console.error('Erro ao carregar beneficiários:', err),
+      next: (items) => this._beneficiaries.set(updateAsyncSuccess(items)),
+      error: (err) => {
+        console.error('Erro ao carregar beneficiários:', err);
+        const errorMessage = err.message || 'Erro ao carregar beneficiários';
+        this._beneficiaries.set(updateAsyncError(errorMessage, this._beneficiaries().data));
+        this.feedback.notifyError('Erro ao carregar beneficiários', errorMessage);
+      },
     });
   }
 
   list(): Beneficiario[] {
-    return this.records();
+    return this.beneficiaries();
   }
 
   getById(id: string): Beneficiario | undefined {
-    return this.records().find((item) => item.id === id);
+    return this.beneficiaries().find((item) => item.id === id);
   }
 
   createBeneficiary(beneficiary: Partial<Beneficiario>): string {
@@ -38,7 +47,10 @@ export class BeneficiariesStore {
 
     this.repository.create(payload).subscribe({
       next: (newBeneficiary) => {
-        this.records.update((items) => [newBeneficiary, ...items]);
+        this._beneficiaries.update(state => ({
+          ...state,
+          data: [newBeneficiary, ...(state.data || [])]
+        }));
         this.feedback.notifySuccess('Beneficiário criado', `O beneficiário ${newBeneficiary.nomeCompleto} foi cadastrado com sucesso.`);
       },
       error: (err) => {
@@ -53,9 +65,10 @@ export class BeneficiariesStore {
   updateBeneficiary(id: string, changes: Partial<Beneficiario>): void {
     this.repository.update(id, changes).subscribe({
       next: (updatedBeneficiary) => {
-        this.records.update((items) =>
-          items.map((item) => (item.id === id ? updatedBeneficiary : item)),
-        );
+        this._beneficiaries.update(state => ({
+          ...state,
+          data: (state.data || []).map((item) => (item.id === id ? updatedBeneficiary : item))
+        }));
         this.feedback.notifySuccess('Beneficiário atualizado', 'As informações foram salvas com sucesso.');
       },
       error: (err) => {
@@ -74,7 +87,10 @@ export class BeneficiariesStore {
       accept: () => {
         this.repository.delete(id).subscribe({
           next: () => {
-            this.records.update((items) => items.filter((item) => item.id !== id));
+            this._beneficiaries.update(state => ({
+              ...state,
+              data: (state.data || []).filter((item) => item.id !== id)
+            }));
             this.feedback.notifySuccess('Beneficiário excluído', 'O registro foi removido com sucesso.');
           },
           error: (err) => {

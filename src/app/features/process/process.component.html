@@ -16,8 +16,14 @@
 
   <div class="process-grid">
     <section class="process-card table-card">
-      @if (loading()) {
+      @if (store.processList().loading) {
         <app-table-skeleton [rows]="rows" [cols]="5" />
+      } @else if (store.processList().error) {
+        <div class="p-8 text-center">
+          <i class="pi pi-exclamation-circle text-4xl text-red-500 mb-4"></i>
+          <p class="text-gray-600">{{ store.processList().error }}</p>
+          <app-button label="Tentar novamente" variant="secondary" customClass="mt-4" (onClick)="store.loadProcesses()" />
+        </div>
       } @else {
         <p-table
           [value]="filteredProcesses"

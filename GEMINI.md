@@ -71,6 +71,12 @@
 - **Permissions (AND logic)**: `data: { permissions: ['process:delete'] }` - Access if user has *all* listed permissions.
 - **Redirection**: Denied access redirects to `/dashboard` with an error notification.
 
+### 9. State Management (Centralized Store State)
+- **Pattern**: All asynchronous data in feature stores must use the `AsyncState<T>` object.
+- **Structure**: `{ data: T | null, loading: boolean, error: string | null }`.
+- **Helpers**: Use `createInitialAsyncState`, `updateAsyncLoading`, `updateAsyncSuccess`, and `updateAsyncError` from `src/app/core/models/repository.types.ts`.
+- **Consistency**: This avoids repetitive standalone signals for loading and error states across the codebase.
+
 ## Building and Running
 
 ### Prerequisites
@@ -125,9 +131,9 @@ Prettier is configured in `package.json` with the following settings:
 - `src/app/shared/`: Shared components and utilities.
 
 ## Recent Changes
+- 009-centralized-store-state: Added TypeScript 5.6+ / Angular 21 (Zoneless) + `@ngrx/signals`, `rxjs`, `@angular/common/http`
 - 008-permission-route-guards: Added TypeScript 5.6+ / Angular 21 (Zoneless) + `@angular/router`, `AuthStore`, `GlobalFeedbackService`
 - 007-ssr-skeleton-screens: Added TypeScript 5.6+ / Angular 21 (Zoneless) + PrimeNG 21 (`p-skeleton`), Tailwind CSS 4
-- 006-structure-shared-folder: Added TypeScript 5.x / Angular 21 (Zoneless) + PrimeNG 21, Tailwind CSS 4, Angular Signals
 
 ## Active Technologies
-- TypeScript 5.6+ / Angular 21 (Zoneless) + `@angular/router`, `AuthStore`, `GlobalFeedbackService` (008-permission-route-guards)
+- TypeScript 5.6+ / Angular 21 (Zoneless) + `@ngrx/signals`, `rxjs`, `@angular/common/http` (009-centralized-store-state)

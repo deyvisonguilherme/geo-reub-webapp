@@ -15,34 +15,40 @@ import {
 } from './process.types';
 import { ProcessRepository } from './process.repository';
 import { GlobalFeedbackService } from '../../core/feedback/global-feedback.service';
+import { AsyncState, createInitialAsyncState, updateAsyncError, updateAsyncLoading, updateAsyncSuccess } from '../../core/models/repository.types';
 
 @Injectable({ providedIn: 'root' })
 export class ProcessStore {
   private repository = inject(ProcessRepository);
   private feedback = inject(GlobalFeedbackService);
-  private readonly records = signal<ProcessRecord[]>([]);
-  readonly processes = computed(() => this.records());
+  
+  private readonly _processList = signal<AsyncState<ProcessRecord[]>>(createInitialAsyncState([]));
+  readonly processList = computed(() => this._processList());
+  readonly processes = computed(() => this._processList().data || []);
 
   constructor() {
     this.loadProcesses();
   }
 
   loadProcesses(): void {
+    this._processList.update(state => updateAsyncLoading(state));
     this.repository.getAll().subscribe({
-      next: (items) => this.records.set(items),
+      next: (items) => this._processList.set(updateAsyncSuccess(items)),
       error: (err) => {
         console.error('Erro ao carregar processos:', err);
-        this.feedback.notifyError('Erro ao carregar processos', err.message);
+        const errorMessage = err.message || 'Erro ao carregar processos';
+        this._processList.set(updateAsyncError(errorMessage, this._processList().data));
+        this.feedback.notifyError('Erro ao carregar processos', errorMessage);
       },
     });
   }
 
   list(): ProcessRecord[] {
-    return this.records();
+    return this.processes();
   }
 
   getById(id: string): ProcessRecord | undefined {
-    return this.records().find((item) => item.id === id);
+    return this.processes().find((item) => item.id === id);
   }
 
   createProcess(): string {
@@ -52,7 +58,10 @@ export class ProcessStore {
     
     this.repository.create(process).subscribe({
       next: (newProcess) => {
-        this.records.update((items) => [newProcess, ...items]);
+        this._processList.update(state => ({
+          ...state,
+          data: [newProcess, ...(state.data || [])]
+        }));
         this.feedback.notifySuccess('Processo criado', `O processo ${newProcess.numeroProcesso || id} foi criado com sucesso.`);
       },
       error: (err) => {
@@ -67,7 +76,10 @@ export class ProcessStore {
   deleteProcess(id: string): void {
     this.repository.delete(id).subscribe({
       next: () => {
-        this.records.update((items) => items.filter((item) => item.id !== id));
+        this._processList.update(state => ({
+          ...state,
+          data: (state.data || []).filter((item) => item.id !== id)
+        }));
         this.feedback.notifySuccess('Processo excluído', 'O processo foi removido com sucesso.');
       },
       error: (err) => {
@@ -85,9 +97,10 @@ export class ProcessStore {
 
     this.repository.update(id, updatedChanges).subscribe({
       next: (updatedProcess) => {
-        this.records.update((items) =>
-          items.map((item) => (item.id === id ? updatedProcess : item)),
-        );
+        this._processList.update(state => ({
+          ...state,
+          data: (state.data || []).map((item) => (item.id === id ? updatedProcess : item))
+        }));
         this.feedback.notifySuccess('Processo atualizado', 'As alterações foram salvas com sucesso.');
       },
       error: (err) => {
