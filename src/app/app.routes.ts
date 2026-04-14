@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { AppLayout } from './layout/component/layout/app.layout';
 import { authGuard } from './core/auth/auth.guard';
+import { permissionGuard } from './core/auth/permission.guard';
 
 export const routes: Routes = [
   {
@@ -80,15 +81,15 @@ export const routes: Routes = [
       },
       {
         path: 'settings',
-        canActivate: [authGuard],
-        data: { role: 'ADMIN' },
+        canActivate: [authGuard, permissionGuard],
+        data: { roles: ['ADMIN'] },
         loadComponent: () =>
           import('./features/settings/settings.component').then((m) => m.SettingsComponent),
       },
       {
         path: 'users',
-        canActivate: [authGuard],
-        data: { role: 'ADMIN' },
+        canActivate: [authGuard, permissionGuard],
+        data: { roles: ['ADMIN'] },
         loadComponent: () =>
           import('./features/users/users.component').then((m) => m.UsersComponent),
       },

@@ -64,18 +64,12 @@
 - **Gaps:** Standard `1.25rem` gap between fields.
 - **Spans:** Use `.field-span-full` or `.field-span-2` for wider fields like addresses or descriptions.
 
-### 7. Shared Library (Reusable Elements)
-- **Location**: `src/app/shared/`
-- **Components**: 
-  - `app-button`: Standardized buttons with variants (`primary`, `secondary`, `danger`, `text`).
-  - `app-status-badge`: Rounded tags for statuses and modalities.
-- **Pipes**:
-  - `cpfCnpj`: Formats numeric strings to Brazilian documents.
-  - `area`: Formats numeric values to `m²` with locale-aware decimal separation.
-  - `processStatus`: Maps internal status codes to user-friendly labels.
-- **Directives**:
-  - `hasPermission`: Reactive ACL directive using `AuthStore`.
-  - `appMask`: Input masking for `cpf`, `cnpj`, and `cep`.
+### 8. Route Protection (Authorization)
+- **Permission Guard**: `src/app/core/auth/permission.guard.ts`.
+- **Usage**: Apply `permissionGuard` to routes and define access requirements in the `data` object.
+- **Roles (OR logic)**: `data: { roles: ['ADMIN', 'TECNICO'] }` - Access if user has *either* role.
+- **Permissions (AND logic)**: `data: { permissions: ['process:delete'] }` - Access if user has *all* listed permissions.
+- **Redirection**: Denied access redirects to `/dashboard` with an error notification.
 
 ## Building and Running
 
@@ -131,9 +125,9 @@ Prettier is configured in `package.json` with the following settings:
 - `src/app/shared/`: Shared components and utilities.
 
 ## Recent Changes
+- 008-permission-route-guards: Added TypeScript 5.6+ / Angular 21 (Zoneless) + `@angular/router`, `AuthStore`, `GlobalFeedbackService`
 - 007-ssr-skeleton-screens: Added TypeScript 5.6+ / Angular 21 (Zoneless) + PrimeNG 21 (`p-skeleton`), Tailwind CSS 4
 - 006-structure-shared-folder: Added TypeScript 5.x / Angular 21 (Zoneless) + PrimeNG 21, Tailwind CSS 4, Angular Signals
-- 005-global-feedback-system: Added TypeScript 5.6+ / Angular 21 (Zoneless) + PrimeNG 21 (`MessageService`, `ConfirmationService`), Angular Signals
 
 ## Active Technologies
-- TypeScript 5.6+ / Angular 21 (Zoneless) + PrimeNG 21 (`p-skeleton`), Tailwind CSS 4 (007-ssr-skeleton-screens)
+- TypeScript 5.6+ / Angular 21 (Zoneless) + `@angular/router`, `AuthStore`, `GlobalFeedbackService` (008-permission-route-guards)
