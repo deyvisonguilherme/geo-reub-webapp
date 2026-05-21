@@ -1,58 +1,85 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
-import { NucleusFormModel } from './nucleus.types';
+import { Observable, map } from 'rxjs';
+import { NucleusFormModel, NucleoResponse } from './nucleus.types';
 import { IRepository } from '../../core/repositories/repository.interface';
 
 @Injectable({ providedIn: 'root' })
 export class NucleusRepository implements IRepository<NucleusFormModel> {
   private http = inject(HttpClient);
-  private readonly baseUrl = '/api/v1/nuclei';
-
-  private seedData: NucleusFormModel[] = [
-    {
-      id: 'n1',
-      codigo: 'NUC-001',
-      nome: 'Vale Verde',
-      descricao: 'Núcleo urbano consolidado.',
-      situacaoGeografica: 'Urbana',
-      consolidado: true,
-      areaTotalM2: 25000,
-      perimetroM: 850,
-      numeroFamiliasEstimado: 120,
-      dataOcupacaoInicial: '2005-03-15',
-      municipioId: 'm1',
-      poligonalGeorreferenciada: '',
-      centroide: '',
-      criadoPor: 'admin',
-      criadoEm: '2026-01-10T10:00:00Z',
-      atualizadoPor: 'admin',
-      atualizadoEm: '2026-03-20T15:30:00Z',
-    },
-  ];
+  private readonly baseUrl = '/nucleos';
 
   getAll(): Observable<NucleusFormModel[]> {
-    return of(this.seedData);
+    return this.http
+      .get<NucleoResponse[]>(this.baseUrl)
+      .pipe(map((items) => items.map((item) => this.mapToModel(item))));
   }
 
   getById(id: string): Observable<NucleusFormModel> {
-    const item = this.seedData.find((n) => n.id === id);
-    if (item) return of(item);
-    throw new Error('Núcleo não encontrado');
+    return this.http
+      .get<NucleoResponse>(`${this.baseUrl}/${id}`)
+      .pipe(map((item) => this.mapToModel(item)));
   }
 
   create(data: Partial<NucleusFormModel>): Observable<NucleusFormModel> {
-    const newItem = { ...data, id: Math.random().toString(36).substr(2, 9) } as NucleusFormModel;
-    return of(newItem);
+    const payload = this.mapToResponse(data);
+    return this.http
+      .post<NucleoResponse>(this.baseUrl, payload)
+      .pipe(map((item) => this.mapToModel(item)));
   }
 
   update(id: string, data: Partial<NucleusFormModel>): Observable<NucleusFormModel> {
-    const item = this.seedData.find((n) => n.id === id);
-    if (item) return of({ ...item, ...data });
-    throw new Error('Núcleo não encontrado');
+    const payload = this.mapToResponse(data);
+    return this.http
+      .put<NucleoResponse>(`${this.baseUrl}/${id}`, payload)
+      .pipe(map((item) => this.mapToModel(item)));
   }
 
   delete(id: string): Observable<void> {
-    return of(undefined);
+    return this.http.delete<void>(`${this.baseUrl}/${id}`);
+  }
+
+  private mapToModel(resp: NucleoResponse): NucleusFormModel {
+    return {
+      id: resp.id,
+      codigo: resp.codigo,
+      nome: resp.nome,
+      descricao: resp.descricao || '',
+      situacaoGeografica: resp.situacao_geografica || '',
+      consolidado: resp.consolidado,
+      areaTotalM2: resp.area_total_m2,
+      perimetroM: resp.perimetro_m,
+      numeroFamiliasEstimado: resp.numero_familias_estimado,
+      dataOcupacaoInicial: resp.data_ocupacao_inicial,
+      municipioId: resp.municipio_id || '',
+      poligonalGeorreferenciada: resp.poligonal_georreferenciada || '',
+      centroide: resp.centroide || '',
+      criadoPor: resp.criado_por,
+      criadoEm: resp.criado_em,
+      atualizadoPor: resp.atualizado_por || '',
+      atualizadoEm: resp.atualizado_em || '',
+    };
+  }
+
+  private mapToResponse(model: Partial<NucleusFormModel>): Partial<NucleoResponse> {
+    return {
+      id: model.id,
+      codigo: model.codigo,
+      nome: model.nome,
+      descricao: model.descricao,
+      situacao_geografica: model.situacaoGeografica,
+      consolidado: model.consolidado,
+      area_total_m2: model.areaTotalM2,
+      perimetro_m: model.perimetroM,
+      numero_familias_estimado: model.numeroFamiliasEstimado,
+      data_ocupacao_inicial: model.dataOcupacaoInicial,
+      municipio_id: model.municipioId,
+      poligonal_georreferenciada: model.poligonalGeorreferenciada,
+      centroide: model.centroide,
+      criado_por: model.criadoPor,
+      criado_em: model.criadoEm,
+      atualizado_por: model.atualizadoPor,
+      atualizado_em: model.atualizadoEm,
+    };
   }
 }

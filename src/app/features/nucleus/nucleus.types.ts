@@ -1,3 +1,23 @@
+export interface NucleoResponse {
+  id: string;
+  codigo: string;
+  nome: string;
+  descricao: string | null;
+  situacao_geografica: string | null;
+  area_total_m2: number | null;
+  perimetro_m: number | null;
+  poligonal_georreferenciada: string | null;
+  centroide: string | null;
+  consolidado: boolean;
+  data_ocupacao_inicial: string | null;
+  numero_familias_estimado: number | null;
+  municipio_id: string | null;
+  criado_por: string;
+  criado_em: string;
+  atualizado_por: string | null;
+  atualizado_em: string | null;
+}
+
 export interface NucleusFormModel {
   id: string;
   codigo: string;

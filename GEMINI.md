@@ -131,9 +131,8 @@ Prettier is configured in `package.json` with the following settings:
 - `src/app/shared/`: Shared components and utilities.
 
 ## Recent Changes
+- 010-integrate-nucleus-api: Added [if applicable, e.g., PostgreSQL, CoreData, files or N/A]
 - 009-centralized-store-state: Added TypeScript 5.6+ / Angular 21 (Zoneless) + `@ngrx/signals`, `rxjs`, `@angular/common/http`
 - 008-permission-route-guards: Added TypeScript 5.6+ / Angular 21 (Zoneless) + `@angular/router`, `AuthStore`, `GlobalFeedbackService`
-- 007-ssr-skeleton-screens: Added TypeScript 5.6+ / Angular 21 (Zoneless) + PrimeNG 21 (`p-skeleton`), Tailwind CSS 4
 
 ## Active Technologies
-- TypeScript 5.6+ / Angular 21 (Zoneless) + `@ngrx/signals`, `rxjs`, `@angular/common/http` (009-centralized-store-state)
